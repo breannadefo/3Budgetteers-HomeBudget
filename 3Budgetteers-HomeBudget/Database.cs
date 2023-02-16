@@ -17,6 +17,18 @@ namespace Budget
         public static SQLiteConnection dbConnection
         {
             get { return _connection; }
+            private set { _connection = value; }
+        }
+
+        //constructor
+        public static void newDatabase(string filename)
+        {            
+            CloseDatabaseAndReleaseFile();
+             
+            SQLiteConnection connection = new SQLiteConnection($"Data Source={filename};Foreign Keys=1");
+            dbConnection = connection;
+
+            AddTables(connection);
         }
 
         //member methods
@@ -34,5 +46,27 @@ namespace Budget
             }
         }
 
+        private static void AddTables(SQLiteConnection con)
+        {
+            SQLiteCommand cmd = new SQLiteCommand(con);
+
+            cmd = con.CreateCommand();
+
+            cmd.CommandText = "CREATE TABLE categoryTypes(Id INT PRIMARY KEY, Description VARCHAR(20))";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "CREATE TABLE categories(Id INT PRIMARY KEY, Description VARCHAR(20), TypeId INT, FOREIGN KEY (TypeId) REFERENCES categoryTypes (Id))";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "CREATE TABLE expenses(Id INT PRIMARY KEY, Date VARCHAR(20), Description VARCHAR(50), Amount DOUBLE, CategoryId INT, FOREIGN KEY (CategoryId) REFERENCES categories (Id))";
+            cmd.ExecuteNonQuery();
+
+            cmd.Dispose();
+        }
+
+        public static void existingDatabase(string filename)
+        {
+
+        }
     }
 }
