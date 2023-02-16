@@ -83,7 +83,11 @@ namespace Budget
 
         public static void existingDatabase(string filename)
         {
+            CloseDatabaseAndReleaseFile();
 
+            // your code
+            Database._connection = new SQLiteConnection($"Data Source={filename};Foreign Keys=1");
+            Database.dbConnection.Open();
         }
     }
 }
