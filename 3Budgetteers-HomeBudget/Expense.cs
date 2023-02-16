@@ -29,27 +29,27 @@ namespace Budget
         /// <value>
         /// Gets the id of the expense.
         /// </value>
-        public int Id { get; }
+        public int Id { get; private set; }
 
         /// <value>
         /// Gets the date of when the expense happened.
         /// </value>
-        public DateTime Date { get;  }
+        public DateTime Date { get; private set; }
 
         /// <value>
         /// Gets or sets the cost of the expense. If the amount is negative, it means the expense was made using a credit card.
         /// </value>
-        public Double Amount { get; set; }
+        public Double Amount { get; private set; }
 
         /// <value>
         /// Gets or sets a short description of what the expense was for.
         /// </value>
-        public String Description { get; set; }
+        public String Description { get; private set; }
 
         /// <value>
         /// Gets or sets the category id of the category that the expense belongs to.
         /// </value>
-        public int Category { get; set; }
+        public int Category { get; private set; }
 
         // ====================================================================
         // Constructor
