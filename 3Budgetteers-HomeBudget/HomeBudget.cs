@@ -104,33 +104,6 @@ namespace Budget
         public Expenses expenses { get { return _expenses; } }
 
         // -------------------------------------------------------------------
-        // Constructor (new... default categories, no expenses)
-        // -------------------------------------------------------------------
-
-        /// <summary>
-        /// Creates a new HomeBudget object. It initializes the categories, which means 16 default categories are created, 
-        /// and the expenses, which remains a blank slate.
-        /// 
-        /// <example>
-        /// Here is how this constructor would be called:
-        /// 
-        /// <code>
-        /// 
-        /// HomeBudget newBudget = new HomeBudget();
-        /// 
-        /// </code>
-        /// 
-        /// Since this is creating a completely new HomeBudget, it doesn't need anything passed into it.
-        /// 
-        /// </example>
-        /// </summary>
-        public HomeBudget()
-        {
-            _categories = new Categories();
-            _expenses = new Expenses();
-        }
-
-        // -------------------------------------------------------------------
         // Constructor (existing budget ... must specify file)
         // -------------------------------------------------------------------
 
@@ -156,11 +129,22 @@ namespace Budget
         /// </summary>
         /// <param name="budgetFileName">Represents the file that contains the already existing budget.</param>
         /// <exception cref="Exception">Thrown when there is a problem reading from the file.</exception>
-        public HomeBudget(String budgetFileName)
+        public HomeBudget(String databaseFile, String expensesXMLFile, bool newDB=false)
         {
+            if(! newDB && File.Exists(databaseFile))
+            {
+                Database.existingDatabase(databaseFile);
+            }
+            else
+            {
+                Database.newDatabase(databaseFile);
+                newDB = true;
+            }
             _categories = new Categories();
             _expenses = new Expenses();
-            ReadFromFile(budgetFileName);
+
+            //read the expenese from the xml
+            _expenses.ReadFromFile(expensesXMLFile);
         }
 
         #region OpenNewAndSave
@@ -230,7 +214,6 @@ namespace Budget
                 // Save information about budget file
                 _DirName = Path.GetDirectoryName(budgetFileName);
                 _FileName = Path.GetFileName(budgetFileName);
-
             }
 
             // ----------------------------------------------------------------
