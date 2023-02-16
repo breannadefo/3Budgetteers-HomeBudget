@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -93,7 +94,24 @@ namespace Budget
         /// <param name="category">The original Category object that is going to be copied.</param>
         public Category(Category category)
         {
-            this.Id = category.Id;;
+            //Connecting to the database
+            SQLiteCommand sqlite_cmd;
+            sqlite_cmd = Database.dbConnection.CreateCommand();
+
+            //Writing the insert command for ID
+            sqlite_cmd.CommandText = "";
+            sqlite_cmd.ExecuteNonQuery();
+
+            //Writing the insert command for description
+            sqlite_cmd.CommandText = "";
+            sqlite_cmd.ExecuteNonQuery();
+
+            //Writing the insert command Category type
+            sqlite_cmd.CommandText = "";
+            sqlite_cmd.ExecuteNonQuery();
+
+
+            this.Id = category.Id;
             this.Description = category.Description;
             this.Type = category.Type;
         }
