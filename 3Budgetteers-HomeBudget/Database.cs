@@ -14,6 +14,10 @@ namespace Budget
         private static SQLiteConnection _connection;
 
         //properties
+
+        /// <summary>
+        /// Gets or sets the connection to a database.
+        /// </summary>
         public static SQLiteConnection dbConnection
         {
             get { return _connection; }
@@ -21,6 +25,11 @@ namespace Budget
         }
 
         //constructor
+
+        /// <summary>
+        /// Creates a new database, populates it with the budget tables, and opens the conneciton.
+        /// </summary>
+        /// <param name="filename">The file that the database resides in.</param>
         public static void newDatabase(string filename)
         {            
             CloseDatabaseAndReleaseFile();
@@ -33,6 +42,10 @@ namespace Budget
 
         //member methods
 
+        /// <summary>
+        /// Closes the database and severs the connection. It also calls the garbage collector to
+        /// make sure any all databases are completely closed before .
+        /// </summary>
         public static void CloseDatabaseAndReleaseFile()
         {
             if (dbConnection != null)
@@ -46,11 +59,15 @@ namespace Budget
             }
         }
 
-        private static void AddTables(SQLiteConnection con)
+        /// <summary>
+        /// Creates an SQLite command to add the three budget tables to the database.
+        /// </summary>
+        /// <param name="connection">The connection to the database.</param>
+        private static void AddTables(SQLiteConnection connection)
         {
-            SQLiteCommand cmd = new SQLiteCommand(con);
+            SQLiteCommand cmd = new SQLiteCommand(connection);
 
-            cmd = con.CreateCommand();
+            cmd = connection.CreateCommand();
 
             cmd.CommandText = "CREATE TABLE categoryTypes(Id INT PRIMARY KEY, Description VARCHAR(20))";
             cmd.ExecuteNonQuery();
