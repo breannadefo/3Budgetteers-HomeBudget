@@ -28,19 +28,19 @@ namespace Budget
         // ====================================================================
 
         /// <value>
-        /// Gets or sets the id that is linked to a specific category.
+        /// Gets the id that is linked to a specific category.
         /// </value>
-        public int Id { get; set; }
+        public int Id { get; }
 
         /// <value>
-        /// Gets or sets the name/description of the category.
+        /// Gets the name/description of the category.
         /// </value>
-        public String Description { get; set; }
+        public String Description { get; }
 
         /// <value>
-        /// Gets or sets the category's type from the CategoryType enum. Could be Income, Expense, Credit, or Savings.
+        /// Gets the category's type from the CategoryType enum. Could be Income, Expense, Credit, or Savings.
         /// </value>
-        public CategoryType Type { get; set; }
+        public CategoryType Type { get; }
 
         /// <summary>
         /// Represents how a category gains, loses, uses, or stores money.
