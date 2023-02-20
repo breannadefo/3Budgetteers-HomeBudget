@@ -10,10 +10,13 @@ namespace Budget
 {
     public class Database
     {
-        //backing fields
+        #region backing fields
+
         private static SQLiteConnection _connection;
 
-        //properties
+        #endregion
+
+        #region properties
 
         /// <summary>
         /// Gets or sets the connection to a database.
@@ -24,10 +27,14 @@ namespace Budget
             private set { _connection = value; }
         }
 
-        //constructor
+        #endregion
+
+        #region constructor
 
         /// <summary>
         /// Creates a new database, populates it with the budget tables, and opens the conneciton.
+        /// It also adds the category types to the categoryTypes table and adds default categories to
+        /// the categories table.
         /// </summary>
         /// <param name="filename">The file that the database resides in.</param>
         public static void newDatabase(string filename)
@@ -37,10 +44,16 @@ namespace Budget
             SQLiteConnection connection = new SQLiteConnection($"Data Source={filename};Foreign Keys=1");
             dbConnection = connection;
 
+            dbConnection.Open();
+
             AddTables(connection);
+            AddCategoryTypes(connection);
+            AddDefaultCategories(connection);
         }
 
-        //member methods
+        #endregion
+
+        #region member methods
 
         /// <summary>
         /// Closes the database and severs the connection. It also calls the garbage collector to
@@ -69,6 +82,17 @@ namespace Budget
 
             cmd = connection.CreateCommand();
 
+            //dropping the tables if they already exist
+            cmd.CommandText = "DROP TABLE IF EXISTS expenses";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "DROP TABLE IF EXISTS categories";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "DROP TABLE IF EXISTS categoryTypes";
+            cmd.ExecuteNonQuery();
+
+            //creating the tables
             cmd.CommandText = "CREATE TABLE categoryTypes(Id INT PRIMARY KEY, Description VARCHAR(20))";
             cmd.ExecuteNonQuery();
 
@@ -89,5 +113,93 @@ namespace Budget
             Database._connection = new SQLiteConnection($"Data Source={filename};Foreign Keys=1");
             Database.dbConnection.Open();
         }
+
+        /// <summary>
+        /// Adds the category types to the categoryTypes table in the database.
+        /// </summary>
+        /// <param name="connection">The connection to the database.</param>
+        private static void AddCategoryTypes(SQLiteConnection connection)
+        {
+            SQLiteCommand cmd = new SQLiteCommand(connection);
+
+            cmd = connection.CreateCommand();
+
+            cmd.CommandText = "INSERT INTO categoryTypes (Id, Description) VALUES (1, 'Income');";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categoryTypes (Id, Description) VALUES (2, 'Expense');";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categoryTypes (Id, Description) VALUES (3, 'Credit');";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categoryTypes (Id, Description) VALUES (4, 'Savings');";
+            cmd.ExecuteNonQuery();
+
+            cmd.Dispose();
+        }
+
+        /// <summary>
+        /// Adds all the default categories to the categories table in the database.
+        /// </summary>
+        /// <param name="connection">The connection to the database.</param>
+        private static void AddDefaultCategories(SQLiteConnection connection)
+        {
+            SQLiteCommand cmd = new SQLiteCommand(connection);
+
+            cmd = connection.CreateCommand();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Utilities', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Rent', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Food', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Entertainment', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Education', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Micellaneous', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Medical Expenses', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Vacation', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Credit Card', 3);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Clothes', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Gifts', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Insurance', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Transportation', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Eating Out', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Savings', 4);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Income', 1);";
+            cmd.ExecuteNonQuery();
+
+            cmd.Dispose();
+        }
+
+        #endregion
     }
 }
