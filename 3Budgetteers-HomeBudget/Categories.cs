@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Data.SQLite;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -388,12 +389,20 @@ namespace Budget
         /// <returns>A copy of the categories list.</returns>
         public List<Category> List()
         {
-            List<Category> newList = new List<Category>();
-            foreach (Category category in _Cats)
+            List<Category> list = new List<Category>();
+
+            SQLiteDataReader reader;
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+
+            cmd.CommandText = "SELECT Id, Description, TypeId FROM categories";
+
+            reader = cmd.ExecuteReader();
+            while (reader.Read())
             {
-                newList.Add(new Category(category));
+                list.Add(new Category(reader.GetInt32(0), reader.GetString(1), (Category.CategoryType)reader.GetInt32(2)));
             }
-            return newList;
+
+            return list;
         }
 
         // ====================================================================
