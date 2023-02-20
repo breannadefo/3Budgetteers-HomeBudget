@@ -69,7 +69,6 @@ namespace Budget
         // ====================================================================
         // Constructor
         // ====================================================================
-
         /// <summary>
         /// Creates a new Category object with the provided id, description, and category type. If a category type isn't specified,
         /// the default is to make it an expense.
@@ -79,15 +78,21 @@ namespace Budget
         /// <param name="type">This is what type of category it is. It can be income, expense, credit, or savings.</param>
         public Category(int id, String description, CategoryType type = CategoryType.Expense)
         {
-            this.Id = id;
-            this.Description = description;
-            this.Type = type;
+            //Connecting to the database
+            SQLiteCommand sqlite_cmd;
+            sqlite_cmd = Database.dbConnection.CreateCommand();
+
+            //Writing the insert command
+            sqlite_cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (@Id, @Description, @Type)";
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Id", id));
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", description));
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Type", type));
+            sqlite_cmd.ExecuteNonQuery();
         }
 
         // ====================================================================
         // Copy Constructor
         // ====================================================================
-
         /// <summary>
         /// This creates a new Category object that is an exact copy of the Category object that was passed in.
         /// </summary>
@@ -99,21 +104,11 @@ namespace Budget
             sqlite_cmd = Database.dbConnection.CreateCommand();
 
             //Writing the insert command for ID
-            sqlite_cmd.CommandText = "";
+            sqlite_cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (@Id, @Description, @Type)";
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Id", category.Id));
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", category.Description));
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Type", category.Type));
             sqlite_cmd.ExecuteNonQuery();
-
-            //Writing the insert command for description
-            sqlite_cmd.CommandText = "";
-            sqlite_cmd.ExecuteNonQuery();
-
-            //Writing the insert command Category type
-            sqlite_cmd.CommandText = "";
-            sqlite_cmd.ExecuteNonQuery();
-
-
-            this.Id = category.Id;
-            this.Description = category.Description;
-            this.Type = category.Type;
         }
         // ====================================================================
         // String version of object
