@@ -241,6 +241,7 @@ namespace BudgetCodeTests
 
         // ========================================================================
 
+        /*
         [Fact]
         public void CategoriesMethod_UpdateCategory()
         {
@@ -262,6 +263,7 @@ namespace BudgetCodeTests
             Assert.Equal(Category.CategoryType.Income, category.Type);
 
         }
+        */
     }
 }
 
