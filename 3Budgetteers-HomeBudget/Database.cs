@@ -138,12 +138,12 @@ namespace Budget
 
             cmd.Dispose();
         }
-
+        
         /// <summary>
         /// Adds all the default categories to the categories table in the database.
         /// </summary>
         /// <param name="connection">The connection to the database.</param>
-        private static void AddDefaultCategories(SQLiteConnection connection)
+        public static void AddDefaultCategories(SQLiteConnection connection)
         {
             SQLiteCommand cmd = new SQLiteCommand(connection);
 

@@ -51,19 +51,19 @@ namespace Budget
             /// <summary>
             /// Means money is gained.
             /// </summary>
-            Income,
+            Income = 1,
             /// <summary>
             /// Means money is lost.
             /// </summary>
-            Expense,
+            Expense = 2,
             /// <summary>
             /// Means a credit card was used for the expense.
             /// </summary>
-            Credit,
+            Credit = 3,
             /// <summary>
             /// Means money is added to a savings account.
             /// </summary>
-            Savings
+            Savings = 4
         };
 
         // ====================================================================
@@ -76,18 +76,11 @@ namespace Budget
         /// <param name="id">This is the id that the category will have.</param>
         /// <param name="description">This is the name of the category.</param>
         /// <param name="type">This is what type of category it is. It can be income, expense, credit, or savings.</param>
-        public Category(int id, String description, CategoryType type = CategoryType.Expense)
+        public Category(int Id, String description, CategoryType type = CategoryType.Expense)
         {
-            //Connecting to the database
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = Database.dbConnection.CreateCommand();
-
-            //Writing the insert command
-            sqlite_cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (@Id, @Description, @Type)";
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Id", id));
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", description));
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Type", type));
-            sqlite_cmd.ExecuteNonQuery();
+            this.Id = Id;
+            this.Description = description;
+            this.Type = type;
         }
 
         // ====================================================================
@@ -99,16 +92,9 @@ namespace Budget
         /// <param name="category">The original Category object that is going to be copied.</param>
         public Category(Category category)
         {
-            //Connecting to the database
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = Database.dbConnection.CreateCommand();
-
-            //Writing the insert command for ID
-            sqlite_cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (@Id, @Description, @Type)";
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Id", category.Id));
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", category.Description));
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Type", category.Type));
-            sqlite_cmd.ExecuteNonQuery();
+            this.Id = category.Id;
+            this.Description = category.Description;
+            this.Type = category.Type;
         }
         // ====================================================================
         // String version of object

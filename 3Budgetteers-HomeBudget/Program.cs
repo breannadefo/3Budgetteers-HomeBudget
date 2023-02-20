@@ -14,10 +14,11 @@ namespace Budget
     {
         const string FORMAT = "| {0,-9}| {1,-20}| {2,-15}| {3,-15}|{4,10} |{5,10} |";
         //id, description, date, category, amount, balance
-
+    
         static void Main(string[] args)
         {
-
+            /*
+            
             string budgetFilePath = "../../../tests/test.budget";
 
             //Expense e = new Expense(1, DateTime.Now, 10, 12, null);
@@ -230,7 +231,9 @@ namespace Budget
                 }
 
             }
+            */
         }
+
 
 
 
