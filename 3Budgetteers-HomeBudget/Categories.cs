@@ -279,28 +279,117 @@ namespace Budget
             // ---------------------------------------------------------------
             // reset any current categories,
             // ---------------------------------------------------------------
-            _Cats.Clear();
+            ResetCategories();
+            ResetCategoryTypes();
 
             // ---------------------------------------------------------------
             // Add Defaults
             // ---------------------------------------------------------------
-            Add("Utilities", Category.CategoryType.Expense);
-            Add("Rent", Category.CategoryType.Expense);
-            Add("Food", Category.CategoryType.Expense);
-            Add("Entertainment", Category.CategoryType.Expense);
-            Add("Education", Category.CategoryType.Expense);
-            Add("Miscellaneous", Category.CategoryType.Expense);
-            Add("Medical Expenses", Category.CategoryType.Expense);
-            Add("Vacation", Category.CategoryType.Expense);
-            Add("Credit Card", Category.CategoryType.Credit);
-            Add("Clothes", Category.CategoryType.Expense);
-            Add("Gifts", Category.CategoryType.Expense);
-            Add("Insurance", Category.CategoryType.Expense);
-            Add("Transportation", Category.CategoryType.Expense);
-            Add("Eating Out", Category.CategoryType.Expense);
-            Add("Savings", Category.CategoryType.Savings);
-            Add("Income", Category.CategoryType.Income);
 
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+
+            cmd = Database.dbConnection.CreateCommand();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Utilities', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Rent', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Food', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Entertainment', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Education', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Micellaneous', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Medical Expenses', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Vacation', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Credit Card', 3);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Clothes', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Gifts', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Insurance', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Transportation', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Eating Out', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Savings', 4);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Income', 1);";
+            cmd.ExecuteNonQuery();
+
+            cmd.Dispose();
+
+        }
+
+        /// <summary>
+        /// Gets all the categories and removes them from the table
+        /// </summary>
+        private void ResetCategories()
+        {
+            List<Category> categoriesList = List();
+            
+            foreach(Category categoryItem in categoriesList)
+            {
+                Delete(categoryItem.Id);
+            }
+        }
+
+        /// <summary>
+        /// Removes all existing items in the categoryTypes table before adding default values to that table.
+        /// </summary>
+        /// <exception cref="SQLiteException">Thrown if there is a problem deleting any of the values from the table.</exception>
+        private void ResetCategoryTypes()
+        {
+            try
+            {
+                SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+                cmd = Database.dbConnection.CreateCommand();
+
+                //deleting all existing category types
+                cmd.CommandText = "DELETE * FROM categoryTypes;";
+                cmd.ExecuteNonQuery();
+
+                //adding the category types into the table
+                cmd.CommandText = "INSERT INTO categoryTypes (Id, Description) VALUES (1, 'Income');";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "INSERT INTO categoryTypes (Id, Description) VALUES (2, 'Expense');";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "INSERT INTO categoryTypes (Id, Description) VALUES (3, 'Credit');";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "INSERT INTO categoryTypes (Id, Description) VALUES (4, 'Savings');";
+                cmd.ExecuteNonQuery();
+
+                cmd.Dispose();
+
+            }
+            catch (Exception e)
+            {
+                throw new SQLiteException();
+            }
         }
 
         // ====================================================================
