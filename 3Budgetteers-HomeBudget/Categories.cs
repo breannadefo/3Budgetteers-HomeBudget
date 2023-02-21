@@ -67,9 +67,6 @@ namespace Budget
 
 
             }
-
-
-
         }
 
         // ====================================================================
@@ -356,8 +353,7 @@ namespace Budget
 
         /// <summary>
         /// Removes a category from the categories list. To do this, the category's id must be provided. Using the id, it
-        /// finds the index of that category and removes the category at that index from the list.
-        /// 
+        /// searches for that Id in the databse and then deletes the row with that category.
         /// <example>
         /// Here is an example of how to use this method:
         /// <code>
@@ -373,8 +369,24 @@ namespace Budget
         /// category's id.</exception>
         public void Delete(int Id)
         {
-            int i = _Cats.FindIndex(x => x.Id == Id);
-            _Cats.RemoveAt(i);
+            try
+            {
+                //Connecting to the database
+                SQLiteCommand sqlite_cmd;
+                sqlite_cmd = Database.dbConnection.CreateCommand();
+
+                //Writing the Delete command
+                sqlite_cmd.CommandText = "DELETE FROM categories WHERE Id=@Id";
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@Id", Id));
+                sqlite_cmd.ExecuteNonQuery();
+            }
+            catch(Exception ex)
+            {
+                if(ex is SQLiteException)
+                {
+                    throw new SQLiteException(ex.Message);
+                }
+            }
         }
 
         // ====================================================================
