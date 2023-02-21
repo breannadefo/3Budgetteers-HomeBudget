@@ -383,6 +383,48 @@ namespace Budget
             }
         }
 
+        public void UpdateCategory(int idToUpdate, string newDescription, Category.CategoryType newType)
+        {
+            try
+            {
+                SQLiteConnection conn = Database.dbConnection;
+
+                SQLiteCommand cmd = conn.CreateCommand();
+
+                cmd.CommandText = "SELECT count(*) FROM categories WHERE Id = @id;";
+                cmd.Parameters.Add(new SQLiteParameter("@id", idToUpdate));
+
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
+                if (count == 0)
+                {
+                    throw new SQLiteException("Record to update could not be found with id: " + idToUpdate);
+                }
+
+                cmd.CommandText = "UPDATE categories SET Description = @newDescription, TypeId = @newTypeId WHERE Id = @id;";
+                cmd.Parameters.Add(new SQLiteParameter("@newDescription", newDescription));
+                cmd.Parameters.Add(new SQLiteParameter("@newTypeId", (int)newType));
+
+                int updatedRows = cmd.ExecuteNonQuery();
+                if(updatedRows == 0)
+                {
+                    throw new SQLiteException("No rows were updated.");
+                }
+                else if(updatedRows > 1)
+                {
+                    throw new SQLiteException("More than 1 rows were updated.");
+                }
+            }
+            catch (Exception e)
+            {
+                if(e is SQLiteException)
+                {
+                    throw new SQLiteException(e.Message);
+                }
+                throw new Exception(e.Message);
+            }
+            //run it, read it, check if exists, bla bla bla
+        }
+
         // ====================================================================
         // Return list of categories
         // Note:  make new copy of list, so user cannot modify what is part of
