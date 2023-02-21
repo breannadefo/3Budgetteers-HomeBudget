@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,25 +51,24 @@ namespace Budget
             /// <summary>
             /// Means money is gained.
             /// </summary>
-            Income,
+            Income = 1,
             /// <summary>
             /// Means money is lost.
             /// </summary>
-            Expense,
+            Expense = 2,
             /// <summary>
             /// Means a credit card was used for the expense.
             /// </summary>
-            Credit,
+            Credit = 3,
             /// <summary>
             /// Means money is added to a savings account.
             /// </summary>
-            Savings
+            Savings = 4
         };
 
         // ====================================================================
         // Constructor
         // ====================================================================
-
         /// <summary>
         /// Creates a new Category object with the provided id, description, and category type. If a category type isn't specified,
         /// the default is to make it an expense.
@@ -76,9 +76,9 @@ namespace Budget
         /// <param name="id">This is the id that the category will have.</param>
         /// <param name="description">This is the name of the category.</param>
         /// <param name="type">This is what type of category it is. It can be income, expense, credit, or savings.</param>
-        public Category(int id, String description, CategoryType type = CategoryType.Expense)
+        public Category(int Id, String description, CategoryType type = CategoryType.Expense)
         {
-            this.Id = id;
+            this.Id = Id;
             this.Description = description;
             this.Type = type;
         }
@@ -86,14 +86,13 @@ namespace Budget
         // ====================================================================
         // Copy Constructor
         // ====================================================================
-
         /// <summary>
         /// This creates a new Category object that is an exact copy of the Category object that was passed in.
         /// </summary>
         /// <param name="category">The original Category object that is going to be copied.</param>
         public Category(Category category)
         {
-            this.Id = category.Id;;
+            this.Id = category.Id;
             this.Description = category.Description;
             this.Type = category.Type;
         }

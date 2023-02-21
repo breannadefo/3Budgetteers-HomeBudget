@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Data.SQLite;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -54,9 +55,18 @@ namespace Budget
         /// <summary>
         /// Creates a new instance of the object. Calls a method to set everything to default values.
         /// </summary>
-        public Categories()
+        public Categories(System.Data.SQLite.SQLiteConnection conn, bool resetDatabase)
         {
-            SetCategoriesToDefaults();
+            if (resetDatabase)
+            {
+
+
+            }
+            else
+            {
+
+
+            }
         }
 
         // ====================================================================
@@ -295,7 +305,15 @@ namespace Budget
         // ====================================================================
         private void Add(Category cat)
         {
-            _Cats.Add(cat);
+            //Connecting to the database
+            SQLiteCommand sqlite_cmd;
+            sqlite_cmd = Database.dbConnection.CreateCommand();
+
+            //Writing the insert command for ID
+            sqlite_cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES (@Description, @Type);";
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", cat.Description));
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Type", (int)cat.Type));
+            sqlite_cmd.ExecuteNonQuery();
         }
 
         /// <summary>
@@ -318,13 +336,15 @@ namespace Budget
         /// <param name="type">Represents the category type of the new category.</param>
         public void Add(String desc, Category.CategoryType type)
         {
-            int new_num = 1;
-            if (_Cats.Count > 0)
-            {
-                new_num = (from c in _Cats select c.Id).Max();
-                new_num++;
-            }
-            _Cats.Add(new Category(new_num, desc, type));
+            //Connecting to the database
+            SQLiteCommand sqlite_cmd;
+            sqlite_cmd = Database.dbConnection.CreateCommand();
+
+            //Writing the insert command
+            sqlite_cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES (@Description, @Type);";
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", desc));
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Type", (int)type));
+            sqlite_cmd.ExecuteNonQuery();
         }
 
         // ====================================================================
@@ -333,8 +353,7 @@ namespace Budget
 
         /// <summary>
         /// Removes a category from the categories list. To do this, the category's id must be provided. Using the id, it
-        /// finds the index of that category and removes the category at that index from the list.
-        /// 
+        /// searches for that Id in the databse and then deletes the row with that category.
         /// <example>
         /// Here is an example of how to use this method:
         /// <code>
@@ -350,8 +369,24 @@ namespace Budget
         /// category's id.</exception>
         public void Delete(int Id)
         {
-            int i = _Cats.FindIndex(x => x.Id == Id);
-            _Cats.RemoveAt(i);
+            try
+            {
+                //Connecting to the database
+                SQLiteCommand sqlite_cmd;
+                sqlite_cmd = Database.dbConnection.CreateCommand();
+
+                //Writing the Delete command
+                sqlite_cmd.CommandText = "DELETE FROM categories WHERE Id=@Id";
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@Id", Id));
+                sqlite_cmd.ExecuteNonQuery();
+            }
+            catch(Exception ex)
+            {
+                if(ex is SQLiteException)
+                {
+                    throw new SQLiteException(ex.Message);
+                }
+            }
         }
 
         // ====================================================================
@@ -388,12 +423,20 @@ namespace Budget
         /// <returns>A copy of the categories list.</returns>
         public List<Category> List()
         {
-            List<Category> newList = new List<Category>();
-            foreach (Category category in _Cats)
+            List<Category> list = new List<Category>();
+
+            SQLiteDataReader reader;
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+
+            cmd.CommandText = "SELECT Id, Description, TypeId FROM categories ORDER BY Id ASC;";
+
+            reader = cmd.ExecuteReader();
+            while (reader.Read())
             {
-                newList.Add(new Category(category));
+                list.Add(new Category(reader.GetInt32(0), reader.GetString(1), (Category.CategoryType)reader.GetInt32(2)));
             }
-            return newList;
+
+            return list;
         }
 
         // ====================================================================

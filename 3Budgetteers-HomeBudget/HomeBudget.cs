@@ -140,7 +140,7 @@ namespace Budget
                 Database.newDatabase(databaseFile);
                 newDB = true;
             }
-            _categories = new Categories();
+            _categories = new Categories(Database.dbConnection, newDB);
             _expenses = new Expenses();
 
             //read the expenese from the xml
