@@ -408,7 +408,7 @@ namespace Budget
 
                 cmd.CommandText = "UPDATE categories SET Description = @newDescription, TypeId = @newTypeId WHERE Id = @id;";
                 cmd.Parameters.Add(new SQLiteParameter("@newDescription", newDescription));
-                cmd.Parameters.Add(new SQLiteParameter("@id", (int)newType));
+                cmd.Parameters.Add(new SQLiteParameter("@newTypeId", (int)newType));
 
                 int updatedRows = cmd.ExecuteNonQuery();
                 if(updatedRows == 0)

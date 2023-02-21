@@ -153,6 +153,33 @@ namespace BudgetCodeTests
         // ========================================================================
 
         [Fact]
+        public void CategoriesMethod_Update()
+        {
+            //Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
+            String messyDB = $"{folder}\\messy.db";
+            System.IO.File.Copy(goodDB, messyDB, true);
+            Database.existingDatabase(messyDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Categories categories = new Categories(conn, false);
+            int IdToUpdate = 3;
+            string newDescription = "Test description";
+            Category.CategoryType newType = Category.CategoryType.Credit;
+            
+            categories.UpdateCategory(IdToUpdate, newDescription, newType);
+
+            List<Category> categoriesList = categories.List();
+            //minus one since index is starting at 0 and ID starts at 1
+            Category catToUpdate = categoriesList[IdToUpdate - 1];
+
+            Assert.Equal(newDescription, catToUpdate.Description);
+            Assert.Equal(newType, catToUpdate.Type);
+        }
+
+        // ========================================================================
+
+        [Fact]
         public void CategoriesMethod_Delete_InvalidIDDoesntCrash()
         {
             // Arrange
