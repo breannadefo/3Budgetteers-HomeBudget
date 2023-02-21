@@ -416,7 +416,7 @@ namespace Budget
             SQLiteDataReader reader;
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
 
-            cmd.CommandText = "SELECT Id, Description, TypeId FROM categories";
+            cmd.CommandText = "SELECT Id, Description, TypeId FROM categories ORDER BY Id ASC;";
 
             reader = cmd.ExecuteReader();
             while (reader.Read())
