@@ -59,13 +59,7 @@ namespace Budget
         {
             if (resetDatabase)
             {
-
-
-            }
-            else
-            {
-
-
+                SetCategoriesToDefaults();
             }
         }
 
