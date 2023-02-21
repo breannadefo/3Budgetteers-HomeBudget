@@ -93,7 +93,7 @@ namespace Budget
         /// <param name="category">The original Category object that is going to be copied.</param>
         public Category(Category category)
         {
-            this.Id = category.Id;;
+            this.Id = category.Id;
             this.Description = category.Description;
             this.Type = category.Type;
         }

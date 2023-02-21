@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Data.SQLite;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -352,6 +353,30 @@ namespace Budget
         {
             int i = _Cats.FindIndex(x => x.Id == Id);
             _Cats.RemoveAt(i);
+        }
+
+        public void UpdateCategory(int idToUpdate, string newDescription, Category.CategoryType newType)
+        {
+            try
+            {
+                SQLiteConnection conn = Database.dbConnection;
+
+                SQLiteCommand cmd = conn.CreateCommand();
+
+                cmd.CommandText = "SELECT count(*) FROM categories WHERE Id = @id;";
+                cmd.Parameters.Add(new SQLiteParameter("@id", idToUpdate));
+
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
+                if (count == 0)
+                {
+                    throw new SQLiteException("Record to update could not be found with id: " + idToUpdate);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            //run it, read it, check if exists, bla bla bla
         }
 
         // ====================================================================
