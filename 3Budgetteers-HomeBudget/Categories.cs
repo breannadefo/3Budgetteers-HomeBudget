@@ -281,52 +281,52 @@ namespace Budget
 
             cmd = Database.dbConnection.CreateCommand();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Utilities', 2);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (1, 'Utilities', 2);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Rent', 2);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (2, 'Rent', 2);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Food', 2);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (3, 'Food', 2);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Entertainment', 2);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (4, 'Entertainment', 2);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Education', 2);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (5, 'Education', 2);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Micellaneous', 2);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (6, 'Micellaneous', 2);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Medical Expenses', 2);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (7, 'Medical Expenses', 2);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Vacation', 2);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (8, 'Vacation', 2);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Credit Card', 3);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (9, 'Credit Card', 3);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Clothes', 2);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (10, 'Clothes', 2);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Gifts', 2);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (11, 'Gifts', 2);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Insurance', 2);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (12, 'Insurance', 2);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Transportation', 2);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (13, 'Transportation', 2);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Eating Out', 2);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (14, 'Eating Out', 2);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Savings', 4);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (15, 'Savings', 4);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES ('Income', 1);";
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (16, 'Income', 1);";
             cmd.ExecuteNonQuery();
 
             cmd.Dispose();
@@ -358,8 +358,8 @@ namespace Budget
                 cmd = Database.dbConnection.CreateCommand();
 
                 //deleting all existing category types
-                cmd.CommandText = "DELETE * FROM categoryTypes;";
-                cmd.ExecuteNonQuery();
+                //cmd.CommandText = "DELETE * FROM categoryTypes;";
+                //cmd.ExecuteNonQuery();
 
                 //adding the category types into the table
                 cmd.CommandText = "INSERT INTO categoryTypes (Id, Description) VALUES (1, 'Income');";
@@ -553,13 +553,21 @@ namespace Budget
             SQLiteDataReader reader;
             SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
 
+            //cmd.CommandText = "SELECT COUNT(*) FROM categories;";
             cmd.CommandText = "SELECT Id, Description, TypeId FROM categories ORDER BY Id ASC;";
 
             reader = cmd.ExecuteReader();
-            while (reader.Read())
+            if (reader.HasRows)
             {
-                list.Add(new Category(reader.GetInt32(0), reader.GetString(1), (Category.CategoryType)reader.GetInt32(2)));
+                while (reader.Read())
+                {
+                    //SOMETHINGS NOT WORKING WITH THE CASTING
+                    int tempEnum = reader.GetInt32(2);
+                    list.Add(new Category(reader.GetInt32(0), reader.GetString(1), (Category.CategoryType)tempEnum));
+                }
             }
+
+            reader.Close();
 
             return list;
         }
