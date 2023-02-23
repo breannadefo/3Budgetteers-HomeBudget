@@ -91,13 +91,13 @@ namespace Budget
             cmd.ExecuteNonQuery();
 
             //creating the tables
-            cmd.CommandText = "CREATE TABLE categoryTypes(Id INT PRIMARY KEY, Description VARCHAR(20))";
+            cmd.CommandText = "CREATE TABLE categoryTypes(Id INTEGER PRIMARY KEY, Description VARCHAR(20))";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "CREATE TABLE categories(Id INT PRIMARY KEY, Description VARCHAR(20), TypeId INT, FOREIGN KEY (TypeId) REFERENCES categoryTypes (Id))";
+            cmd.CommandText = "CREATE TABLE categories(Id INTEGER PRIMARY KEY, Description VARCHAR(20), TypeId INT, FOREIGN KEY (TypeId) REFERENCES categoryTypes (Id))";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "CREATE TABLE expenses(Id INT PRIMARY KEY, Date VARCHAR(20), Description VARCHAR(50), Amount DOUBLE, CategoryId INT, FOREIGN KEY (CategoryId) REFERENCES categories (Id))";
+            cmd.CommandText = "CREATE TABLE expenses(Id INTEGER PRIMARY KEY, Date VARCHAR(20), Description VARCHAR(50), Amount DOUBLE, CategoryId INT, FOREIGN KEY (CategoryId) REFERENCES categories (Id))";
             cmd.ExecuteNonQuery();
 
             cmd.Dispose();

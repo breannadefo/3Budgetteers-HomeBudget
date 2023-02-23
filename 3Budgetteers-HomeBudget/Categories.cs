@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
 using System.Data.SQLite;
+using System.Reflection.PortableExecutable;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -59,7 +60,7 @@ namespace Budget
         {
             if(resetDatabase == true)
             {
-                Database.AddDefaultCategories(Database.dbConnection);
+                SetCategoriesToDefaults();
             }
         }
 
@@ -278,10 +279,6 @@ namespace Budget
         {
             //Getting rid of the old categories
 
-
-            //Adding the default categories
-            Database.AddDefaultCategories(Database.dbConnection);
-
             // ---------------------------------------------------------------
             // reset any current categories,
             // ---------------------------------------------------------------
@@ -373,8 +370,8 @@ namespace Budget
                 cmd = Database.dbConnection.CreateCommand();
 
                 //deleting all existing category types
-                //cmd.CommandText = "DELETE * FROM categoryTypes;";
-                //cmd.ExecuteNonQuery();
+                cmd.CommandText = "DELETE FROM categoryTypes;";
+                cmd.ExecuteNonQuery();
 
                 //adding the category types into the table
                 cmd.CommandText = "INSERT INTO categoryTypes (Id, Description) VALUES (1, 'Income');";
@@ -579,16 +576,11 @@ namespace Budget
                 while (reader.Read())
                 {
                     object tempId = reader.GetValue(idColumn);
-                    //int id = reader.GetInt32(idColumn);
                     string description = reader.GetString(descriptionColumn);
                     object tempEnum = reader.GetValue(typeIdColumn);
-                    //int tempEnum = reader.GetInt32(typeIdColumn);
 
                     int convertedId = Convert.ToInt32(tempId);
                     int convertedEnum = Convert.ToInt32(tempEnum);
-
-                    //var test1 = id.GetType();
-                    //var test2 = tempEnum.GetType();
                     
                     if(convertedEnum == 1)
                     {
@@ -606,7 +598,6 @@ namespace Budget
                     {
                         type = Category.CategoryType.Savings;
                     }
-
                     
                     list.Add(new Category(convertedId, description, type)); 
                     
