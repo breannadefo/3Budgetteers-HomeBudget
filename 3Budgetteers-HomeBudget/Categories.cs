@@ -548,22 +548,53 @@ namespace Budget
         /// <returns>A copy of the categories list.</returns>
         public List<Category> List()
         {
+            int idColumn = 0, descriptionColumn = 1, typeIdColumn = 2;
             List<Category> list = new List<Category>();
 
             SQLiteDataReader reader;
-            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+            SQLiteCommand cmd;
+            cmd = Database.dbConnection.CreateCommand();
 
-            //cmd.CommandText = "SELECT COUNT(*) FROM categories;";
             cmd.CommandText = "SELECT Id, Description, TypeId FROM categories ORDER BY Id ASC;";
 
             reader = cmd.ExecuteReader();
             if (reader.HasRows)
             {
+                Category.CategoryType type;
                 while (reader.Read())
                 {
-                    //SOMETHINGS NOT WORKING WITH THE CASTING
-                    int tempEnum = reader.GetInt32(2);
-                    list.Add(new Category(reader.GetInt32(0), reader.GetString(1), (Category.CategoryType)tempEnum));
+                    object tempId = reader.GetValue(idColumn);
+                    //int id = reader.GetInt32(idColumn);
+                    string description = reader.GetString(descriptionColumn);
+                    object tempEnum = reader.GetValue(typeIdColumn);
+                    //int tempEnum = reader.GetInt32(typeIdColumn);
+
+                    int convertedId = Convert.ToInt32(tempId);
+                    int convertedEnum = Convert.ToInt32(tempEnum);
+
+                    //var test1 = id.GetType();
+                    //var test2 = tempEnum.GetType();
+                    
+                    if(convertedEnum == 1)
+                    {
+                        type = Category.CategoryType.Income;
+                    }
+                    else if(convertedEnum == 2)
+                    {
+                        type = Category.CategoryType.Expense;
+                    }
+                    else if(convertedEnum == 3)
+                    {
+                        type = Category.CategoryType.Credit;
+                    }
+                    else
+                    {
+                        type = Category.CategoryType.Savings;
+                    }
+
+                    
+                    list.Add(new Category(convertedId, description, type)); 
+                    
                 }
             }
 
