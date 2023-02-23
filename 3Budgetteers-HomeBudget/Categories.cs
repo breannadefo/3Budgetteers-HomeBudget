@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
 using System.Data.SQLite;
+using System.Reflection.PortableExecutable;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -59,7 +60,7 @@ namespace Budget
         {
             if(resetDatabase == true)
             {
-                Database.AddDefaultCategories(Database.dbConnection);
+                SetCategoriesToDefaults();
             }
         }
 
@@ -278,34 +279,120 @@ namespace Budget
         {
             //Getting rid of the old categories
 
-
-            //Adding the default categories
-            Database.AddDefaultCategories(Database.dbConnection);
-
             // ---------------------------------------------------------------
             // reset any current categories,
             // ---------------------------------------------------------------
-            _Cats.Clear();
+            ResetCategories();
+            ResetCategoryTypes();
 
             // ---------------------------------------------------------------
             // Add Defaults
             // ---------------------------------------------------------------
-            Add("Utilities", Category.CategoryType.Expense);
-            Add("Rent", Category.CategoryType.Expense);
-            Add("Food", Category.CategoryType.Expense);
-            Add("Entertainment", Category.CategoryType.Expense);
-            Add("Education", Category.CategoryType.Expense);
-            Add("Miscellaneous", Category.CategoryType.Expense);
-            Add("Medical Expenses", Category.CategoryType.Expense);
-            Add("Vacation", Category.CategoryType.Expense);
-            Add("Credit Card", Category.CategoryType.Credit);
-            Add("Clothes", Category.CategoryType.Expense);
-            Add("Gifts", Category.CategoryType.Expense);
-            Add("Insurance", Category.CategoryType.Expense);
-            Add("Transportation", Category.CategoryType.Expense);
-            Add("Eating Out", Category.CategoryType.Expense);
-            Add("Savings", Category.CategoryType.Savings);
-            Add("Income", Category.CategoryType.Income);
+
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+
+            cmd = Database.dbConnection.CreateCommand();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (1, 'Utilities', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (2, 'Rent', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (3, 'Food', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (4, 'Entertainment', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (5, 'Education', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (6, 'Micellaneous', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (7, 'Medical Expenses', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (8, 'Vacation', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (9, 'Credit Card', 3);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (10, 'Clothes', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (11, 'Gifts', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (12, 'Insurance', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (13, 'Transportation', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (14, 'Eating Out', 2);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (15, 'Savings', 4);";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (16, 'Income', 1);";
+            cmd.ExecuteNonQuery();
+
+            cmd.Dispose();
+
+        }
+
+        /// <summary>
+        /// Gets all the categories and removes them from the table
+        /// </summary>
+        private void ResetCategories()
+        {
+            List<Category> categoriesList = List();
+            
+            foreach(Category categoryItem in categoriesList)
+            {
+                Delete(categoryItem.Id);
+            }
+        }
+
+        /// <summary>
+        /// Removes all existing items in the categoryTypes table before adding default values to that table.
+        /// </summary>
+        /// <exception cref="SQLiteException">Thrown if there is a problem deleting any of the values from the table.</exception>
+        private void ResetCategoryTypes()
+        {
+            try
+            {
+                SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+                cmd = Database.dbConnection.CreateCommand();
+
+                //deleting all existing category types
+                cmd.CommandText = "DELETE FROM categoryTypes;";
+                cmd.ExecuteNonQuery();
+
+                //adding the category types into the table
+                cmd.CommandText = "INSERT INTO categoryTypes (Id, Description) VALUES (1, 'Income');";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "INSERT INTO categoryTypes (Id, Description) VALUES (2, 'Expense');";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "INSERT INTO categoryTypes (Id, Description) VALUES (3, 'Credit');";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "INSERT INTO categoryTypes (Id, Description) VALUES (4, 'Savings');";
+                cmd.ExecuteNonQuery();
+
+                cmd.Dispose();
+
+            }
+            catch (Exception e)
+            {
+                throw new SQLiteException();
+            }
         }
 
         // ====================================================================
@@ -473,18 +560,51 @@ namespace Budget
         /// <returns>A copy of the categories list.</returns>
         public List<Category> List()
         {
+            int idColumn = 0, descriptionColumn = 1, typeIdColumn = 2;
             List<Category> list = new List<Category>();
 
             SQLiteDataReader reader;
-            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+            SQLiteCommand cmd;
+            cmd = Database.dbConnection.CreateCommand();
 
             cmd.CommandText = "SELECT Id, Description, TypeId FROM categories ORDER BY Id ASC;";
 
             reader = cmd.ExecuteReader();
-            while (reader.Read())
+            if (reader.HasRows)
             {
-                list.Add(new Category(reader.GetInt32(0), reader.GetString(1), (Category.CategoryType)reader.GetInt32(2)));
+                Category.CategoryType type;
+                while (reader.Read())
+                {
+                    object tempId = reader.GetValue(idColumn);
+                    string description = reader.GetString(descriptionColumn);
+                    object tempEnum = reader.GetValue(typeIdColumn);
+
+                    int convertedId = Convert.ToInt32(tempId);
+                    int convertedEnum = Convert.ToInt32(tempEnum);
+                    
+                    if(convertedEnum == 1)
+                    {
+                        type = Category.CategoryType.Income;
+                    }
+                    else if(convertedEnum == 2)
+                    {
+                        type = Category.CategoryType.Expense;
+                    }
+                    else if(convertedEnum == 3)
+                    {
+                        type = Category.CategoryType.Credit;
+                    }
+                    else
+                    {
+                        type = Category.CategoryType.Savings;
+                    }
+                    
+                    list.Add(new Category(convertedId, description, type)); 
+                    
+                }
             }
+
+            reader.Close();
 
             return list;
         }
