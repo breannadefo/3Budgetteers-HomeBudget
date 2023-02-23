@@ -57,9 +57,9 @@ namespace Budget
         /// </summary>
         public Categories(System.Data.SQLite.SQLiteConnection conn, bool resetDatabase)
         {
-            if (resetDatabase)
+            if(resetDatabase == true)
             {
-                SetCategoriesToDefaults();
+                Database.AddDefaultCategories(Database.dbConnection);
             }
         }
 
@@ -95,12 +95,21 @@ namespace Budget
         /// <exception cref="Exception">Thrown when the parameter value does not match with any of the existing categories.</exception>
         public Category GetCategoryFromId(int i)
         {
-            Category c = _Cats.Find(x => x.Id == i);
-            if (c == null)
-            {
-                throw new Exception("Cannot find category with id " + i.ToString());
-            }
-            return c;
+            //Setting up the command and executing it
+            SQLiteCommand sqlite_cmd;
+            SQLiteDataReader sqlite_datareader;
+            sqlite_cmd = Database.dbConnection.CreateCommand();
+            sqlite_cmd.CommandText = "SELECT * FROM categories WHERE Id = @id";
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@id", i));
+            sqlite_datareader = sqlite_cmd.ExecuteReader();
+
+            //Reads the row returned
+            sqlite_datareader.Read();
+
+            //Creates the category so that it can be returned
+            Category category = new Category(sqlite_datareader.GetInt32(0), sqlite_datareader.GetString(1), (Category.CategoryType)sqlite_datareader.GetInt32(2));
+            
+            return category;
         }
 
         // ====================================================================
@@ -267,6 +276,12 @@ namespace Budget
         /// </summary>
         public void SetCategoriesToDefaults()
         {
+            //Getting rid of the old categories
+
+
+            //Adding the default categories
+            Database.AddDefaultCategories(Database.dbConnection);
+
             // ---------------------------------------------------------------
             // reset any current categories,
             // ---------------------------------------------------------------
@@ -291,7 +306,6 @@ namespace Budget
             Add("Eating Out", Category.CategoryType.Expense);
             Add("Savings", Category.CategoryType.Savings);
             Add("Income", Category.CategoryType.Income);
-
         }
 
         // ====================================================================
