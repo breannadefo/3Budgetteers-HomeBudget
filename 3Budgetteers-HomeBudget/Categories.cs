@@ -139,6 +139,11 @@ namespace Budget
             // ---------------------------------------------------------------
             // Add Defaults
             // ---------------------------------------------------------------
+            AddAllCategories();
+        }
+
+        private void AddAllCategories()
+        {
             Add("Utilities", Category.CategoryType.Expense);
             Add("Rent", Category.CategoryType.Expense);
             Add("Food", Category.CategoryType.Expense);
