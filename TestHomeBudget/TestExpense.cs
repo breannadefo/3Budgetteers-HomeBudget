@@ -60,7 +60,6 @@ namespace BudgetCodeTests
             Assert.Equal(now, expense.Date);
         }
 
-
         // ========================================================================
 
         [Fact]
@@ -92,7 +91,6 @@ namespace BudgetCodeTests
             Assert.Equal(newDescr, expense.Description);
             Assert.Equal(newCategory, expense.Category);
         }
-
-
+        
     }
 }

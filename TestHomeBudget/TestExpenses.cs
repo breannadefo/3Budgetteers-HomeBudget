@@ -95,6 +95,7 @@ namespace BudgetCodeTests
 
         // ========================================================================
 
+        
         [Fact]
         public void ExpensesMethod_List_ModifyListDoesNotModifyExpensesInstance()
         {
@@ -111,6 +112,7 @@ namespace BudgetCodeTests
             Assert.NotEqual(list[0].Amount, expenses.List()[0].Amount);
 
         }
+        
 
         // ========================================================================
 
