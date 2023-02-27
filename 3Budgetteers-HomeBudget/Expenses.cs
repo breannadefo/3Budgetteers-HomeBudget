@@ -245,9 +245,8 @@ namespace Budget
         // Delete expense
         // ====================================================================
         /// <summary>
-        /// Removes an expense from the list. It uses the id that is passed as a parameter to find the
-        /// index of the expense with the same id. Once the index is found, the expense at its place
-        /// gets removed from the list.
+        /// Removes an expense from the database. It uses the id that is passed as a parameter to find the
+        /// index of the expense with the same id. Once the index is found, the expense is removed from the Database.
         /// 
         /// <example>
         /// Here's an example of how to use the method:
@@ -270,8 +269,35 @@ namespace Budget
         /// doesn't match with any expense ids in the list.</exception>
         public void Delete(int Id)
         {
-            int i = _Expenses.FindIndex(x => x.Id == Id);
-            _Expenses.RemoveAt(i);
+            try
+            {
+                //Connecting to the database
+                SQLiteCommand sqlite_cmd;
+                sqlite_cmd = Database.dbConnection.CreateCommand();
+
+                //Writing the Delete command
+                sqlite_cmd.CommandText = "DELETE FROM expenses WHERE Id=@Id";
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@Id", Id));
+                sqlite_cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                //Error is only thrown if it an SQLiteException because code should only throw an error if
+                //the program did not have thep permissions to delete from the database
+                if (ex is SQLiteException)
+                {
+                    throw new SQLiteException(ex.Message);
+                }
+                else if (ex is KeyNotFoundException)
+                {
+                    //The user story states nothing should happen if the Expense could not be found. Therefore
+                    //nothing is done here
+                }
+                else
+                {
+                    Console.WriteLine("Error, " + ex.Message);
+                }
+            }
         }
 
         // ====================================================================
