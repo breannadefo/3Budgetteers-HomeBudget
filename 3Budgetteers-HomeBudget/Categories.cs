@@ -351,9 +351,9 @@ namespace Budget
         // ====================================================================
 
         /// <summary>
-        /// Creates a copy of the categories list to return to the user. It creates a new list and copies each category into
-        /// the new list. Since lists are passed by reference, this is done so that the user cannot modify the categories 
-        /// list without using the Add and Delete methods.
+        /// Creates a list of all the categories in the database to return to the user. It creates a new list and gets
+        /// everything from the categories table in the database. For each row in the database, the data is parsed and a new
+        /// Category object is created and added to the list.
         /// 
         /// <example>
         /// Here's an example of how to use this method:
@@ -362,20 +362,30 @@ namespace Budget
         /// 
         /// Categories cats = new Categories();
         /// <![CDATA[
-        /// List<Category> copyOfList = cats.List();
+        /// List<Category> categoriesList = cats.List();
+        /// int firstNumberOfCategories = categoriesList.Count();
         /// 
-        /// copyOfList.RemoveAt(3);
-        /// copyOfList.RemoveAt(4);
-        /// copyOfList.RemoveAt(7);
+        /// cats.Delete(3);
+        /// cats.Delete(4);
+        /// cats.Delete(7);
+        /// 
+        /// List<Category> secondCategoryList = cats.List();
+        /// int secondNumberOfCategories = secondCategoriesList.Count();
+        /// 
+        /// if (firstNumberOfCategories != secondNumberOfCategories) {
+        ///     Console.WriteLine("Categories have been removed from the database."); 
+        /// }
+        /// 
         /// ]]>
         /// </code>
         /// 
-        /// Since its a copy, none of those RemoveAt methods will change any of the instance categories.
+        /// Since categories were deleted from the database and the list of categories was retrieved after those deletions,
+        /// the number of categories in the list will be smaller than before the deletions.
         /// 
         /// </example>
         /// 
         /// </summary>
-        /// <returns>A copy of the categories list.</returns>
+        /// <returns>A list of all the categories from the categories table.</returns>
         public List<Category> List()
         {
             int idColumn = 0, descriptionColumn = 1, typeIdColumn = 2;
