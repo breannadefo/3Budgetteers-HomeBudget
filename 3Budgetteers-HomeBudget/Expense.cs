@@ -88,8 +88,7 @@ namespace Budget
             this.Date = obj.Date;
             this.Category = obj.Category;
             this.Amount = obj.Amount;
-            this.Description = obj.Description;
-           
+            this.Description = obj.Description;  
         }
     }
 }
