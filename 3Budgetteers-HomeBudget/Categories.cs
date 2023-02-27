@@ -92,6 +92,7 @@ namespace Budget
             //Creates the category so that it can be returned
             Category category = new Category(sqlite_datareader.GetInt32(0), sqlite_datareader.GetString(1), (Category.CategoryType)sqlite_datareader.GetInt32(2));
             
+            sqlite_datareader.Close();
             return category;
         }
 
