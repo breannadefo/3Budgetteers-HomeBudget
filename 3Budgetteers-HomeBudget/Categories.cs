@@ -302,7 +302,7 @@ namespace Budget
             }
         }
 
-        public void UpdateCategory(int idToUpdate, string newDescription, Category.CategoryType newType)
+        public void UpdateProperties(int idToUpdate, string newDescription, Category.CategoryType newType)
         {
             try
             {
