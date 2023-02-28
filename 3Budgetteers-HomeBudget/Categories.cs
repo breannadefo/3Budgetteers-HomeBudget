@@ -265,12 +265,12 @@ namespace Budget
         // ====================================================================
 
         /// <summary>
-        /// Removes a category from the categories list. To do this, the category's id must be provided. Using the id, it
-        /// searches for that Id in the databse and then deletes the row with that category.
+        /// Removes a category from the categories table in the database. To do this, the category's id must be provided. Using the 
+        /// id, it searches for the row with that id in the database and then deletes that row.
         /// <example>
         /// Here is an example of how to use this method:
         /// <code>
-        /// Categories c = new Categories();
+        /// Categories c = new Categories(connection, false);
         /// c.Delete(1);
         /// </code>
         /// The Categories constructor creates a new object with 16 default categories. After calling the Delete method, only
