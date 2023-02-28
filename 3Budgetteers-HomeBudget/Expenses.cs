@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Data.SQLite;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -185,18 +186,27 @@ namespace Budget
         // ====================================================================
         // Add expense
         // ====================================================================
-        private void Add(Expense exp)
+        private void Add(Expense expense)
         {
-            _Expenses.Add(exp);
+            //Connecting to the database
+            SQLiteCommand sqlite_cmd;
+            sqlite_cmd = Database.dbConnection.CreateCommand();
+
+            //Writing the insert command
+            sqlite_cmd.CommandText = "INSERT INTO expenses (Date, Description, Amount, CategoryId) VALUES (@Date, @Description, @Amount, @CategoryId);";
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Date", expense.Date.ToString("yyyy-MM-dd")));
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", expense.Description));
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Amount", expense.Amount));
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@CategoryId", (int)expense.Category));
+            sqlite_cmd.ExecuteNonQuery();
         }
 
         /// <summary>
         /// Creates or adds a new Expense objects to the expenses list. To create a new expense, it 
         /// needs an id, a date, a category, an amount, and a description. the date, category, amount,
         /// and description are all passed into the method in parameters, but the id has to be
-        /// calculated based on the expense ids that already are in the list, so it finds the largest
-        /// id and increses the value by one. With all the information gathered, the new expense object 
-        /// is created and immediately added to the list.
+        /// calculated based on the expense ids that already are in the database. It then adds the 
+        /// expense to the database.
         /// 
         /// <example>
         /// Here's an example of how to use the method:
@@ -218,27 +228,25 @@ namespace Budget
         /// <param name="description">Represents a description of what the expense is.</param>
         public void Add(DateTime date, int category, Double amount, String description)
         {
-            int new_id = 1;
+            //Connecting to the database
+            SQLiteCommand sqlite_cmd;
+            sqlite_cmd = Database.dbConnection.CreateCommand();
 
-            // if we already have expenses, set ID to max
-            if (_Expenses.Count > 0)
-            {
-                new_id = (from e in _Expenses select e.Id).Max();
-                new_id++;
-            }
-
-            _Expenses.Add(new Expense(new_id, date, category, amount, description));
-
+            //Writing the insert command
+            sqlite_cmd.CommandText = "INSERT INTO expenses (Date, Description, Amount, CategoryId) VALUES (@Date, @Description, @Amount, @CategoryId);";
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Date", date.ToString("yyyy-MM-dd")));
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", description));
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Amount", amount));
+            sqlite_cmd.Parameters.Add(new SQLiteParameter("@CategoryId", category));
+            sqlite_cmd.ExecuteNonQuery();
         }
 
         // ====================================================================
         // Delete expense
         // ====================================================================
-
         /// <summary>
-        /// Removes an expense from the list. It uses the id that is passed as a parameter to find the
-        /// index of the expense with the same id. Once the index is found, the expense at its place
-        /// gets removed from the list.
+        /// Removes an expense from the database. It uses the id that is passed as a parameter to find the
+        /// index of the expense with the same id. Once the index is found, the expense is removed from the Database.
         /// 
         /// <example>
         /// Here's an example of how to use the method:
@@ -261,9 +269,35 @@ namespace Budget
         /// doesn't match with any expense ids in the list.</exception>
         public void Delete(int Id)
         {
-            int i = _Expenses.FindIndex(x => x.Id == Id);
-            _Expenses.RemoveAt(i);
+            try
+            {
+                //Connecting to the database
+                SQLiteCommand sqlite_cmd;
+                sqlite_cmd = Database.dbConnection.CreateCommand();
 
+                //Writing the Delete command
+                sqlite_cmd.CommandText = "DELETE FROM expenses WHERE Id=@Id";
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@Id", Id));
+                sqlite_cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                //Error is only thrown if it an SQLiteException because code should only throw an error if
+                //the program did not have thep permissions to delete from the database
+                if (ex is SQLiteException)
+                {
+                    throw new SQLiteException(ex.Message);
+                }
+                else if (ex is KeyNotFoundException)
+                {
+                    //The user story states nothing should happen if the Expense could not be found. Therefore
+                    //nothing is done here
+                }
+                else
+                {
+                    Console.WriteLine("Error, " + ex.Message);
+                }
+            }
         }
 
         // ====================================================================
@@ -271,7 +305,6 @@ namespace Budget
         // Note:  make new copy of list, so user cannot modify what is part of
         //        this instance
         // ====================================================================
-
         /// <summary>
         /// Creates a copy of the expenses list to return to the caller of the method. It creates
         /// a new list and copies each expense to the new list. This is done because lists are 

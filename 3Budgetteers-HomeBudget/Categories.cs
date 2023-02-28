@@ -313,9 +313,20 @@ namespace Budget
             }
             catch(Exception ex)
             {
-                if(ex is SQLiteException)
+                //Error is only thrown if it an SQLiteException because code should only throw an error if
+                //the program did not have thep permissions to delete from the database
+                if (ex is SQLiteException)
                 {
                     throw new SQLiteException(ex.Message);
+                }
+                else if (ex is KeyNotFoundException)
+                {
+                    //The user story states nothing should happen if the Expense could not be found. Therefore
+                    //nothing is done here
+                }
+                else
+                {
+                    Console.WriteLine("Error, " + ex.Message);
                 }
             }
         }
