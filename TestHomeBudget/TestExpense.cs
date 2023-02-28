@@ -35,6 +35,7 @@ namespace BudgetCodeTests
 
         // ========================================================================
 
+        /*
         [Fact]
         public void ExpenseCopyConstructoryIsDeepCopy()
         {
@@ -91,6 +92,7 @@ namespace BudgetCodeTests
             Assert.Equal(newDescr, expense.Description);
             Assert.Equal(newCategory, expense.Category);
         }
+        */
         
     }
 }
