@@ -7,6 +7,7 @@ using System.IO;
 using System.Xml;
 using System.Data.SQLite;
 using System.Reflection.PortableExecutable;
+using System.Data.Common;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -35,8 +36,11 @@ namespace Budget
         // ====================================================================
 
         /// <summary>
-        /// Creates a new instance of the object. Calls a method to set everything to default values.
+        /// Creates a new instance of the object. If the database should be reset, it calls methods to remove, reset and set the 
+        /// default categoryTypes and categories valus.
         /// </summary>
+        /// <param name="conn">The connection to the database.</param>
+        /// <param name="resetDatabase">A bool that represents whether the database should be reset or not.</param>
         public Categories(System.Data.SQLite.SQLiteConnection conn, bool resetDatabase)
         {
             if(resetDatabase == true)
@@ -52,7 +56,8 @@ namespace Budget
         // ====================================================================
 
         /// <summary>
-        /// Returns the Category object, from the categories list, whose id matches the id that is passed in as a parameter. 
+        /// Finds the category from the categories table whose id matches the one that is passed in as a parameter. This category is 
+        /// returned to whoever called the method.
         /// 
         /// <example>
         /// Here is an example of how this is used:
@@ -61,13 +66,12 @@ namespace Budget
         /// are run:
         /// <code>
         /// 
-        /// Categories c = new Categories();
-        /// Console.Write(c.GetCategoryFromId(1));
+        /// Categories c = new Categories(connection, true);
+        /// Console.Write(c.GetCategoryFromId(1).toString());
         /// 
         /// </code>
         /// 
         /// The expected outcome should be:
-        /// 
         /// <code>
         /// Utilities
         /// </code>
@@ -76,7 +80,7 @@ namespace Budget
         /// </summary>
         /// <param name="i">Represents the category id of the category that should be retrieved.</param>
         /// <returns>The Category object that has the same id as the parameter.</returns>
-        /// <exception cref="Exception">Thrown when the parameter value does not match with any of the existing categories.</exception>
+        /// <exception cref="Exception">Thrown when the id does not match with any of the existing categories in the database.</exception>
         public Category GetCategoryFromId(int i)
         {
             //Setting up the command and executing it
@@ -87,14 +91,29 @@ namespace Budget
             sqlite_cmd.Parameters.Add(new SQLiteParameter("@id", i));
             sqlite_datareader = sqlite_cmd.ExecuteReader();
 
-            //Reads the row returned
-            sqlite_datareader.Read();
+            int idColumn = 0, descriptionColumn = 1, typeIdColumn = 2;
+            int convertedId = -1, convertedEnum = -1;
+            string description = null;
 
-            //Creates the category so that it can be returned
-            Category category = new Category(sqlite_datareader.GetInt32(0), sqlite_datareader.GetString(1), (Category.CategoryType)sqlite_datareader.GetInt32(2));
-            
+            //Reads the row returned
+            if (sqlite_datareader.Read())
+            {
+                object tempId = sqlite_datareader.GetValue(idColumn);
+                description = sqlite_datareader.GetString(descriptionColumn);
+                object tempEnum = sqlite_datareader.GetValue(typeIdColumn);
+
+                convertedId = Convert.ToInt32(tempId);
+                convertedEnum = Convert.ToInt32(tempEnum);
+            }
+            else
+            {
+                throw new Exception("Category did not exist in the database.");
+            }
+
+            Category retrievedCategory = new Category(convertedId, description, (Category.CategoryType)convertedEnum);
+
             sqlite_datareader.Close();
-            return category;
+            return retrievedCategory;
         }
 
         // ====================================================================
@@ -110,7 +129,7 @@ namespace Budget
         /// 
         /// <code>
         /// 
-        /// Categories cats = new Categories(connection, false);
+        /// Categories cats = new Categories(connection, true);
         /// 
         /// cats.Add("Sports Equipment", Category.CategoryType.Expense);
         /// cats.Add("Sports Registration", Category.CategoryType.Credit);
@@ -237,7 +256,7 @@ namespace Budget
         /// <example>
         /// Here is an example of how to use the method:
         /// <code>
-        /// Categories c = new Categories(connection, false);
+        /// Categories c = new Categories(connection, true);
         /// c.Add("Test Grading", Category.CategoryType.Income);
         /// </code>
         /// This creates a new Categories object which gets 16 default categories. After the Add method is run, c would contain
@@ -269,7 +288,7 @@ namespace Budget
         /// <example>
         /// Here is an example of how to use this method:
         /// <code>
-        /// Categories c = new Categories(connection, false);
+        /// Categories c = new Categories(connection, true);
         /// c.Delete(1);
         /// </code>
         /// The Categories constructor creates a new object with 16 default categories. After calling the Delete method, only
@@ -310,7 +329,7 @@ namespace Budget
         /// Here is an example of how to use this: 
         /// 
         /// <code>
-        /// Categories categories = new Categories(connection, false);
+        /// Categories categories = new Categories(connection, true);
         /// 
         /// categories.Add("TestCategory", Category.CategoryType.Expense);
         /// </code>
@@ -391,7 +410,7 @@ namespace Budget
         /// 
         /// <code>
         /// 
-        /// Categories cats = new Categories(connection, false);
+        /// Categories cats = new Categories(connection, true);
         /// <![CDATA[
         /// List<Category> categoriesList = cats.List();
         /// int firstNumberOfCategories = categoriesList.Count();
