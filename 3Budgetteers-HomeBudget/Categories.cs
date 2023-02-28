@@ -230,15 +230,15 @@ namespace Budget
         }
 
         /// <summary>
-        /// Creates and adds a new category to the categories list. To create a new category, it needs an id, a description,
-        /// and a category type. The description and type are passed in as parameters, while the id is calculated based on 
-        /// the list's current highest id. After the id is calculated, the category is created and immediately added to the
-        /// categories list.
+        /// Creates and adds a new category to the categories table in the database. To create a new category, it needs an id, a 
+        /// description, and a category type. The description and type are passed in as parameters, while the id is automatically added
+        /// based on the ids that already exist in the database. An SQLite command is created to make an insert statement, adding in 
+        /// the description and category type using parameter binding.
         /// 
         /// <example>
         /// Here is an example of how to use the method:
         /// <code>
-        /// Categories c = new Categories();
+        /// Categories c = new Categories(connection, false);
         /// c.Add("Test Grading", Category.CategoryType.Income);
         /// </code>
         /// This creates a new Categories object which gets 16 default categories. After the Add method is run, c would contain
