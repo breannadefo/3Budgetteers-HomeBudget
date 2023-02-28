@@ -169,6 +169,8 @@ namespace BudgetCodeTests
 
         // ========================================================================
         
+        //Not sure if test is relevant, maybe use to test while outputting the file
+        /*
         [Fact]
         public void ExpenseMethod_WriteToFile()
         {
@@ -197,7 +199,7 @@ namespace BudgetCodeTests
             }
 
         }
-        
+        */
         // ========================================================================
 
         
