@@ -41,6 +41,7 @@ namespace Budget
         {
             if(resetDatabase == true)
             {
+                RemoveAllCategories();
                 ResetCategoryTypes();
                 SetCategoriesToDefaults();
             }
@@ -109,7 +110,7 @@ namespace Budget
         /// 
         /// <code>
         /// 
-        /// Categories cats = new Categories();
+        /// Categories cats = new Categories(connection, false);
         /// 
         /// cats.Add("Sports Equipment", Category.CategoryType.Expense);
         /// cats.Add("Sports Registration", Category.CategoryType.Credit);
@@ -118,8 +119,8 @@ namespace Budget
         /// 
         /// </code>
         /// 
-        /// After making all these modifications, it turns out the program needed the default categories to work. This method 
-        /// allows an easy way to get to that.
+        /// After making all these modifications, the user decides that they want to go back to when they hadn't edited the categories.
+        /// This method allows an easy way to get back to that state.
         /// 
         /// <code>
         /// 
@@ -130,15 +131,13 @@ namespace Budget
         /// </summary>
         public void SetCategoriesToDefaults()
         {
-            //Getting rid of the old categories
-
             // ---------------------------------------------------------------
-            // reset any current categories,
+            // remove any current categories
             // ---------------------------------------------------------------
             RemoveAllCategories();
 
             // ---------------------------------------------------------------
-            // Add Defaults
+            // Add the defaults categories
             // ---------------------------------------------------------------
             AddAllCategories();
         }
@@ -164,7 +163,7 @@ namespace Budget
         }
 
         /// <summary>
-        /// Gets all the categories and removes them from the table.
+        /// Gets all the categories from the categories table and deletes them from the database.
         /// </summary>
         private void RemoveAllCategories()
         {
