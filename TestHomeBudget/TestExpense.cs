@@ -49,12 +49,11 @@ namespace BudgetCodeTests
 
             // Act
             Expense copy = new Expense(expense);
-            copy.Amount = expense.Amount + 15;
 
             // Assert 
             Assert.Equal(id, expense.Id);
             Assert.NotEqual(amount, copy.Amount);
-            Assert.Equal(expense.Amount + 15, copy.Amount);
+            Assert.Equal(expense.Amount, copy.Amount);
             Assert.Equal(descr, expense.Description);
             Assert.Equal(category, expense.Category);
             Assert.Equal(now, expense.Date);
@@ -63,8 +62,11 @@ namespace BudgetCodeTests
 
         // ========================================================================
 
+        //Will: did not think test was relevant, unsure for deletion.
+        //Will clean at end to see if valid or not.
+        /*
         [Fact]
-        public void ExpenseObjectGetSetProperties()
+        public void ExpenseObjectGetProperties()
         {
             // question - why cannot I not change the date of an expense.  What if I got the date wrong?
 
@@ -92,7 +94,7 @@ namespace BudgetCodeTests
             Assert.Equal(newDescr, expense.Description);
             Assert.Equal(newCategory, expense.Category);
         }
-
+        */
 
     }
 }

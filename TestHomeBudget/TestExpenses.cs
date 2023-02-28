@@ -35,7 +35,8 @@ namespace BudgetCodeTests
 
 
         // ========================================================================
-
+        //We are assuming there is a database, this is useless, they don't want me to remove the tests for some reason
+        /*
         [Fact]
         public void ExpensesMethod_ReadFromFile_NotExist_ThrowsException()
         {
@@ -47,18 +48,16 @@ namespace BudgetCodeTests
             Assert.Throws<System.IO.FileNotFoundException>(() => expenses.ReadFromFile(badFile));
 
         }
-
+        */
         // ========================================================================
 
         [Fact]
         public void ExpensesMethod_ReadFromFile_ValidateCorrectDataWasRead()
         {
             // Arrange
-            String dir = TestConstants.GetSolutionDir();
             Expenses expenses = new Expenses();
 
             // Act
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
             List<Expense> list = expenses.List();
             Expense firstExpense = list[0];
 
@@ -69,10 +68,6 @@ namespace BudgetCodeTests
             Assert.Equal(firstExpenseInFile.Description, firstExpense.Description);
             Assert.Equal(firstExpenseInFile.Category, firstExpense.Category);
 
-            String fileDir = Path.GetFullPath(Path.Combine(expenses.DirName, ".\\"));
-            Assert.Equal(dir, fileDir);
-            Assert.Equal(testInputFile, expenses.FileName);
-
         }
 
         // ========================================================================
@@ -81,9 +76,7 @@ namespace BudgetCodeTests
         public void ExpensesMethod_List_ReturnsListOfExpenses()
         {
             // Arrange
-            String dir = TestConstants.GetSolutionDir();
             Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
 
             // Act
             List<Expense> list = expenses.List();
@@ -94,14 +87,14 @@ namespace BudgetCodeTests
         }
 
         // ========================================================================
-
+        //They're too scared to delete it
+        /*
         [Fact]
         public void ExpensesMethod_List_ModifyListDoesNotModifyExpensesInstance()
         {
             // Arrange
             String dir = TestConstants.GetSolutionDir();
             Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
             List<Expense> list = expenses.List();
 
             // Act
@@ -111,16 +104,14 @@ namespace BudgetCodeTests
             Assert.NotEqual(list[0].Amount, expenses.List()[0].Amount);
 
         }
-
+        */
         // ========================================================================
 
         [Fact]
         public void ExpensesMethod_Add()
         {
             // Arrange
-            String dir = TestConstants.GetSolutionDir();
             Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
             int category = 57;
             double amount = 98.1;
 

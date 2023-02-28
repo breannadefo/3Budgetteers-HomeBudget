@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Data.SQLite;
+using System.Globalization;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -36,7 +38,7 @@ namespace Budget
         // ====================================================================
         private void Add(Expense exp)
         {
-            _Expenses.Add(exp);
+            
         }
 
         /// <summary>
@@ -137,7 +139,43 @@ namespace Budget
         /// <returns>A copy of the expenses list.</returns>
         public List<Expense> List()
         {
-            
+            const int idColumn = 0, dateColumn = 1, descColumn = 2, amountColumn = 3, catIdColumn = 4;
+            List<Expense> exps = new List<Expense>();
+
+            SQLiteDataReader reader;
+            SQLiteCommand cmd = Database.dbConnection.CreateCommand();
+
+            cmd.CommandText = "SELECT Id, Date, Description, Amount, CategoryId FROM expenses ORDER BY Id ASC;";
+
+            reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    int expenseId = reader.GetInt32(idColumn);
+
+                    string date = reader.GetString(dateColumn);
+                    DateTime convertedDate = ConvertStringToDate(date);
+
+                    string description = reader.GetString(descColumn);
+
+                    double amount = reader.GetDouble(amountColumn);
+
+                    int catID = reader.GetInt32(catIdColumn);
+
+                    exps.Add(new Expense(expenseId, convertedDate, catID, amount, description));
+                }
+            }
+
+            reader.Close();
+
+            return exps;
+        }
+
+        private DateTime ConvertStringToDate(string date)
+        {
+            return DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
         }
 
     }
