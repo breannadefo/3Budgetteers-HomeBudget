@@ -167,7 +167,7 @@ namespace BudgetCodeTests
             string newDescription = "Test description";
             Category.CategoryType newType = Category.CategoryType.Credit;
             
-            categories.UpdateCategory(IdToUpdate, newDescription, newType);
+            categories.UpdateProperties(IdToUpdate, newDescription, newType);
 
             List<Category> categoriesList = categories.List();
             //minus one since index is starting at 0 and ID starts at 1
@@ -268,7 +268,7 @@ namespace BudgetCodeTests
 
         // ========================================================================
 
-        /*
+        
         [Fact]
         public void CategoriesMethod_UpdateCategory()
         {
@@ -290,7 +290,7 @@ namespace BudgetCodeTests
             Assert.Equal(Category.CategoryType.Income, category.Type);
 
         }
-        */
+        
     }
 }
 
