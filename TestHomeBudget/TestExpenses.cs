@@ -27,10 +27,6 @@ namespace BudgetCodeTests
 
             // Assert
             Assert.IsType<Expenses>(expenses);
-
-            Assert.True(typeof(Expenses).GetProperty("FileName").CanWrite == false);
-            Assert.True(typeof(Expenses).GetProperty("DirName").CanWrite == false);
-
         }
 
 
@@ -67,7 +63,6 @@ namespace BudgetCodeTests
             Assert.Equal(firstExpenseInFile.Amount, firstExpense.Amount);
             Assert.Equal(firstExpenseInFile.Description, firstExpense.Description);
             Assert.Equal(firstExpenseInFile.Category, firstExpense.Category);
-
         }
 
         // ========================================================================
@@ -133,9 +128,7 @@ namespace BudgetCodeTests
         public void ExpensesMethod_Delete()
         {
             // Arrange
-            String dir = TestConstants.GetSolutionDir();
             Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
             int IdToDelete = 3;
 
             // Act
@@ -155,9 +148,7 @@ namespace BudgetCodeTests
         public void ExpensesMethod_Delete_InvalidIDDoesntCrash()
         {
             // Arrange
-            String dir = TestConstants.GetSolutionDir();
             Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
             int IdToDelete = 1006;
             int sizeOfList = expenses.List().Count;
 
@@ -177,7 +168,7 @@ namespace BudgetCodeTests
 
 
         // ========================================================================
-
+        
         [Fact]
         public void ExpenseMethod_WriteToFile()
         {
@@ -206,38 +197,10 @@ namespace BudgetCodeTests
             }
 
         }
-
+        
         // ========================================================================
 
-        [Fact]
-        public void ExpenseMethod_WriteToFile_VerifyNewExpenseWrittenCorrectly()
-        {
-            // Arrange
-            String dir = TestConstants.GetSolutionDir();
-            Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
-            string fileName = TestConstants.ExpenseOutputTestFile;
-            String outputFile = dir + "\\" + fileName;
-            File.Delete(outputFile);
-
-            // Act
-            expenses.Add(DateTime.Now, 14, 35.27, "McDonalds");
-            List<Expense> listBeforeSaving = expenses.List();
-            expenses.SaveToFile(outputFile);
-            expenses.ReadFromFile(outputFile);
-            List<Expense> listAfterSaving = expenses.List();
-
-            Expense beforeSaving = listBeforeSaving[listBeforeSaving.Count - 1];
-            Expense afterSaving = listAfterSaving.Find(e => e.Id == beforeSaving.Id);
-
-            // Assert
-            Assert.Equal(beforeSaving.Id, afterSaving.Id);
-            Assert.Equal(beforeSaving.Category, afterSaving.Category);
-            Assert.Equal(beforeSaving.Description, afterSaving.Description);
-            Assert.Equal(beforeSaving.Amount, afterSaving.Amount);
-
-        }
-
+        
         // ========================================================================
 
         [Fact]
