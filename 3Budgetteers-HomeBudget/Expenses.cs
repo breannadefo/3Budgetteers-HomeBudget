@@ -341,6 +341,45 @@ namespace Budget
             return newList;
         }
 
+        public void Update(int expenseId, DateTime date, double amount, string description, int categoryId)
+        {
+            SQLiteConnection connection = Database.dbConnection;
+            SQLiteCommand command = connection.CreateCommand();
+            SQLiteDataReader reader;
+
+            command.CommandText = "SELECT COUNT(*) FROM categories WHERE Id=@id;";
+            command.Parameters.Add(new SQLiteParameter("@id", expenseId));
+            try
+            {
+                reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    int count = reader.GetInt32(0);
+                    if (count > 1)
+                    {
+                        throw new Exception("Cannot update multiple expenses with the same id.");
+                    }
+                    else if (count == 0)
+                    { 
+                        throw new Exception("There were no expenses that matched the provided id.");
+                    }
+                }
+
+                //NEED TO ACTUALLY CONVERT DATE TO STRING BEFORE THIS!!!
+                command.CommandText = "UPDATE categories SET Date = @Date, Description = @Description, Amount = @Amount, CategoryId = @CategoryId";
+                command.Parameters.Add(new SQLiteParameter("@Date", date));
+                command.Parameters.Add(new SQLiteParameter("@Description", description));
+                command.Parameters.Add(new SQLiteParameter("@Amount", amount));
+                command.Parameters.Add(new SQLiteParameter("@CategoryId", categoryId));
+            }
+            catch (Exception e)
+            {
+                //do error handling
+            }
+
+
+        }
 
         // ====================================================================
         // read from an XML file and add categories to our categories list

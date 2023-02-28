@@ -87,7 +87,7 @@ namespace Budget
             SQLiteCommand sqlite_cmd;
             SQLiteDataReader sqlite_datareader;
             sqlite_cmd = Database.dbConnection.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM categories WHERE Id = @id";
+            sqlite_cmd.CommandText = "SELECT Id, Description, TypeId FROM categories WHERE Id = @id";
             sqlite_cmd.Parameters.Add(new SQLiteParameter("@id", i));
             sqlite_datareader = sqlite_cmd.ExecuteReader();
 
