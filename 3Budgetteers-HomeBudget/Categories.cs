@@ -302,6 +302,38 @@ namespace Budget
             }
         }
 
+        /// <summary>
+        /// Updates the data of a category with the values htat are passed in. It finds the category that needs to be updated, then 
+        /// replaces the old values with the new ones. An exception is thrown if the category can't be updated or if there is a problem
+        /// updating the category.
+        /// 
+        /// <example>
+        /// Here is an example of how to use this: 
+        /// 
+        /// <code>
+        /// Categories categories = new Categories(connection, false);
+        /// 
+        /// categories.Add("TestCategory", Category.CategoryType.Expense);
+        /// </code>
+        /// 
+        /// Since there are 16 default categories, this new category would have an id of 17
+        /// 
+        /// <code>
+        /// categories.UpdateProperties(17, "Test Value", Category.CategoryType.Income);
+        /// </code>
+        /// 
+        /// Now the category with an id of 17 has a description of "Test Value" instead of "TestCategory" and its category type is
+        /// income instead of expense.
+        /// 
+        /// </example>
+        /// 
+        /// </summary>
+        /// <param name="idToUpdate">The id of the category that will be updated.</param>
+        /// <param name="newDescription">The new description that will replace the old description.</param>
+        /// <param name="newType">The new category type that will replace the old category type.</param>
+        /// <exception cref="SQLiteException">Thrown if the category could not be found, if the category could not be updated, or if 
+        /// more than one rows were updated.</exception>
+        /// <exception cref="Exception">Thrown if an unexpected error occurred.</exception>
         public void UpdateProperties(int idToUpdate, string newDescription, Category.CategoryType newType)
         {
             try
@@ -360,7 +392,7 @@ namespace Budget
         /// 
         /// <code>
         /// 
-        /// Categories cats = new Categories();
+        /// Categories cats = new Categories(connection, false);
         /// <![CDATA[
         /// List<Category> categoriesList = cats.List();
         /// int firstNumberOfCategories = categoriesList.Count();
