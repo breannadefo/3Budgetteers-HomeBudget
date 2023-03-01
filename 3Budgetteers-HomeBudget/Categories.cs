@@ -7,6 +7,7 @@ using System.IO;
 using System.Xml;
 using System.Data.SQLite;
 using System.Reflection.PortableExecutable;
+using System.Data.Common;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -35,12 +36,17 @@ namespace Budget
         // ====================================================================
 
         /// <summary>
-        /// Creates a new instance of the object. Calls a method to set everything to default values.
+        /// Creates a new instance of the object. If the database should be reset, it calls methods to remove, reset and set the 
+        /// default categoryTypes and categories valus.
         /// </summary>
+        /// <param name="conn">The connection to the database.</param>
+        /// <param name="resetDatabase">A bool that represents whether the database should be reset or not.</param>
         public Categories(System.Data.SQLite.SQLiteConnection conn, bool resetDatabase)
         {
             if(resetDatabase == true)
             {
+                RemoveAllCategories();
+                ResetCategoryTypes();
                 SetCategoriesToDefaults();
             }
         }
@@ -50,7 +56,8 @@ namespace Budget
         // ====================================================================
 
         /// <summary>
-        /// Returns the Category object, from the categories list, whose id matches the id that is passed in as a parameter. 
+        /// Finds the category from the categories table whose id matches the one that is passed in as a parameter. This category is 
+        /// returned to whoever called the method.
         /// 
         /// <example>
         /// Here is an example of how this is used:
@@ -59,13 +66,12 @@ namespace Budget
         /// are run:
         /// <code>
         /// 
-        /// Categories c = new Categories();
-        /// Console.Write(c.GetCategoryFromId(1));
+        /// Categories c = new Categories(connection, true);
+        /// Console.Write(c.GetCategoryFromId(1).toString());
         /// 
         /// </code>
         /// 
         /// The expected outcome should be:
-        /// 
         /// <code>
         /// Utilities
         /// </code>
@@ -74,7 +80,7 @@ namespace Budget
         /// </summary>
         /// <param name="i">Represents the category id of the category that should be retrieved.</param>
         /// <returns>The Category object that has the same id as the parameter.</returns>
-        /// <exception cref="Exception">Thrown when the parameter value does not match with any of the existing categories.</exception>
+        /// <exception cref="Exception">Thrown when the id does not match with any of the existing categories in the database.</exception>
         public Category GetCategoryFromId(int i)
         {
             //Setting up the command and executing it
@@ -85,13 +91,29 @@ namespace Budget
             sqlite_cmd.Parameters.Add(new SQLiteParameter("@id", i));
             sqlite_datareader = sqlite_cmd.ExecuteReader();
 
-            //Reads the row returned
-            sqlite_datareader.Read();
+            int idColumn = 0, descriptionColumn = 1, typeIdColumn = 2;
+            int convertedId = -1, convertedEnum = -1;
+            string description = null;
 
-            //Creates the category so that it can be returned
-            Category category = new Category(sqlite_datareader.GetInt32(0), sqlite_datareader.GetString(1), (Category.CategoryType)sqlite_datareader.GetInt32(2));
-            
-            return category;
+            //Reads the row returned
+            if (sqlite_datareader.Read())
+            {
+                object tempId = sqlite_datareader.GetValue(idColumn);
+                description = sqlite_datareader.GetString(descriptionColumn);
+                object tempEnum = sqlite_datareader.GetValue(typeIdColumn);
+
+                convertedId = Convert.ToInt32(tempId);
+                convertedEnum = Convert.ToInt32(tempEnum);
+            }
+            else
+            {
+                throw new Exception("Category did not exist in the database.");
+            }
+
+            Category retrievedCategory = new Category(convertedId, description, (Category.CategoryType)convertedEnum);
+
+            sqlite_datareader.Close();
+            return retrievedCategory;
         }
 
         // ====================================================================
@@ -107,7 +129,7 @@ namespace Budget
         /// 
         /// <code>
         /// 
-        /// Categories cats = new Categories();
+        /// Categories cats = new Categories(connection, true);
         /// 
         /// cats.Add("Sports Equipment", Category.CategoryType.Expense);
         /// cats.Add("Sports Registration", Category.CategoryType.Credit);
@@ -116,8 +138,8 @@ namespace Budget
         /// 
         /// </code>
         /// 
-        /// After making all these modifications, it turns out the program needed the default categories to work. This method 
-        /// allows an easy way to get to that.
+        /// After making all these modifications, the user decides that they want to go back to when they hadn't edited the categories.
+        /// This method allows an easy way to get back to that state.
         /// 
         /// <code>
         /// 
@@ -128,78 +150,41 @@ namespace Budget
         /// </summary>
         public void SetCategoriesToDefaults()
         {
-            //Getting rid of the old categories
+            // ---------------------------------------------------------------
+            // remove any current categories
+            // ---------------------------------------------------------------
+            RemoveAllCategories();
 
             // ---------------------------------------------------------------
-            // reset any current categories,
+            // Add the defaults categories
             // ---------------------------------------------------------------
-            ResetCategories();
-            ResetCategoryTypes();
+            AddAllCategories();
+        }
 
-            // ---------------------------------------------------------------
-            // Add Defaults
-            // ---------------------------------------------------------------
-
-            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
-
-            cmd = Database.dbConnection.CreateCommand();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (1, 'Utilities', 2);";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (2, 'Rent', 2);";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (3, 'Food', 2);";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (4, 'Entertainment', 2);";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (5, 'Education', 2);";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (6, 'Micellaneous', 2);";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (7, 'Medical Expenses', 2);";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (8, 'Vacation', 2);";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (9, 'Credit Card', 3);";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (10, 'Clothes', 2);";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (11, 'Gifts', 2);";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (12, 'Insurance', 2);";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (13, 'Transportation', 2);";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (14, 'Eating Out', 2);";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (15, 'Savings', 4);";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categories (Id, Description, TypeId) VALUES (16, 'Income', 1);";
-            cmd.ExecuteNonQuery();
-
-            cmd.Dispose();
-
+        private void AddAllCategories()
+        {
+            Add("Utilities", Category.CategoryType.Expense);
+            Add("Rent", Category.CategoryType.Expense);
+            Add("Food", Category.CategoryType.Expense);
+            Add("Entertainment", Category.CategoryType.Expense);
+            Add("Education", Category.CategoryType.Expense);
+            Add("Miscellaneous", Category.CategoryType.Expense);
+            Add("Medical Expenses", Category.CategoryType.Expense);
+            Add("Vacation", Category.CategoryType.Expense);
+            Add("Credit Card", Category.CategoryType.Credit);
+            Add("Clothes", Category.CategoryType.Expense);
+            Add("Gifts", Category.CategoryType.Expense);
+            Add("Insurance", Category.CategoryType.Expense);
+            Add("Transportation", Category.CategoryType.Expense);
+            Add("Eating Out", Category.CategoryType.Expense);
+            Add("Savings", Category.CategoryType.Savings);
+            Add("Income", Category.CategoryType.Income);
         }
 
         /// <summary>
-        /// Gets all the categories and removes them from the table
+        /// Gets all the categories from the categories table and deletes them from the database.
         /// </summary>
-        private void ResetCategories()
+        private void RemoveAllCategories()
         {
             List<Category> categoriesList = List();
             
@@ -213,7 +198,7 @@ namespace Budget
         /// Removes all existing items in the categoryTypes table before adding default values to that table.
         /// </summary>
         /// <exception cref="SQLiteException">Thrown if there is a problem deleting any of the values from the table.</exception>
-        private void ResetCategoryTypes()
+        public void ResetCategoryTypes()
         {
             try
             {
@@ -263,15 +248,15 @@ namespace Budget
         }
 
         /// <summary>
-        /// Creates and adds a new category to the categories list. To create a new category, it needs an id, a description,
-        /// and a category type. The description and type are passed in as parameters, while the id is calculated based on 
-        /// the list's current highest id. After the id is calculated, the category is created and immediately added to the
-        /// categories list.
+        /// Creates and adds a new category to the categories table in the database. To create a new category, it needs an id, a 
+        /// description, and a category type. The description and type are passed in as parameters, while the id is automatically added
+        /// based on the ids that already exist in the database. An SQLite command is created to make an insert statement, adding in 
+        /// the description and category type using parameter binding.
         /// 
         /// <example>
         /// Here is an example of how to use the method:
         /// <code>
-        /// Categories c = new Categories();
+        /// Categories c = new Categories(connection, true);
         /// c.Add("Test Grading", Category.CategoryType.Income);
         /// </code>
         /// This creates a new Categories object which gets 16 default categories. After the Add method is run, c would contain
@@ -298,12 +283,12 @@ namespace Budget
         // ====================================================================
 
         /// <summary>
-        /// Removes a category from the categories list. To do this, the category's id must be provided. Using the id, it
-        /// searches for that Id in the databse and then deletes the row with that category.
+        /// Removes a category from the categories table in the database. To do this, the category's id must be provided. Using the 
+        /// id, it searches for the row with that id in the database and then deletes that row.
         /// <example>
         /// Here is an example of how to use this method:
         /// <code>
-        /// Categories c = new Categories();
+        /// Categories c = new Categories(connection, true);
         /// c.Delete(1);
         /// </code>
         /// The Categories constructor creates a new object with 16 default categories. After calling the Delete method, only
@@ -328,14 +313,57 @@ namespace Budget
             }
             catch(Exception ex)
             {
-                if(ex is SQLiteException)
+                //Error is only thrown if it an SQLiteException because code should only throw an error if
+                //the program did not have thep permissions to delete from the database
+                if (ex is SQLiteException)
                 {
                     throw new SQLiteException(ex.Message);
+                }
+                else if (ex is KeyNotFoundException)
+                {
+                    //The user story states nothing should happen if the Expense could not be found. Therefore
+                    //nothing is done here
+                }
+                else
+                {
+                    Console.WriteLine("Error, " + ex.Message);
                 }
             }
         }
 
-        public void UpdateCategory(int idToUpdate, string newDescription, Category.CategoryType newType)
+        /// <summary>
+        /// Updates the data of a category with the values htat are passed in. It finds the category that needs to be updated, then 
+        /// replaces the old values with the new ones. An exception is thrown if the category can't be updated or if there is a problem
+        /// updating the category.
+        /// 
+        /// <example>
+        /// Here is an example of how to use this: 
+        /// 
+        /// <code>
+        /// Categories categories = new Categories(connection, true);
+        /// 
+        /// categories.Add("TestCategory", Category.CategoryType.Expense);
+        /// </code>
+        /// 
+        /// Since there are 16 default categories, this new category would have an id of 17
+        /// 
+        /// <code>
+        /// categories.UpdateProperties(17, "Test Value", Category.CategoryType.Income);
+        /// </code>
+        /// 
+        /// Now the category with an id of 17 has a description of "Test Value" instead of "TestCategory" and its category type is
+        /// income instead of expense.
+        /// 
+        /// </example>
+        /// 
+        /// </summary>
+        /// <param name="idToUpdate">The id of the category that will be updated.</param>
+        /// <param name="newDescription">The new description that will replace the old description.</param>
+        /// <param name="newType">The new category type that will replace the old category type.</param>
+        /// <exception cref="SQLiteException">Thrown if the category could not be found, if the category could not be updated, or if 
+        /// more than one rows were updated.</exception>
+        /// <exception cref="Exception">Thrown if an unexpected error occurred.</exception>
+        public void UpdateProperties(int idToUpdate, string newDescription, Category.CategoryType newType)
         {
             try
             {
@@ -384,31 +412,41 @@ namespace Budget
         // ====================================================================
 
         /// <summary>
-        /// Creates a copy of the categories list to return to the user. It creates a new list and copies each category into
-        /// the new list. Since lists are passed by reference, this is done so that the user cannot modify the categories 
-        /// list without using the Add and Delete methods.
+        /// Creates a list of all the categories in the database to return to the user. It creates a new list and gets
+        /// everything from the categories table in the database. For each row in the database, the data is parsed and a new
+        /// Category object is created and added to the list.
         /// 
         /// <example>
         /// Here's an example of how to use this method:
         /// 
         /// <code>
         /// 
-        /// Categories cats = new Categories();
+        /// Categories cats = new Categories(connection, true);
         /// <![CDATA[
-        /// List<Category> copyOfList = cats.List();
+        /// List<Category> categoriesList = cats.List();
+        /// int firstNumberOfCategories = categoriesList.Count();
         /// 
-        /// copyOfList.RemoveAt(3);
-        /// copyOfList.RemoveAt(4);
-        /// copyOfList.RemoveAt(7);
+        /// cats.Delete(3);
+        /// cats.Delete(4);
+        /// cats.Delete(7);
+        /// 
+        /// List<Category> secondCategoryList = cats.List();
+        /// int secondNumberOfCategories = secondCategoriesList.Count();
+        /// 
+        /// if (firstNumberOfCategories != secondNumberOfCategories) {
+        ///     Console.WriteLine("Categories have been removed from the database."); 
+        /// }
+        /// 
         /// ]]>
         /// </code>
         /// 
-        /// Since its a copy, none of those RemoveAt methods will change any of the instance categories.
+        /// Since categories were deleted from the database and the list of categories was retrieved after those deletions,
+        /// the number of categories in the list will be smaller than before the deletions.
         /// 
         /// </example>
         /// 
         /// </summary>
-        /// <returns>A copy of the categories list.</returns>
+        /// <returns>A list of all the categories from the categories table.</returns>
         public List<Category> List()
         {
             int idColumn = 0, descriptionColumn = 1, typeIdColumn = 2;

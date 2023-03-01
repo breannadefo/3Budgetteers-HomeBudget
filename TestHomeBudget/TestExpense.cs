@@ -59,7 +59,6 @@ namespace BudgetCodeTests
             Assert.Equal(now, expense.Date);
         }
 
-
         // ========================================================================
 
         //Will: did not think test was relevant, unsure for deletion.
