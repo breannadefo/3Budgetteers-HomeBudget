@@ -3,6 +3,7 @@ using Xunit;
 using System.IO;
 using System.Collections.Generic;
 using Budget;
+using System.Data.SQLite;
 
 namespace BudgetCodeTests
 {
@@ -237,7 +238,18 @@ namespace BudgetCodeTests
 
         // ========================================================================
 
+        [Fact]
+        public void ExpensesMethod_ReadFromDatabase_ValidateCorrectDataWasRead()
+        {
+            // Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String existingDB = $"{folder}\\{TestConstants.testDBInputFile}";
+            Database.existingDatabase(existingDB);
+            SQLiteConnection conn = Database.dbConnection;
 
+            //Act
+            //Expenses expenses = new Expenses()
+        }
 
         // -------------------------------------------------------
         // helpful functions, ... they are not tests
