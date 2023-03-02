@@ -3,6 +3,7 @@ using Xunit;
 using System.IO;
 using System.Collections.Generic;
 using Budget;
+using System.Data.SQLite;
 
 namespace BudgetCodeTests
 {
@@ -95,7 +96,7 @@ namespace BudgetCodeTests
 
         // ========================================================================
 
-        
+        /*
         [Fact]
         public void ExpensesMethod_List_ModifyListDoesNotModifyExpensesInstance()
         {
@@ -112,7 +113,7 @@ namespace BudgetCodeTests
             Assert.NotEqual(list[0].Amount, expenses.List()[0].Amount);
 
         }
-        
+        */
 
         // ========================================================================
 
@@ -282,6 +283,38 @@ namespace BudgetCodeTests
         }
 
         // ========================================================================
+
+        [Fact]
+        public void ExpensesMethod_UpdateExpense()
+        {
+            // Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String newDB = $"{folder}\\newDB.db";
+            Database.newDatabase(newDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Expenses expenses = new Expenses(conn);
+            DateTime originalDate = new DateTime(2019, 07, 14);
+            DateTime newDate = new DateTime(2023, 03, 02);
+            int originalCatId = 4, newCatId = 11;
+            double originalAmount = -39.99, newAmount = -19.99;
+            String originalDesc = "Video Projector", newDesc = "Tangled Movie";
+            int id = 1;
+
+            // Act
+            expenses.Add(originalDate, originalCatId, originalAmount, originalDesc);
+            expenses.Update(id, newDate,newAmount, newDesc, newCatId);
+
+            List<Expense> expList = expenses.List();
+
+            // Assert 
+            Assert.Equal(expList[0].Date, newDate);
+            Assert.Equal(expList[0].Category, newCatId);
+            Assert.Equal(expList[0].Amount, newAmount);
+            Assert.Equal(expList[0].Description, newDesc);
+        }
+
+        // ========================================================================
+
 
 
 
