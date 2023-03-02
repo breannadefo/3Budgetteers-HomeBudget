@@ -148,7 +148,7 @@ namespace BudgetCodeTests
             expenses.Delete(IdToDelete);
             List<Expense> expensesList = expenses.List();
             int sizeOfList = expensesList.Count;
-
+ 
             // Assert
             Assert.Equal(numberOfExpensesInFile - 1, sizeOfList);
             Assert.False(expensesList.Exists(e => e.Id == IdToDelete), "correct expense item deleted");
@@ -355,7 +355,39 @@ namespace BudgetCodeTests
 
         // ========================================================================
 
+        [Fact]
+        public void ExpensesMethod_UpdateExpense_InvalidId()
+        {
+            // Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String newDB = $"{folder}\\newDB.db";
+            Database.newDatabase(newDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Categories cats = new Categories(conn, true);
+            Expenses expenses = new Expenses(conn);
+            DateTime originalDate = new DateTime(2019, 07, 14);
+            DateTime newDate = new DateTime(2023, 03, 02);
+            int originalCatId = 4, newCatId = 11;
+            double originalAmount = -39.99, newAmount = -19.99;
+            String originalDesc = "Video Projector", newDesc = "Tangled Movie";
+            int id = 10;
 
+
+
+            // Act
+            expenses.Add(originalDate, originalCatId, originalAmount, originalDesc);
+            expenses.Update(id, newDate, newAmount, newDesc, newCatId);
+
+            List<Expense> expList = expenses.List();
+
+            // Assert 
+            Assert.Equal(expList[0].Date, originalDate);
+            Assert.Equal(expList[0].Category, originalCatId);
+            Assert.Equal(expList[0].Amount, originalAmount);
+            Assert.Equal(expList[0].Description, originalDesc);
+        }
+
+        // ========================================================================
 
 
         // -------------------------------------------------------
