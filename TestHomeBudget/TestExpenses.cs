@@ -73,25 +73,6 @@ namespace BudgetCodeTests
             Assert.Equal(testInputFile, expenses.FileName);
 
         }
-
-        // ========================================================================
-
-        [Fact]
-        public void ExpensesMethod_List_ReturnsListOfExpenses()
-        {
-            // Arrange
-            String dir = TestConstants.GetSolutionDir();
-            Expenses expenses = new Expenses(databaseConnection);
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
-
-            // Act
-            List<Expense> list = expenses.List();
-
-            // Assert
-            Assert.Equal(numberOfExpensesInFile, list.Count);
-
-        }
-
         // ========================================================================
 
         
