@@ -7,6 +7,7 @@ using System.IO;
 using System.Dynamic;
 using static System.Net.WebRequestMethods;
 using System.Collections;
+using System.Data.SQLite;
 
 namespace Budget
 {
