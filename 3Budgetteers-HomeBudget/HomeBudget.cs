@@ -146,7 +146,7 @@ namespace Budget
             _categories = new Categories(Database.dbConnection, newDB);
 
             //Intializes Expenses
-            _expenses = new Expenses();
+            _expenses = new Expenses(Database.dbConnection);
 
             //read the expenese from the xml
             _expenses.ReadFromFile(expensesXMLFile);

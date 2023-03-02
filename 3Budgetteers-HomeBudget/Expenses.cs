@@ -352,6 +352,8 @@ namespace Budget
             SQLiteCommand cmd;
             cmd = Database.dbConnection.CreateCommand();
 
+            cmd.CommandText = "SELECT Id, Date, Description, Amount, CategoryId FROM expenses ORDER BY Id ASC;";
+
             reader = cmd.ExecuteReader();
             if (reader.HasRows)
             {
@@ -377,6 +379,73 @@ namespace Budget
             return list;
         }
         
+
+        /// <summary>
+        /// Updates the data of an expense with the values that are passed in. It finds the expense in the database that will be updated,
+        /// and replaces the old values with the new ones. An exception is thrown if the expense can't be found or if it can't be updated.
+        /// 
+        /// <example>
+        /// Here's an example of how to use this method:
+        /// 
+        /// <code>
+        /// Expenses expenses = new Expenses(connection, true);
+        /// expenses.Add(DateTime.Now(), 4, -14.99, "Movie Tickets");        
+        /// </code>
+        /// Now in the expenses table, there is an expense that has an id of 1, a date of the current date and time, the categoryId that
+        /// matches the 'Entertainment' category, an amount of $14.99, and a description of 'Movie Tickets'.
+        /// 
+        /// <code>
+        /// DateTime newDate = new DateTime(2008, 11, 27);
+        /// expenses.Update(1, newDate, 11, -14.99, "Movie Tickets Gift Card");
+        /// </code>
+        /// After this line is run, that same expense from above still has an id of 1, and amount of $14.99, but the date has changed
+        /// to November 27, 2008, the categoryId has changed to match the 'Gifts' category, and the description has been updated to be
+        /// 'Movie Tickets Gift Card'.
+        /// 
+        /// </example>
+        /// </summary>
+        /// <param name="expenseId">The id of the expense that will be updated.</param>
+        /// <param name="date">The new date that will replace the old one.</param>
+        /// <param name="amount">The new amount that will replace the old one.</param>
+        /// <param name="description">The new description that will replace the old one.</param>
+        /// <param name="categoryId">The new category id that will replace the old one.</param>
+        /// <exception cref="SQLiteException">Thrown if there are multiple expenses with the same id or if there are no matches for
+        /// the id.</exception>
+        public void Update(int expenseId, DateTime date, double amount, string description, int categoryId)
+        {
+            SQLiteConnection connection = Database.dbConnection;
+            SQLiteCommand command = connection.CreateCommand();
+            SQLiteDataReader reader;
+
+            command.CommandText = "SELECT COUNT(*) FROM categories WHERE Id=@id;";
+            command.Parameters.Add(new SQLiteParameter("@id", expenseId));
+            
+            reader = command.ExecuteReader();
+
+            if (reader.Read())
+            {
+                int count = reader.GetInt32(0);
+                if (count > 1)
+                {
+                    throw new SQLiteException("Cannot update multiple expenses with the same id.");
+                }
+                else if (count == 0)
+                { 
+                    throw new SQLiteException("There were no expenses that matched the provided id.");
+                }
+            }
+            reader.Close();
+
+            string formattedDate = date.ToString("yyyy-MM-dd");
+
+            command.CommandText = "UPDATE expenses SET Date = @Date, Description = @Description, Amount = @Amount, CategoryId = @CategoryId";
+            command.Parameters.Add(new SQLiteParameter("@Date", formattedDate));
+            command.Parameters.Add(new SQLiteParameter("@Description", description));
+            command.Parameters.Add(new SQLiteParameter("@Amount", amount));
+            command.Parameters.Add(new SQLiteParameter("@CategoryId", categoryId));
+
+            command.ExecuteNonQuery();
+        }
 
 
         // ====================================================================
