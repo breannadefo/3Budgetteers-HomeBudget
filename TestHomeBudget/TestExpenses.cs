@@ -77,6 +77,26 @@ namespace BudgetCodeTests
 
         /*
         [Fact]
+        public void ExpensesMethod_List_ReturnsListOfExpenses()
+        {
+            // Arrange
+            String dir = TestConstants.GetSolutionDir();
+            Expenses expenses = new Expenses();
+            expenses.ReadFromFile(dir + "\\" + testInputFile);
+
+            // Act
+            List<Expense> list = expenses.List();
+
+            // Assert
+            Assert.Equal(numberOfExpensesInFile, list.Count);
+
+        }
+        */
+
+        // ========================================================================
+
+        
+        [Fact]
         public void ExpensesMethod_List_ModifyListDoesNotModifyExpensesInstance()
         {
             // Arrange
@@ -299,6 +319,44 @@ namespace BudgetCodeTests
             Assert.Equal(numberOfExpensesInFile, list.Count);
 
         }
+
+        // ========================================================================
+
+        [Fact]
+        public void ExpensesMethod_UpdateExpense()
+        {
+            // Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String newDB = $"{folder}\\newDB.db";
+            Database.newDatabase(newDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Categories cats = new Categories(conn, true);
+            Expenses expenses = new Expenses(conn);
+            DateTime originalDate = new DateTime(2019, 07, 14);
+            DateTime newDate = new DateTime(2023, 03, 02);
+            int originalCatId = 4, newCatId = 11;
+            double originalAmount = -39.99, newAmount = -19.99;
+            String originalDesc = "Video Projector", newDesc = "Tangled Movie";
+            int id = 1;
+
+            
+
+            // Act
+            expenses.Add(originalDate, originalCatId, originalAmount, originalDesc);
+            expenses.Update(id, newDate,newAmount, newDesc, newCatId);
+
+            List<Expense> expList = expenses.List();
+
+            // Assert 
+            Assert.Equal(expList[0].Date, newDate);
+            Assert.Equal(expList[0].Category, newCatId);
+            Assert.Equal(expList[0].Amount, newAmount);
+            Assert.Equal(expList[0].Description, newDesc);
+        }
+
+        // ========================================================================
+
+
 
 
         // -------------------------------------------------------
