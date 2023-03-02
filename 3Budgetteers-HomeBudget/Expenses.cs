@@ -352,6 +352,8 @@ namespace Budget
             SQLiteCommand cmd;
             cmd = Database.dbConnection.CreateCommand();
 
+            cmd.CommandText = "SELECT Id, Date, Description, Amount, CategoryId FROM expenses ORDER BY Id ASC;";
+
             reader = cmd.ExecuteReader();
             if (reader.HasRows)
             {
@@ -432,10 +434,11 @@ namespace Budget
                     throw new SQLiteException("There were no expenses that matched the provided id.");
                 }
             }
+            reader.Close();
 
             string formattedDate = date.ToString("yyyy-MM-dd");
 
-            command.CommandText = "UPDATE categories SET Date = @Date, Description = @Description, Amount = @Amount, CategoryId = @CategoryId";
+            command.CommandText = "UPDATE expenses SET Date = @Date, Description = @Description, Amount = @Amount, CategoryId = @CategoryId";
             command.Parameters.Add(new SQLiteParameter("@Date", formattedDate));
             command.Parameters.Add(new SQLiteParameter("@Description", description));
             command.Parameters.Add(new SQLiteParameter("@Amount", amount));

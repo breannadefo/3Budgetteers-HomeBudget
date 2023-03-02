@@ -107,7 +107,7 @@ namespace BudgetCodeTests
             Assert.NotEqual(list[0].Amount, expenses.List()[0].Amount + 25);
 
         }
-        */
+        
 
         // ========================================================================
 
@@ -329,6 +329,7 @@ namespace BudgetCodeTests
             String newDB = $"{folder}\\newDB.db";
             Database.newDatabase(newDB);
             SQLiteConnection conn = Database.dbConnection;
+            Categories cats = new Categories(conn, true);
             Expenses expenses = new Expenses(conn);
             DateTime originalDate = new DateTime(2019, 07, 14);
             DateTime newDate = new DateTime(2023, 03, 02);
@@ -336,6 +337,8 @@ namespace BudgetCodeTests
             double originalAmount = -39.99, newAmount = -19.99;
             String originalDesc = "Video Projector", newDesc = "Tangled Movie";
             int id = 1;
+
+            
 
             // Act
             expenses.Add(originalDate, originalCatId, originalAmount, originalDesc);
