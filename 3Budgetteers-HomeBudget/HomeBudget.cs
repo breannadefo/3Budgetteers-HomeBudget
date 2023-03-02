@@ -152,7 +152,7 @@ namespace Budget
             _categories = new Categories(Database.dbConnection, newDB);
 
             //Intializes Expenses
-            _expenses = new Expenses();
+            _expenses = new Expenses(Database.dbConnection);
 
             //read the expenese from the xml
             _expenses.ReadFromFile(expensesXMLFile);
@@ -459,27 +459,26 @@ namespace Budget
             // create a BudgetItem list with totals,
             // ------------------------------------------------------------------------
             List<BudgetItem> items = new List<BudgetItem>();
-            Double total = 0;
+            
             if (sqliteReader.HasRows)
             {
                 while (sqliteReader.Read())
                 {
                     // filter out unwanted categories if filter flag is on
-                    if (FilterFlag == true && CategoryID != sqliteReader.GetInt32(1))
+                    if (FilterFlag == true && CategoryID != sqliteReader.GetInt32(0))
                     {
                         continue;
                     }
                     else
                     {
                         BudgetItem budgetItem = new BudgetItem();
-                        budgetItem.CategoryID = sqliteReader.GetInt32(1);
-                        budgetItem.ExpenseID = sqliteReader.GetInt32(2);
-                        budgetItem.Date = DateTime.ParseExact(sqliteReader.GetString(3), "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                        budgetItem.Category = sqliteReader.GetString(4);
-                        budgetItem.ShortDescription = sqliteReader.GetString(5);
-                        budgetItem.Amount = sqliteReader.GetInt32(6) * -1;
-                        total = total - budgetItem.Amount;
-                        budgetItem.Balance = total;
+                        budgetItem.CategoryID = sqliteReader.GetInt32(0);
+                        budgetItem.ExpenseID = sqliteReader.GetInt32(1);
+                        budgetItem.Date = DateTime.ParseExact(sqliteReader.GetString(2), "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                        budgetItem.Category = sqliteReader.GetString(3);
+                        budgetItem.ShortDescription = sqliteReader.GetString(4);
+                        budgetItem.Amount = sqliteReader.GetDouble(5);
+
 
                         items.Add(budgetItem);
                     }
@@ -489,6 +488,13 @@ namespace Budget
 
             //Sorting the list by date
             items.Sort((x, y) => x.Date.CompareTo(y.Date));
+
+            Double total = 0;
+            foreach (BudgetItem item in items)
+            {
+                total += item.Amount;
+                item.Balance = total;
+            }
 
             sqliteReader.Close();
 

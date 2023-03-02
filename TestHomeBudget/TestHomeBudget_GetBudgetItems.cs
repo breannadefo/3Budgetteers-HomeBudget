@@ -56,8 +56,10 @@ namespace BudgetCodeTests
             System.IO.File.Copy(goodDB, messyDB, true);
             HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
 
-            // Act
+            //Act
             List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(null, null, false, 9);
+
+            
 
             // Assert
             double balance = 0;
