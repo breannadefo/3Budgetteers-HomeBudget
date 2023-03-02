@@ -51,6 +51,11 @@ namespace Budget
         /// </value>
         public String DirName { get { return _DirName; } }
 
+        /// <summary>
+        /// Creates an instance of expenses object passing in a valid database connection.
+        /// The DB connection is passed in to ensure there is a connection to a valid database.
+        /// </summary>
+        /// <param name="conn"></param>
         public Expenses(System.Data.SQLite.SQLiteConnection conn)
         {
 
