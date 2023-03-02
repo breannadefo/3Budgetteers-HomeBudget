@@ -23,7 +23,9 @@ namespace BudgetCodeTests
         public void ExpensesObject_New()
         {
             // Arrange
-
+            String folder = TestConstants.GetSolutionDir();
+            String existingDB = $"{folder}\\{TestConstants.testDBInputFile}";
+            Database.existingDatabase(existingDB);
             // Act
             Expenses expenses = new Expenses(databaseConnection);
 

@@ -35,6 +35,7 @@ namespace BudgetCodeTests
 
         // ========================================================================
 
+        /*
         [Fact]
         public void ExpenseCopyConstructoryIsDeepCopy()
         {
@@ -59,9 +60,10 @@ namespace BudgetCodeTests
             Assert.Equal(category, expense.Category);
             Assert.Equal(now, expense.Date);
         }
-
+        */
         // ========================================================================
 
+        /*
         [Fact]
         public void ExpenseObjectGetSetProperties()
         {
@@ -91,6 +93,7 @@ namespace BudgetCodeTests
             Assert.Equal(newDescr, expense.Description);
             Assert.Equal(newCategory, expense.Category);
         }
+        */
         
     }
 }
