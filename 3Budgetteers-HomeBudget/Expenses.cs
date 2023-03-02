@@ -51,6 +51,27 @@ namespace Budget
         /// </value>
         public String DirName { get { return _DirName; } }
 
+        public Expenses(System.Data.SQLite.SQLiteConnection conn, bool resetDB)
+        {
+            if (resetDB)
+            {
+
+            }
+        }
+
+        private void RemoveAllExpenses()
+        {
+            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
+
+            cmd = Database.dbConnection.CreateCommand();
+
+            cmd.CommandText = "DELETE FROM expenses;";
+
+            cmd.ExecuteNonQuery();
+
+            cmd.Dispose();
+        }
+
         // ====================================================================
         // populate categories from a file
         // if filepath is not specified, read/save in AppData file
@@ -307,7 +328,7 @@ namespace Budget
         //        this instance
         // ====================================================================
         /// <summary>
-        /// Creates a copy of the expenses list to return to the caller of the method.
+        /// Creates a list of the expenses to return to the caller of the method.
         /// 
         /// <example>
         /// Here's an example of how to use this method:
