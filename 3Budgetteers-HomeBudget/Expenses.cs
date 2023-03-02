@@ -51,25 +51,9 @@ namespace Budget
         /// </value>
         public String DirName { get { return _DirName; } }
 
-        public Expenses(System.Data.SQLite.SQLiteConnection conn, bool resetDB)
+        public Expenses(System.Data.SQLite.SQLiteConnection conn)
         {
-            if (resetDB)
-            {
 
-            }
-        }
-
-        private void RemoveAllExpenses()
-        {
-            SQLiteCommand cmd = new SQLiteCommand(Database.dbConnection);
-
-            cmd = Database.dbConnection.CreateCommand();
-
-            cmd.CommandText = "DELETE FROM expenses;";
-
-            cmd.ExecuteNonQuery();
-
-            cmd.Dispose();
         }
 
         // ====================================================================

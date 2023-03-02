@@ -308,7 +308,7 @@ namespace BudgetCodeTests
         //=============================================================================
 
         [Fact]
-        public void ExpensesMethod_List_ReturnsListOfCategories()
+        public void ExpensesMethod_List_ReturnsListOfExpenses()
         {
             // Arrange
             String folder = TestConstants.GetSolutionDir();
