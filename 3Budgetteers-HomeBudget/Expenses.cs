@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
 using System.Data.SQLite;
+using System.Globalization;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -39,7 +40,7 @@ namespace Budget
         // ====================================================================
         // Properties
         // ====================================================================
-        
+
         /// <value>
         /// Returns the file name that will hold information about the expenses.
         /// </value>
@@ -49,6 +50,16 @@ namespace Budget
         /// Returns the directory name that the file can be found in.
         /// </value>
         public String DirName { get { return _DirName; } }
+
+        /// <summary>
+        /// Creates an instance of expenses object passing in a valid database connection.
+        /// The DB connection is passed in to ensure there is a connection to a valid database.
+        /// </summary>
+        /// <param name="conn"></param>
+        public Expenses(System.Data.SQLite.SQLiteConnection conn)
+        {
+
+        }
 
         // ====================================================================
         // populate categories from a file
@@ -306,10 +317,7 @@ namespace Budget
         //        this instance
         // ====================================================================
         /// <summary>
-        /// Creates a copy of the expenses list to return to the caller of the method. It creates
-        /// a new list and copies each expense to the new list. This is done because lists are 
-        /// passed by reference and the list should not be editable outside of the methods from
-        /// this class.
+        /// Creates a list of the expenses to return to the caller of the method.
         /// 
         /// <example>
         /// Here's an example of how to use this method:
@@ -320,26 +328,55 @@ namespace Budget
         /// exp.Add(DateTime.Now, 3, 9.87, "Eggs");
         /// exp.Add(DateTime.Now, 3, 8.31, "Goldfish");
         /// <![CDATA[
-        /// List<Expense> copyOfList = exp.List();
+        /// List<Expense> expenses = exp.List();
         /// 
-        /// copyOfList.RemoveAt(1);
+        /// foreach(Expense e in expenses){
+        /// 
+        /// Console.WriteLine(e.ToString);
+        /// 
+        /// }
         /// ]]>
         /// </code>
         /// 
-        /// Since its a copy, the RemoveAt call won't change anything in the actual expenses instance.
+        /// This example gets all the expenses and outputs them to the console.
         /// </example>
         /// 
         /// </summary>
-        /// <returns>A copy of the expenses list.</returns>
+        /// <returns>A list of all the expenses in the database.</returns>
         public List<Expense> List()
         {
-            List<Expense> newList = new List<Expense>();
-            foreach (Expense expense in _Expenses)
+            const int idColumn = 0, dateColumn = 1, descriptionColumn = 2, amountColumn = 3, categoryIdColumn = 4;
+            List<Expense> list = new List<Expense>();
+
+            SQLiteDataReader reader;
+            SQLiteCommand cmd;
+            cmd = Database.dbConnection.CreateCommand();
+
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
             {
-                newList.Add(new Expense(expense));
+                while (reader.Read())
+                {
+                    int id = reader.GetInt32(idColumn);
+
+                    string date = reader.GetString(dateColumn);
+                    DateTime realDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+                    string description = reader.GetString(descriptionColumn);
+
+                    double amount = reader.GetDouble(amountColumn);
+
+                    int catId = reader.GetInt32(categoryIdColumn);
+
+                    list.Add(new Expense(id, realDate, catId, amount, description));
+                }
             }
-            return newList;
+
+            reader.Close();
+
+            return list;
         }
+        
 
         /// <summary>
         /// Updates the data of an expense with the values that are passed in. It finds the expense in the database that will be updated,
