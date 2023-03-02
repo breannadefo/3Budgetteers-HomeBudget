@@ -3,6 +3,7 @@ using Xunit;
 using System.IO;
 using System.Collections.Generic;
 using Budget;
+using System.Data.SQLite;
 
 namespace BudgetCodeTests
 {
@@ -283,6 +284,46 @@ namespace BudgetCodeTests
 
         // ========================================================================
 
+        [Fact]
+        public void ExpensesMethod_ReadFromDatabase_ValidateCorrectDataWasRead()
+        {
+            // Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String existingDB = $"{folder}\\{TestConstants.testDBInputFile}";
+            Database.existingDatabase(existingDB);
+            SQLiteConnection conn = Database.dbConnection;
+
+            // Act
+            Expenses expenses = new Expenses(conn, false);
+            List<Expense> list = expenses.List();
+            Expense firstExpense = list[0];
+
+            // Assert
+            Assert.Equal(numberOfExpensesInFile, list.Count);
+            Assert.Equal(firstExpenseInFile.Id, firstExpense.Id);
+            Assert.Equal(firstExpenseInFile.Description, firstExpense.Description);
+
+        }
+
+        //=============================================================================
+
+        [Fact]
+        public void ExpensesMethod_List_ReturnsListOfCategories()
+        {
+            // Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String newDB = $"{folder}\\{TestConstants.testDBInputFile}";
+            Database.existingDatabase(newDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Expenses expenses = new Expenses(conn, false);
+
+            // Act
+            List<Expense> list = expenses.List();
+
+            // Assert
+            Assert.Equal(numberOfExpensesInFile, list.Count);
+
+        }
 
 
         // -------------------------------------------------------
