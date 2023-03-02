@@ -332,7 +332,7 @@ namespace Budget
         }
 
         /// <summary>
-        /// Updates the data of a category with the values htat are passed in. It finds the category that needs to be updated, then 
+        /// Updates the data of a category with the values that are passed in. It finds the category that needs to be updated, then 
         /// replaces the old values with the new ones. An exception is thrown if the category can't be updated or if there is a problem
         /// updating the category.
         /// 
