@@ -438,7 +438,7 @@ namespace Budget
             DateTime EndDate = End ?? new DateTime(2500, 1, 1);
 
             //Sets the start time and end time to what was specified OR makes it 1900 and 2500 if the specified parameters are null
-            if (Start == null){  }
+            if (Start == null){ StartDate = new DateTime(1900, 1, 1) }
             if(End == null) { EndDate = new DateTime(2500, 1, 1); }
 
             //Creating the Query
@@ -465,7 +465,7 @@ namespace Budget
                 while (sqliteReader.Read())
                 {
                     // filter out unwanted categories if filter flag is on
-                    if (FilterFlag == true && CategoryID != sqliteReader.GetInt32(0))
+                    if (FilterFlag == true && CategoryID == sqliteReader.GetInt32(0))
                     {
                         continue;
                     }
@@ -478,7 +478,6 @@ namespace Budget
                         budgetItem.Category = sqliteReader.GetString(3);
                         budgetItem.ShortDescription = sqliteReader.GetString(4);
                         budgetItem.Amount = sqliteReader.GetDouble(5);
-
 
                         items.Add(budgetItem);
                     }
