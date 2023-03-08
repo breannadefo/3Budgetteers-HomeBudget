@@ -15,7 +15,7 @@ namespace Budget
     {
         const string FORMAT = "| {0,-9}| {1,-20}| {2,-15}| {3,-15}|{4,10} |{5,10} |";
         //id, description, date, category, amount, balance
-    
+
         static void Main(string[] args)
         {
             /*
@@ -53,9 +53,11 @@ namespace Budget
             //}
 
             Console.ReadLine();
+            */
 
         }
 
+        /*
         public static void GetUserInput(HomeBudget budget, out DateTime? start, out DateTime? end, out bool filterFlag, out int categoryId)
         {
             string userInput;
@@ -233,10 +235,6 @@ namespace Budget
 
             }
             */
-        }
-
-
-
 
     }
 }
