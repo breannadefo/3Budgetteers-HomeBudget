@@ -91,6 +91,7 @@ namespace BudgetCodeTests
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
             HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
+            Expenses expense = new Expenses(Database.dbConnection);
             List<BudgetItemsByCategory> validBudgetItemsByCategory = TestConstants.getBudgetItemsByCategory2018_Cat9();
             BudgetItemsByCategory firstRecord = validBudgetItemsByCategory[0];
 

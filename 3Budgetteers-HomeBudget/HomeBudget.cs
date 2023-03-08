@@ -329,8 +329,6 @@ namespace Budget
 
         #region GetList
 
-
-
         // ============================================================================
         // Get all expenses list
         // NOTE: VERY IMPORTANT... budget amount is the negative of the expense amount
@@ -782,12 +780,12 @@ namespace Budget
             // -----------------------------------------------------------------------
             // create new list
             // -----------------------------------------------------------------------
-            var summary = new List<BudgetItemsByCategory>();
+            List<BudgetItemsByCategory> summary = new List<BudgetItemsByCategory>();
             foreach (var CategoryGroup in GroupedByCategory.OrderBy(g => g.Key))
             {
                 // calculate total for this category, and create list of details
                 double total = 0;
-                var details = new List<BudgetItem>();
+                List<BudgetItem> details = new List<BudgetItem>();
                 foreach (var item in CategoryGroup)
                 {
                     total = total + item.Amount;
