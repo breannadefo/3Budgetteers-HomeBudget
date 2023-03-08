@@ -60,9 +60,10 @@ namespace BudgetCodeTests
             Assert.Equal(category, expense.Category);
             Assert.Equal(now, expense.Date);
         }
-
+        */
         // ========================================================================
 
+        /*
         [Fact]
         public void ExpenseObjectGetSetProperties()
         {
