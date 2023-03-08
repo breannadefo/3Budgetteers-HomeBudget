@@ -591,6 +591,17 @@ namespace Budget
             // -----------------------------------------------------------------------
             List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID);
 
+            //get all budget items grouped by month
+            //once that is done, requery to get all bugdte items for specific month
+            //add those into the details of budget items by month
+            //seems useless to query twice
+            //wtv lets do it that way then see
+           
+            //Get all expenses grouped by month
+            string expenseQuery = "SELECT SUM(Amount), substr(Date ,1 ,7) FROM expenses WHERE Date >= startDate AND Date =< endDate GROUP BY substr(Date ,1 ,7);"
+
+                //write query for categories and then inner join
+            string categoryQuery = "";
             // -----------------------------------------------------------------------
             // Group by year/month
             // -----------------------------------------------------------------------
