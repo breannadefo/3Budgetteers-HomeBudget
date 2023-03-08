@@ -192,20 +192,15 @@ namespace BudgetCodeTests
             // Arrange
             String dir = TestConstants.GetSolutionDir();
             Expenses expenses = new Expenses(databaseConnection);
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
             string fileName = TestConstants.ExpenseOutputTestFile;
             String outputFile = dir + "\\" + fileName;
             File.Delete(outputFile);
 
             // Act
-            expenses.SaveToFile(outputFile);
+            expenses.WriteToFile(outputFile);
 
             // Assert
             Assert.True(File.Exists(outputFile), "output file created");
-            Assert.True(FileEquals(dir + "\\" + testInputFile, outputFile), "Input /output files are the same");
-            String fileDir = Path.GetFullPath(Path.Combine(expenses.DirName, ".\\"));
-            Assert.Equal(dir, fileDir);
-            Assert.Equal(fileName, expenses.FileName);
 
             // Cleanup
             if (FileEquals(dir + "\\" + testInputFile, outputFile))
@@ -217,6 +212,7 @@ namespace BudgetCodeTests
 
         // ========================================================================
 
+        //obsolete
         [Fact]
         public void ExpenseMethod_WriteToFile_VerifyNewExpenseWrittenCorrectly()
         {
