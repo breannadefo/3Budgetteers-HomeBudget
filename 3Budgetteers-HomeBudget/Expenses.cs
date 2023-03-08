@@ -196,9 +196,10 @@ namespace Budget
 
         //=====================================================================
         /// <summary>
+        /// This method prints the expense information to a file for easy access and understanding.
         /// We are assuming the file exists.
         /// </summary>
-        /// <param name="filepath"></param>
+        /// <param name="filepath">The path of the file to be written to.</param>
         public void WriteToFile(string filepath)
         {
             try
