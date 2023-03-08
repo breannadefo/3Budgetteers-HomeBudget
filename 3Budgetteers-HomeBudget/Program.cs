@@ -18,6 +18,20 @@ namespace Budget
 
         static void Main(string[] args)
         {
+            String folder = Directory.GetCurrentDirectory();
+
+            String testDB = $"{folder}\\testDB.db";
+
+            Database.newDatabase(testDB);
+
+            Categories c = new Categories(Database.dbConnection, true); ;
+
+            Expenses e = new Expenses(Database.dbConnection);
+
+            e.Add(DateTime.Now, 5, 17.45, "Chicken burger");
+            e.Add(DateTime.Now.AddDays(1), 7, -8, "IDK");
+
+            e.WriteToFile($"{folder}\\testExpensesOutput.txt");
             /*
             
             string budgetFilePath = "../../../tests/test.budget";
