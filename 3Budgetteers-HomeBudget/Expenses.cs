@@ -37,6 +37,8 @@ namespace Budget
         private string _FileName;
         private string _DirName;
 
+        private string defaultSaveFilePath = Directory.GetCurrentDirectory() + "\\expenses.txt";
+
         // ====================================================================
         // Properties
         // ====================================================================
@@ -192,6 +194,32 @@ namespace Budget
             _FileName = Path.GetFileName(filepath);
         }
 
+        //=====================================================================
+        /// <summary>
+        /// This method prints the expense information to a file for easy access and understanding.
+        /// We are assuming the file exists.
+        /// </summary>
+        /// <param name="filepath">The path of the file to be written to.</param>
+        public void WriteToFile(string filepath)
+        {
+            try
+            {
+                List<Expense> exps = List();
+
+                string[] expenses = new string[exps.Count];
+
+                for(int i = 0;i < expenses.Length; i++)
+                {
+                    expenses[i] = $"Description: {exps[i].Description} | Date: {exps[i].Date} | Amount: ${String.Format("{0:0.00}",exps[i].Amount)}";
+                }
+
+                File.WriteAllLines(filepath, expenses);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine($"Error while writing to file: {e.Message}");
+            }
+        }
 
 
         // ====================================================================
