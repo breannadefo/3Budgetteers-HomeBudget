@@ -199,7 +199,7 @@ namespace Budget
         /// We are assuming the file exists.
         /// </summary>
         /// <param name="filepath"></param>
-        public void WriteToFile(string filepath = null)
+        public void WriteToFile(string filepath)
         {
             try
             {
@@ -209,7 +209,7 @@ namespace Budget
 
                 for(int i = 0;i < expenses.Length; i++)
                 {
-                    expenses[i] = $"{exps[i].Description} | {exps[i].Date} | ${String.Format("{0:0.00}",exps[i].Amount)}";
+                    expenses[i] = $"Description: {exps[i].Description} | Date: {exps[i].Date} | Amount: ${String.Format("{0:0.00}",exps[i].Amount)}";
                 }
 
                 File.WriteAllLines(filepath, expenses);
