@@ -330,11 +330,9 @@ namespace BudgetCodeTests
             String originalDesc = "Video Projector", newDesc = "Tangled Movie";
             int id = 1;
 
-            
-
             // Act
             expenses.Add(originalDate, originalCatId, originalAmount, originalDesc);
-            expenses.Update(id, newDate,newAmount, newDesc, newCatId);
+            expenses.Update(id, newDate, newAmount, newDesc, newCatId);
 
             List<Expense> expList = expenses.List();
 
