@@ -21,11 +21,10 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            string inFile = TestConstants.GetSolutionDir() + "\\" + testInputFile;
             String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB,inFile,false);
+            HomeBudget homeBudget = new HomeBudget(messyDB, false);
             List<Expense> listExpenses = homeBudget.expenses.List();
             List<Category> listCategories = homeBudget.categories.List();
 
@@ -50,11 +49,10 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            string inFile = TestConstants.GetSolutionDir() + "\\" + testInputFile;
             String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
+            HomeBudget homeBudget = new HomeBudget(messyDB, false);
 
             //Act
             List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(null, null, false, 9);
@@ -76,11 +74,10 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            string inFile = TestConstants.GetSolutionDir() + "\\" + testInputFile;
             String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
+            HomeBudget homeBudget = new HomeBudget(messyDB, false);
             Expenses expenses = new Expenses(Database.dbConnection);
             List<Expense> listAllExpenses = expenses.List();
             List<Category> listCategories = homeBudget.categories.List();
@@ -119,11 +116,10 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            string inFile = TestConstants.GetSolutionDir() + "\\" + testInputFile;
             String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
+            HomeBudget homeBudget = new HomeBudget(messyDB, false);
             Expenses expenses = new Expenses(Database.dbConnection);
             List<Expense> listAllExpenses = expenses.List();
             List<Category> listCategories = homeBudget.categories.List();
@@ -161,11 +157,10 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            string inFile = TestConstants.GetSolutionDir() + "\\" + testInputFile;
             String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
+            HomeBudget homeBudget = new HomeBudget(messyDB, false);
             Expenses expenses = new Expenses(Database.dbConnection);
             List<Expense> listAllExpenses = expenses.List();
             DateTime startDate = new DateTime(1900, 1, 1);
@@ -204,11 +199,10 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            string inFile = TestConstants.GetSolutionDir() + "\\" + testInputFile;
             String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
+            HomeBudget homeBudget = new HomeBudget(messyDB, false);
             Expenses expenses = new Expenses(Database.dbConnection);
             List<Expense> listAllExpenses = expenses.List();
             List<Category> listCategories = homeBudget.categories.List();

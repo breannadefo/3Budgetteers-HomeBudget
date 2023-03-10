@@ -9,10 +9,12 @@ namespace BudgetCodeTests
     [Collection("Sequential")]
     public class TestHomeBudget
     {
-        //string testInputFile = TestConstants.testBudgetFile;
-        
+        string testInputFile = TestConstants.testDBInputFile;
 
-        //// ========================================================================
+
+        // ========================================================================
+
+        //I think this test is useless
 
         //[Fact]
         //public void HomeBudgetObject_New_NoFileSpecified()
@@ -20,7 +22,7 @@ namespace BudgetCodeTests
         //    // Arrange
 
         //    // Act
-        //    HomeBudget homeBudget  = new HomeBudget("abc.txt");
+        //    HomeBudget homeBudget = new HomeBudget("abc.txt");
 
         //    // Assert 
         //    Assert.IsType<HomeBudget>(homeBudget);
@@ -35,27 +37,29 @@ namespace BudgetCodeTests
         //    Assert.NotEmpty(homeBudget.categories.List());
         //}
 
-        //// ========================================================================
+        // ========================================================================
 
-        //[Fact]
-        //public void HomeBudgetObject_New_WithFilename()
-        //{
-        //    // Arrange
-        //    string file = TestConstants.GetSolutionDir() + "\\" + testInputFile;
-        //    int numExpenses = TestConstants.numberOfExpensesInFile;
-        //    int numCategories = TestConstants.numberOfCategoriesInFile;
+        [Fact]
+        public void HomeBudgetObject_New_WithFilename()
+        {
+            // Arrange
+            string file = TestConstants.GetSolutionDir() + "\\" + testInputFile;
+            int numExpenses = TestConstants.numberOfExpensesInFile;
+            int numCategories = TestConstants.numberOfCategoriesInFile;
 
-        //    // Act
-        //    HomeBudget homeBudget = new HomeBudget(file);
+            // Act
+            HomeBudget homeBudget = new HomeBudget(file, false);
 
-        //    // Assert 
-        //    Assert.IsType<HomeBudget>(homeBudget);
-        //    Assert.Equal(numExpenses, homeBudget.expenses.List().Count);
-        //    Assert.Equal(numCategories, homeBudget.categories.List().Count);
+            // Assert 
+            Assert.IsType<HomeBudget>(homeBudget);
+            Assert.Equal(numExpenses, homeBudget.expenses.List().Count);
+            Assert.Equal(numCategories, homeBudget.categories.List().Count);
 
-        //}
+        }
 
-        //// ========================================================================
+        // ========================================================================
+
+        //pointless test
 
         //[Fact]
         //public void HomeBudgeMethod_ReadFromFile_ReadsCorrectData()
@@ -81,7 +85,9 @@ namespace BudgetCodeTests
         //    Assert.Equal(firstCategoryInFile.Description, firstCategory.Description);
         //}
 
-        //// ========================================================================
+        // ========================================================================
+
+        //useless test
 
         //[Fact]
         //public void HomeBudgetMethod_SaveToFile_FilesAreCreated()
@@ -116,7 +122,9 @@ namespace BudgetCodeTests
 
         //}
 
-        //// ========================================================================
+        // ========================================================================
+
+        //useless test
 
         //[Fact]
         //public void HomeBudgetMethod_SaveToFile_FilesAreWrittenTo()
@@ -151,7 +159,7 @@ namespace BudgetCodeTests
         //    Assert.True(File.Exists(output_categories), output_categories + "file exists");
 
         //    string[] contents = File.ReadAllLines(output_budget);
-        //    Assert.True(contents.Length==2);
+        //    Assert.True(contents.Length == 2);
         //    Assert.True(contents[0] == file + "_categories.cats", "categorie file " + contents[0]);
         //    Assert.True(contents[1] == file + "_expenses.exps", "expenses file " + contents[1]);
 
@@ -165,17 +173,17 @@ namespace BudgetCodeTests
 
         //}
 
-        //// ========================================================================
+        // ========================================================================
 
-        //// -------------------------------------------------------
-        //// helpful functions, ... they are not tests
-        //// -------------------------------------------------------
-        //private bool FileSameSize(string path1, string path2)
-        //{
-        //    byte[] file1 = File.ReadAllBytes(path1);
-        //    byte[] file2 = File.ReadAllBytes(path2);
-        //    return (file1.Length == file2.Length);
-        //}
+        // -------------------------------------------------------
+        // helpful functions, ... they are not tests
+        // -------------------------------------------------------
+        private bool FileSameSize(string path1, string path2)
+        {
+            byte[] file1 = File.ReadAllBytes(path1);
+            byte[] file2 = File.ReadAllBytes(path2);
+            return (file1.Length == file2.Length);
+        }
 
     }
 }
