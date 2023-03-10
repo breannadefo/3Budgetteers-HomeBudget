@@ -59,8 +59,6 @@ namespace BudgetCodeTests
             //Act
             List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(null, null, false, 9);
 
-            
-
             // Assert
             double balance = 0;
             foreach (BudgetItem budgetItem in budgetItems)
@@ -216,7 +214,7 @@ namespace BudgetCodeTests
             List<Category> listCategories = homeBudget.categories.List();
             DateTime startDate = new DateTime(2018, 1, 1);
             DateTime endDate = new DateTime(2018, 12, 31);
-            int filterCategory = 5;
+            int filterCategory = 10;
 
             // Act
             List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(startDate, endDate, true, filterCategory);
