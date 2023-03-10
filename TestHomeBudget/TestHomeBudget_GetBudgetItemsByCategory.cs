@@ -159,7 +159,6 @@ namespace BudgetCodeTests
             System.IO.File.Copy(goodDB, messyDB, true);
             HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
             List<Expense> listAllExpenses = homeBudget.expenses.List();
-            //List<BudgetItemsByCategory> validBudgetItemsByCategory = TestConstants.getBudgetItemsByCategory2018();
             DateTime startDate = new DateTime(2018, 1, 1);
             DateTime endDate = new DateTime(2018, 12, 31);
             int filterCategoryId = 9;

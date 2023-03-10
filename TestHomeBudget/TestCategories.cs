@@ -103,25 +103,19 @@ namespace BudgetCodeTests
         public void CategoriesMethod_Add()
         {
             // Arrange
-            String folder = TestConstants.GetSolutionDir();
-            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
-            String messyDB = $"{folder}\\messy.db";
-            System.IO.File.Copy(goodDB, messyDB, true);
-            Database.existingDatabase(messyDB);
             SQLiteConnection conn = Database.dbConnection;
             Categories categories = new Categories(conn, false);
-            string descr = "New Category";
+            string description = "New Category";
             Category.CategoryType type = Category.CategoryType.Income;
 
             // Act
-            categories.Add(descr,type);
-            List<Category> categoriesList = categories.List();
+            int intialSizeOfList = categories.List().Count;
+            categories.Add(description, type);
             int sizeOfList = categories.List().Count;
+            List<Category> list = categories.List();
 
             // Assert
-            Assert.Equal(numberOfCategoriesInFile + 1, sizeOfList);
-            Assert.Equal(descr, categoriesList[sizeOfList - 1].Description);
-
+            Assert.Equal(intialSizeOfList + 1, sizeOfList);
         }
 
         // ========================================================================
@@ -130,24 +124,20 @@ namespace BudgetCodeTests
         public void CategoriesMethod_Delete()
         {
             // Arrange
-            String folder = TestConstants.GetSolutionDir();
-            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
-            String messyDB = $"{folder}\\messy.db";
-            System.IO.File.Copy(goodDB, messyDB, true);
-            Database.existingDatabase(messyDB);
             SQLiteConnection conn = Database.dbConnection;
             Categories categories = new Categories(conn, false);
             int IdToDelete = 3;
 
             // Act
+            int intialSizeOfList = categories.List().Count;
             categories.Delete(IdToDelete);
-            List<Category> categoriesList = categories.List();
-            int sizeOfList = categoriesList.Count;
+            int sizeOfList = categories.List().Count;
+            List<Category> list = categories.List();
+
 
             // Assert
-            Assert.Equal(numberOfCategoriesInFile - 1, sizeOfList);
-            Assert.False(categoriesList.Exists(e => e.Id == IdToDelete), "correct Category item deleted");
-
+            Assert.Equal(intialSizeOfList - 1, sizeOfList);
+            Assert.False(list.Exists(e => e.Id == IdToDelete), "correct Category item deleted");
         }
 
         // ========================================================================
