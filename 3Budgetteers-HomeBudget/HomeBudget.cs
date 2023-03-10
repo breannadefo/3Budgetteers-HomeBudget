@@ -135,7 +135,7 @@ namespace Budget
         /// </summary>
         /// <param name="budgetFileName">Represents the file that contains the already existing budget.</param>
         /// <exception cref="Exception">Thrown when there is a problem reading from the file.</exception>
-        public HomeBudget(String databaseFile, String expensesXMLFile, bool newDB=false)
+        public HomeBudget(String databaseFile, bool newDB=false)
         {
             //If the user does not want to reset the databse and it exists we read from existing database
             if(!newDB && File.Exists(databaseFile))
@@ -145,7 +145,6 @@ namespace Budget
             else
             {//If the database does not exist or the user wants to reset it we create a new one
                 Database.newDatabase(databaseFile);
-                newDB = true;
             }
 
             //If the newDB flag is set to true the categories are reset
@@ -153,9 +152,6 @@ namespace Budget
 
             //Intializes Expenses
             _expenses = new Expenses(Database.dbConnection);
-
-            //read the expenese from the xml
-            _expenses.ReadFromFile(expensesXMLFile);
         }
 
         #region OpenNewAndSave
@@ -505,21 +501,15 @@ namespace Budget
         // ============================================================================
 
         /// <summary>
-        /// Sorts all the BudgetItems into lists, which are stored in BudgetItemsByMonth objects, which are stored and returned 
-        /// in a list. As the class name suggests, the budget items are sorted by the month they occur in.
+        /// Retrieves all the budget items form the database groouped by their month.
+        /// As the class name suggests, the budget items are sorted by the month they occur in.
         /// 
         /// The method takes in the start date, end date, a FilterFlag which determines if the budget items will be filtered by
         /// category, and a category id. These parameters are used near the beginning of the method, where the GetBudgetItems 
         /// method is called. This returns a list of budget items that are filtered based on the parameters that were passed in.
         /// 
-        /// All these budget items get grouped into a collection of elements, where each element holds all the budget items that
-        /// happened in the same month. These groups are sorted in a year/month order. To save this data in the actual class lists
-        /// that have been created, there is a foreach loop that goes through each element in the collection. Each iteration of the
-        /// loop keeps track of the total amount of the budget items and creates a new list of budget items. It also includes a 
-        /// nested foreach loop that goes through each budget item from the group and increases the total, then adds the budget item 
-        /// to the list. Once the inner loop is done, it creates a BudgetItemsByMonth object using the group's key, the list of 
-        /// budget items, and the total from the inner loop. This object is added to the list of BudgetItemsByMonth, and the cycle 
-        /// continues until the outer loop is done.
+        /// The method retrieves the budget items for that month using the GetBudgetItems method in this class. This is done since the query to get 
+        /// the totals for the month uses group by, therefore it is a colleciton of rows.
         /// 
         /// When the outer loop has finished, it means that all the budget items have been sorted into BudgetItemsByMonth objects, 
         /// which have all been added to the list, so that list is returned.
@@ -530,7 +520,7 @@ namespace Budget
         /// It starts off with this pre-existing budget that contains the content shown below.
         /// <code>
         /// 
-        /// string budgetFilePath = "../tests/test.budget";
+        /// string budgetDatabasePath = "../tests/testBudget.db";
         /// 
         /// ExpenseID   Description         Date        Category        CategoryID  Amount  Balance
         /// 1           hat (on credit)     01-10-2018  Clothes         10          -10     -10
@@ -552,7 +542,7 @@ namespace Budget
         /// 
         /// <code>
         /// 
-        /// HomeBudget budget = new HomeBudget(budgetFilePath);
+        /// HomeBudget budget = new HomeBudget(budgetDatabsePath);
         /// 
         /// DateTime? start = null, end = null;
         /// bool filter = false;
@@ -622,36 +612,62 @@ namespace Budget
             // -----------------------------------------------------------------------
             List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID);
 
-            // -----------------------------------------------------------------------
-            // Group by year/month
-            // -----------------------------------------------------------------------
-            var GroupedByMonth = items.GroupBy(c => c.Date.Year.ToString("D4") + "/" + c.Date.Month.ToString("D2"));
+            List<BudgetItemsByMonth> itemsByMonth = new List<BudgetItemsByMonth>();
 
-            // -----------------------------------------------------------------------
-            // create new list
-            // -----------------------------------------------------------------------
-            var summary = new List<BudgetItemsByMonth>();
-            foreach (var MonthGroup in GroupedByMonth)
+            const int sumColumn = 0, monthColumn = 1;
+
+            DateTime realStart = Start ?? new DateTime(1900, 1, 1);
+            DateTime realEnd = End ?? new DateTime(2500, 1, 1);
+
+            string startDate = realStart.ToString("yyyy-MM-dd");
+            string endDate = realEnd.ToString("yyyy-MM-dd");
+
+            SQLiteCommand cmd = Database.dbConnection.CreateCommand();
+            SQLiteDataReader reader;
+
+            if (FilterFlag)
             {
-                // calculate total for this month, and create list of details
-                double total = 0;
-                var details = new List<BudgetItem>();
-                foreach (var item in MonthGroup)
-                {
-                    total = total + item.Amount;
-                    details.Add(item);
-                }
+                cmd.CommandText = "SELECT SUM(Amount), substr(Date ,1 ,7) FROM expenses WHERE Date >= @startDate AND Date <= @endDate AND CategoryId != @catId GROUP BY substr(Date ,1 ,7);";
+                cmd.Parameters.Add(new SQLiteParameter("@catId", CategoryID));
+            }
+            else
+            {
+                cmd.CommandText = "SELECT SUM(Amount), substr(Date ,1 ,7) FROM expenses WHERE Date >= @startDate AND Date <= @endDate GROUP BY substr(Date ,1 ,7);";
+            }
+            cmd.Parameters.Add(new SQLiteParameter("@startDate", startDate));
+            cmd.Parameters.Add(new SQLiteParameter("@endDate", endDate));
 
-                // Add new BudgetItemsByMonth to our list
-                summary.Add(new BudgetItemsByMonth
+            reader = cmd.ExecuteReader();
+
+            if(reader.HasRows)
+            {
+                while (reader.Read())
                 {
-                    Month = MonthGroup.Key,
-                    Details = details,
-                    Total = total
-                });
+                    double sum = reader.GetDouble(sumColumn);
+
+                    string yearAndMonth = reader.GetString(monthColumn);
+
+                    int year = int.Parse(yearAndMonth.Substring(0, 4));
+                    int month = int.Parse(yearAndMonth.Substring(5, 2));
+
+                    int daysInMonth = DateTime.DaysInMonth(year, month);
+
+                    DateTime beginDate = new DateTime(year, month, 1);
+                    DateTime finishDate = beginDate.AddDays(daysInMonth - 1);
+
+                    List<BudgetItem> bi = GetBudgetItems(beginDate, finishDate, FilterFlag, CategoryID);
+
+                    itemsByMonth.Add(new BudgetItemsByMonth
+                    {
+                        Month = yearAndMonth,
+                        Details = bi,
+                        Total = sum
+                    });                    
+                }
             }
 
-            return summary;
+            return itemsByMonth;
+            //in theory should add the budget items by month properly
         }
 
         // ============================================================================

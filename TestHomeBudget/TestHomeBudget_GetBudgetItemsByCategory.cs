@@ -21,11 +21,10 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            string inFile = TestConstants.GetSolutionDir() + "\\" + testInputFile;
             String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
+            HomeBudget homeBudget = new HomeBudget(messyDB, false);
             List<Expense> listAllExpenses = homeBudget.expenses.List();
             //BudgetItemsByCategory firstRecord = TestConstants.budgetItemsByCategory_FirstRecord;
             int testCateogory = 1;
@@ -69,15 +68,15 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            string inFile = TestConstants.GetSolutionDir() + "\\" + testInputFile;
             String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
+            HomeBudget homeBudget = new HomeBudget(messyDB, false);
             int maxRecords14 = TestConstants.budgetItemsByCategory14;
             int maxRecords20 = TestConstants.budgetItemsByCategory20;
 
             // Act
+            //why calling getbudgetitems by month?
             List<BudgetItemsByMonth> budgetItemsByCategory = homeBudget.GetBudgetItemsByMonth(null, null, true, 14);
 
             // Assert
@@ -98,11 +97,10 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            string inFile = TestConstants.GetSolutionDir() + "\\" + testInputFile;
             String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
+            HomeBudget homeBudget = new HomeBudget(messyDB, false);
             Expenses expenses = new Expenses(Database.dbConnection);
             //List<BudgetItemsByCategory> validBudgetItemsByCategory = TestConstants.getBudgetItemsByCategory2018_Cat9();
             List<Expense> listAllExpenses = homeBudget.expenses.List();
@@ -153,12 +151,12 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            string inFile = TestConstants.GetSolutionDir() + "\\" + testInputFile;
             String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
+            HomeBudget homeBudget = new HomeBudget(messyDB, false);
             List<Expense> listAllExpenses = homeBudget.expenses.List();
+            //List<BudgetItemsByCategory> validBudgetItemsByCategory = TestConstants.getBudgetItemsByCategory2018();
             DateTime startDate = new DateTime(2018, 1, 1);
             DateTime endDate = new DateTime(2018, 12, 31);
             int filterCategoryId = 9;

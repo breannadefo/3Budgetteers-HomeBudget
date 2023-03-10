@@ -21,33 +21,35 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            string inFile = TestConstants.GetSolutionDir() + "\\" + testInputFile;
             String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
-            int maxRecords = TestConstants.budgetItemsByMonth_MaxRecords;
-            BudgetItemsByMonth firstRecord = TestConstants.budgetItemsByMonth_FirstRecord;
+            HomeBudget homeBudget = new HomeBudget(messyDB, true);
+
+            homeBudget.expenses.Add(new DateTime(2018, 1, 3), 9, 10, "First test expense");
+            homeBudget.expenses.Add(new DateTime(2018, 1, 25), 10, -5, "Second test expense");
+            homeBudget.expenses.Add(new DateTime(2019, 1, 3), 9, -8, "third test expense");
+            homeBudget.expenses.Add(new DateTime(2020, 1, 3), 9, 14, "Fourth test expense");
+            homeBudget.expenses.Add(new DateTime(2019, 1, 13), 10, 15, "Fifth test expense");
+            homeBudget.expenses.Add(new DateTime(2020, 1, 9), 10, -4, "Sixth test expense");
+
+            string[] expectedMonths = { "2018-01", "2019-01", "2020-01" };
+            double[] expectedTotals = { 5, 7, 10 };
+
 
             // Act
             List<BudgetItemsByMonth> budgetItemsByMonth = homeBudget.GetBudgetItemsByMonth(null, null, false, 9);
-            BudgetItemsByMonth firstRecordTest = budgetItemsByMonth[0];
+
 
             // Assert
-            Assert.Equal(maxRecords, budgetItemsByMonth.Count);
+            Assert.Equal(3, budgetItemsByMonth.Count);
 
-            // verify 1st record
-            Assert.Equal(firstRecord.Month, firstRecordTest.Month);
-            Assert.Equal(firstRecord.Total, firstRecordTest.Total);
-            Assert.Equal(firstRecord.Details.Count, firstRecordTest.Details.Count);
-            for (int record = 0; record < firstRecord.Details.Count; record++)
+            // verify all records
+            for (int i = 0; i < budgetItemsByMonth.Count; i++)
             {
-                BudgetItem validItem = firstRecord.Details[record];
-                BudgetItem testItem = firstRecordTest.Details[record];
-                Assert.Equal(validItem.Amount, testItem.Amount);
-                Assert.Equal(validItem.CategoryID, testItem.CategoryID);
-                Assert.Equal(validItem.ExpenseID, testItem.ExpenseID);
-
+                Assert.Equal(2, budgetItemsByMonth[i].Details.Count);
+                Assert.Equal(expectedMonths[i], budgetItemsByMonth[i].Month);
+                Assert.Equal(expectedTotals[i], budgetItemsByMonth[i].Total);
             }
         }
 
@@ -58,33 +60,34 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            string inFile = TestConstants.GetSolutionDir() + "\\" + testInputFile;
             String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
-            int maxRecords = TestConstants.budgetItemsByMonth_FilteredByCat9_number;
-            BudgetItemsByMonth firstRecord = TestConstants.budgetItemsByMonth_FirstRecord_FilteredCat9;
+            HomeBudget homeBudget = new HomeBudget(messyDB, true);
 
+            homeBudget.expenses.Add(new DateTime(2018, 1, 3), 9, 10, "First test expense");
+            homeBudget.expenses.Add(new DateTime(2018, 1, 25), 10, -5, "Second test expense");
+            homeBudget.expenses.Add(new DateTime(2019, 1, 3), 9, -8, "third test expense");
+            homeBudget.expenses.Add(new DateTime(2020, 1, 3), 9, 14, "Fourth test expense");
+            homeBudget.expenses.Add(new DateTime(2019, 1, 13), 10, 15, "Fifth test expense");
+            homeBudget.expenses.Add(new DateTime(2020, 1, 9), 10, -4, "Sixth test expense");
+
+            string[] expectedMonths = {"2018-01", "2019-01", "2020-01" };
+            double[] expectedTotals = { -5 , 15, -4};
+
+            
             // Act
             List<BudgetItemsByMonth> budgetItemsByMonth = homeBudget.GetBudgetItemsByMonth(null, null, true, 9);
-            BudgetItemsByMonth firstRecordTest = budgetItemsByMonth[0];
+            
 
             // Assert
-            Assert.Equal(maxRecords, budgetItemsByMonth.Count);
+            Assert.Equal(3, budgetItemsByMonth.Count);
 
-            // verify 1st record
-            Assert.Equal(firstRecord.Month, firstRecordTest.Month);
-            Assert.Equal(firstRecord.Total, firstRecordTest.Total);
-            Assert.Equal(firstRecord.Details.Count, firstRecordTest.Details.Count);
-            for (int record = 0; record < firstRecord.Details.Count; record++)
-            {
-                BudgetItem validItem = firstRecord.Details[record];
-                BudgetItem testItem = firstRecordTest.Details[record];
-                Assert.Equal(validItem.Amount, testItem.Amount);
-                Assert.Equal(validItem.CategoryID, testItem.CategoryID);
-                Assert.Equal(validItem.ExpenseID, testItem.ExpenseID);
-
+            // verify all records
+            for (int i = 0; i < budgetItemsByMonth.Count; i++){
+                Assert.Equal(1, budgetItemsByMonth[i].Details.Count);
+                Assert.Equal(expectedMonths[i], budgetItemsByMonth[i].Month);
+                Assert.Equal(expectedTotals[i], budgetItemsByMonth[i].Total);
             }
         }
         // ========================================================================
@@ -94,37 +97,32 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            string inFile = TestConstants.GetSolutionDir() + "\\" + testInputFile;
             String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
+            HomeBudget homeBudget = new HomeBudget(messyDB, true);
 
-            List<Expense> listExpenses = TestConstants.filteredbyYear2018();
-            List<Category> listCategories = homeBudget.categories.List();
-            List<BudgetItemsByMonth> validBudgetItemsByMonth = TestConstants.getBudgetItemsBy2018_01_filteredByCat9();
-            BudgetItemsByMonth firstRecord = TestConstants.budgetItemsByMonth_FirstRecord_FilteredCat9;
+            homeBudget.expenses.Add(new DateTime(2018, 1, 3), 9, 10, "First test expense");
+            homeBudget.expenses.Add(new DateTime(2018, 1, 25), 10, -5, "Second test expense");
+            homeBudget.expenses.Add(new DateTime(2019, 1, 3), 9, -8, "third test expense");
+            homeBudget.expenses.Add(new DateTime(2020, 1, 3), 9, 14, "Fourth test expense");
+            homeBudget.expenses.Add(new DateTime(2019, 1, 13), 10, 15, "Fifth test expense");
+            homeBudget.expenses.Add(new DateTime(2020, 1, 9), 10, -4, "Sixth test expense");
+
+            const string expectedMonth = "2018-01";
+            const double expectedTotal = -5;
 
             // Act
             List<BudgetItemsByMonth> budgetItemsByMonth = homeBudget.GetBudgetItemsByMonth(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31), true, 9);
             BudgetItemsByMonth firstRecordTest = budgetItemsByMonth[0];
 
             // Assert
-            Assert.Equal(validBudgetItemsByMonth.Count, budgetItemsByMonth.Count);
+            Assert.Equal(1, budgetItemsByMonth.Count);
 
             // verify 1st record
-            Assert.Equal(firstRecord.Month, firstRecordTest.Month);
-            Assert.Equal(firstRecord.Total, firstRecordTest.Total);
-            Assert.Equal(firstRecord.Details.Count, firstRecordTest.Details.Count);
-            for (int record = 0; record < firstRecord.Details.Count; record++)
-            {
-                BudgetItem validItem = firstRecord.Details[record];
-                BudgetItem testItem = firstRecordTest.Details[record];
-                Assert.Equal(validItem.Amount, testItem.Amount);
-                Assert.Equal(validItem.CategoryID, testItem.CategoryID);
-                Assert.Equal(validItem.ExpenseID, testItem.ExpenseID);
-
-            }
+            Assert.Equal(expectedMonth, firstRecordTest.Month);
+            Assert.Equal(expectedTotal, firstRecordTest.Total);
+            Assert.Equal(1, firstRecordTest.Details.Count);
         }
 
         // ========================================================================
@@ -134,36 +132,32 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            string inFile = TestConstants.GetSolutionDir() + "\\" + testInputFile;
             String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
+            HomeBudget homeBudget = new HomeBudget(messyDB, true);
 
-            List<BudgetItemsByMonth> validBudgetItemsByMonth = TestConstants.getBudgetItemsBy2018_01();
-            BudgetItemsByMonth firstRecord = validBudgetItemsByMonth[0];
+            homeBudget.expenses.Add(new DateTime(2018, 1, 3), 9, 10, "First test expense");
+            homeBudget.expenses.Add(new DateTime(2018, 1, 25), 10, -5, "Second test expense");
+            homeBudget.expenses.Add(new DateTime(2019, 1, 3), 9, -8, "third test expense");
+            homeBudget.expenses.Add(new DateTime(2020, 1, 3), 9, 14, "Fourth test expense");
+            homeBudget.expenses.Add(new DateTime(2019, 1, 13), 10, 15, "Fifth test expense");
+            homeBudget.expenses.Add(new DateTime(2020, 1, 9), 10, -4, "Sixth test expense");
 
+            const string expectedMonth = "2018-01";
+            const double expectedTotal = 5;
 
             // Act
             List<BudgetItemsByMonth> budgetItemsByMonth = homeBudget.GetBudgetItemsByMonth(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31), false, 9);
             BudgetItemsByMonth firstRecordTest = budgetItemsByMonth[0];
 
             // Assert
-            Assert.Equal(validBudgetItemsByMonth.Count, budgetItemsByMonth.Count);
+            Assert.Equal(1, budgetItemsByMonth.Count);
 
             // verify 1st record
-            Assert.Equal(firstRecord.Month, firstRecordTest.Month);
-            Assert.Equal(firstRecord.Total, firstRecordTest.Total);
-            Assert.Equal(firstRecord.Details.Count, firstRecordTest.Details.Count);
-            for (int record = 0; record < firstRecord.Details.Count; record++)
-            {
-                BudgetItem validItem = firstRecord.Details[record];
-                BudgetItem testItem = firstRecordTest.Details[record];
-                Assert.Equal(validItem.Amount, testItem.Amount);
-                Assert.Equal(validItem.CategoryID, testItem.CategoryID);
-                Assert.Equal(validItem.ExpenseID, testItem.ExpenseID);
-
-            }
+            Assert.Equal(expectedMonth, firstRecordTest.Month);
+            Assert.Equal(expectedTotal, firstRecordTest.Total);
+            Assert.Equal(2, firstRecordTest.Details.Count);
         }
     }
 }
