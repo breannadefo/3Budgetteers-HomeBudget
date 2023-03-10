@@ -135,7 +135,7 @@ namespace Budget
         /// </summary>
         /// <param name="budgetFileName">Represents the file that contains the already existing budget.</param>
         /// <exception cref="Exception">Thrown when there is a problem reading from the file.</exception>
-        public HomeBudget(String databaseFile, String expensesXMLFile, bool newDB=false)
+        public HomeBudget(String databaseFile, bool newDB=false)
         {
             //If the user does not want to reset the databse and it exists we read from existing database
             if(!newDB && File.Exists(databaseFile))
@@ -145,7 +145,6 @@ namespace Budget
             else
             {//If the database does not exist or the user wants to reset it we create a new one
                 Database.newDatabase(databaseFile);
-                newDB = true;
             }
 
             //If the newDB flag is set to true the categories are reset
@@ -153,9 +152,6 @@ namespace Budget
 
             //Intializes Expenses
             _expenses = new Expenses(Database.dbConnection);
-
-            //read the expenese from the xml
-            _expenses.ReadFromFile(expensesXMLFile);
         }
 
         #region OpenNewAndSave
