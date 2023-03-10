@@ -445,7 +445,7 @@ namespace Budget
             SQLiteCommand command = connection.CreateCommand();
             SQLiteDataReader reader;
 
-            command.CommandText = "SELECT COUNT(*) FROM categories WHERE Id=@id;";
+            command.CommandText = "SELECT COUNT(*) FROM expenses WHERE Id=@id;";
             command.Parameters.Add(new SQLiteParameter("@id", expenseId));
             
             reader = command.ExecuteReader();
@@ -466,11 +466,12 @@ namespace Budget
 
             string formattedDate = date.ToString("yyyy-MM-dd");
 
-            command.CommandText = "UPDATE expenses SET Date = @Date, Description = @Description, Amount = @Amount, CategoryId = @CategoryId";
+            command.CommandText = "UPDATE expenses SET Date = @Date, Description = @Description, Amount = @Amount, CategoryId = @CategoryId WHERE Id = @ExpenseId;";
             command.Parameters.Add(new SQLiteParameter("@Date", formattedDate));
             command.Parameters.Add(new SQLiteParameter("@Description", description));
             command.Parameters.Add(new SQLiteParameter("@Amount", amount));
             command.Parameters.Add(new SQLiteParameter("@CategoryId", categoryId));
+            command.Parameters.Add(new SQLiteParameter("@ExpenseId", expenseId));
 
             command.ExecuteNonQuery();
         }
