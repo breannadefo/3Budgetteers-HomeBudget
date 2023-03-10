@@ -33,71 +33,6 @@ namespace BudgetCodeTests
             Assert.IsType<Expenses>(expenses);
         }
 
-
-        // ========================================================================
-
-        //Don't think we need this test, no point in reading from a file
-        [Fact]
-        public void ExpensesMethod_ReadFromFile_NotExist_ThrowsException()
-        {
-            // Arrange
-            String badFile = "abc.txt";
-            Expenses expenses = new Expenses(databaseConnection);
-
-            // Act and Assert
-            Assert.Throws<System.IO.FileNotFoundException>(() => expenses.ReadFromFile(badFile));
-
-        }
-
-        // ========================================================================
-
-        [Fact]
-        public void ExpensesMethod_ReadFromFile_ValidateCorrectDataWasRead()
-        {
-            // Arrange
-            String dir = TestConstants.GetSolutionDir();
-            Expenses expenses = new Expenses(databaseConnection);
-
-            // Act
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
-            List<Expense> list = expenses.List();
-            Expense firstExpense = list[0];
-
-            // Assert
-            Assert.Equal(numberOfExpensesInFile, list.Count);
-            Assert.Equal(firstExpenseInFile.Id, firstExpense.Id);
-            Assert.Equal(firstExpenseInFile.Amount, firstExpense.Amount);
-            Assert.Equal(firstExpenseInFile.Description, firstExpense.Description);
-            Assert.Equal(firstExpenseInFile.Category, firstExpense.Category);
-
-            String fileDir = Path.GetFullPath(Path.Combine(expenses.DirName, ".\\"));
-            Assert.Equal(dir, fileDir);
-            Assert.Equal(testInputFile, expenses.FileName);
-
-        }
-        // ========================================================================
-
-        /*
-        [Fact]
-        public void ExpensesMethod_List_ReturnsListOfExpenses()
-        {
-            // Arrange
-            String dir = TestConstants.GetSolutionDir();
-            Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
-
-            // Act
-            List<Expense> list = expenses.List();
-
-            // Assert
-            Assert.Equal(numberOfExpensesInFile, list.Count);
-
-        }
-        */
-
-        // ========================================================================
-
-        
         [Fact]
         public void ExpensesMethod_List_ModifyListDoesNotModifyExpensesInstance()
         {
@@ -157,9 +92,7 @@ namespace BudgetCodeTests
         public void ExpensesMethod_Delete_InvalidIDDoesntCrash()
         {
             // Arrange
-            String dir = TestConstants.GetSolutionDir();
             Expenses expenses = new Expenses(databaseConnection);
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
             int IdToDelete = 1006;
             int sizeOfList = expenses.List().Count;
 
@@ -195,70 +128,6 @@ namespace BudgetCodeTests
 
             // Assert
             Assert.True(File.Exists(outputFile), "output file created");
-
-            // Cleanup
-            if (FileEquals(dir + "\\" + testInputFile, outputFile))
-            {
-                File.Delete(outputFile);
-            }
-
-        }
-
-        // ========================================================================
-
-        //obsolete
-        [Fact]
-        public void ExpenseMethod_WriteToFile_VerifyNewExpenseWrittenCorrectly()
-        {
-            // Arrange
-            String dir = TestConstants.GetSolutionDir();
-            Expenses expenses = new Expenses(databaseConnection);
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
-            string fileName = TestConstants.ExpenseOutputTestFile;
-            String outputFile = dir + "\\" + fileName;
-            File.Delete(outputFile);
-
-            // Act
-            expenses.Add(DateTime.Now, 14, 35.27, "McDonalds");
-            List<Expense> listBeforeSaving = expenses.List();
-            expenses.SaveToFile(outputFile);
-            expenses.ReadFromFile(outputFile);
-            List<Expense> listAfterSaving = expenses.List();
-
-            Expense beforeSaving = listBeforeSaving[listBeforeSaving.Count - 1];
-            Expense afterSaving = listAfterSaving.Find(e => e.Id == beforeSaving.Id);
-
-            // Assert
-            Assert.Equal(beforeSaving.Id, afterSaving.Id);
-            Assert.Equal(beforeSaving.Category, afterSaving.Category);
-            Assert.Equal(beforeSaving.Description, afterSaving.Description);
-            Assert.Equal(beforeSaving.Amount, afterSaving.Amount);
-
-        }
-
-        // ========================================================================
-
-        [Fact]
-        public void ExpenseMethod_WriteToFile_WriteToLastFileWrittenToByDefault()
-        {
-            // Arrange
-            String dir = TestConstants.GetSolutionDir();
-            Expenses expenses = new Expenses(databaseConnection);
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
-            string fileName = TestConstants.ExpenseOutputTestFile;
-            String outputFile = dir + "\\" + fileName;
-            File.Delete(outputFile);
-            expenses.SaveToFile(outputFile); // output file is now last file that was written to.
-            File.Delete(outputFile);  // Delete the file
-
-            // Act
-            expenses.SaveToFile(); // should write to same file as before
-
-            // Assert
-            Assert.True(File.Exists(outputFile), "output file created");
-            String fileDir = Path.GetFullPath(Path.Combine(expenses.DirName, ".\\"));
-            Assert.Equal(dir, fileDir);
-            Assert.Equal(fileName, expenses.FileName);
 
             // Cleanup
             if (FileEquals(dir + "\\" + testInputFile, outputFile))
