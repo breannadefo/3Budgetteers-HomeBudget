@@ -786,38 +786,66 @@ namespace Budget
             // -----------------------------------------------------------------------
             // get all items first
             // -----------------------------------------------------------------------
-            List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID);
+            List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID);//remove
 
-            // -----------------------------------------------------------------------
-            // Group by Category
-            // -----------------------------------------------------------------------
-            var GroupedByCategory = items.GroupBy(c => c.Category);
+            List<BudgetItemsByCategory> itemsByCategory= new List<BudgetItemsByCategory>();
 
-            // -----------------------------------------------------------------------
-            // create new list
-            // -----------------------------------------------------------------------
-            List<BudgetItemsByCategory> summary = new List<BudgetItemsByCategory>();
-            foreach (var CategoryGroup in GroupedByCategory.OrderBy(g => g.Key))
+            const int sumColumn = 0, categoryIdColumn = 1;
+
+            DateTime realStart = Start ?? new DateTime(1900, 1, 1);
+            DateTime realEnd = End ?? new DateTime(2500, 1, 1);
+
+            string startDate = realStart.ToString("yyyy-MM-dd");
+            string endDate = realEnd.ToString("yyyy-MM-dd");
+
+            SQLiteCommand cmd = Database.dbConnection.CreateCommand();
+            SQLiteDataReader reader;
+
+            if (FilterFlag)
             {
-                // calculate total for this category, and create list of details
-                double total = 0;
-                List<BudgetItem> details = new List<BudgetItem>();
-                foreach (var item in CategoryGroup)
-                {
-                    total = total + item.Amount;
-                    details.Add(item);
-                }
+                cmd.CommandText = "SELECT SUM(Amount), CategoryId FROM expenses WHERE Date >= @startDate AND Date <= @endDate AND CategoryId != @catId GROUP BY CategoryId ;";
+            }
+            else
+            {
+                cmd.CommandText = "SELECT SUM(Amount), CategoryId FROM expenses WHERE Date >= @startDate AND Date <= @endDate GROUP BY CategoryId;";
+            }
+            cmd.Parameters.Add(new SQLiteParameter("@catId", CategoryID));
+            cmd.Parameters.Add(new SQLiteParameter("@startDate", startDate));
+            cmd.Parameters.Add(new SQLiteParameter("@endDate", endDate));
 
-                // Add new BudgetItemsByCategory to our list
-                summary.Add(new BudgetItemsByCategory
+            reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
                 {
-                    Category = CategoryGroup.Key,
-                    Details = details,
-                    Total = total
-                });
+                    double sum = reader.GetDouble(sumColumn);
+
+                    //Finding the category that matches the ID
+                    SQLiteCommand categoryCommand = Database.dbConnection.CreateCommand();
+                    SQLiteDataReader categoryReader;
+                    categoryCommand.CommandText = "SELECT categories.Description FROM categories WHERE categories.Id = @categoryId;";
+                    categoryCommand.Parameters.Add(new SQLiteParameter("@categoryId", reader.GetInt32(categoryIdColumn)));
+                    categoryReader = categoryCommand.ExecuteReader();
+                    categoryReader.Read();
+
+                    String category = categoryReader.GetString(0);
+                    categoryReader.Close();
+
+                    List<BudgetItem> listOfBudgetItems = GetBudgetItems(realStart, realEnd, true, CategoryID);
+
+                    itemsByCategory.Add(new BudgetItemsByCategory
+                    {
+                        Category = listOfBudgetItems[0].Category,
+                        Details = listOfBudgetItems,
+                        Total = sum
+                    });
+                }
             }
 
-            return summary;
+            reader.Close();
+
+            return itemsByCategory;
         }
 
 
