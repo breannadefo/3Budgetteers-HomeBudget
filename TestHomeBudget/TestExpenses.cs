@@ -387,6 +387,47 @@ namespace BudgetCodeTests
 
         // ========================================================================
 
+        [Fact]
+        public void ExpensesMethod_UpdateExpense_InvalidNewCatgegoryId()
+        {
+            // Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String newDB = $"{folder}\\newDB.db";
+            Database.newDatabase(newDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Categories cats = new Categories(conn, true);
+            List<Expense> expList = new List<Expense>();
+            Expenses expenses = new Expenses(conn);
+            DateTime originalDate = new DateTime(2019, 07, 14);
+            DateTime newDate = new DateTime(2023, 03, 02);
+            int originalCatId = 4, newCatId = 111;
+            double originalAmount = -39.99, newAmount = -19.99;
+            String originalDesc = "Video Projector", newDesc = "Tangled Movie";
+            int id = 1;
+
+            // Act
+            expenses.Add(originalDate, originalCatId, originalAmount, originalDesc);
+
+            try
+            {
+                expenses.Update(id, newDate, newAmount, newDesc, newCatId);
+            }
+            // Assert
+            catch (Exception e)
+            {
+                expList = expenses.List();
+
+                Assert.Equal(expList[0].Date, originalDate);
+                Assert.Equal(expList[0].Category, originalCatId);
+                Assert.Equal(expList[0].Amount, originalAmount);
+                Assert.Equal(expList[0].Description, originalDesc);
+            }
+
+            //making sure the list was initialized in the catch
+            Assert.True(expList.Count != 0);
+        }
+
+        // ========================================================================
 
         // -------------------------------------------------------
         // helpful functions, ... they are not tests
