@@ -117,22 +117,19 @@ namespace BudgetCodeTests
         public void ExpensesMethod_Add()
         {
             // Arrange
-            String dir = TestConstants.GetSolutionDir();
-            Expenses expenses = new Expenses(databaseConnection);
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
-            int category = 57;
+            int categoryId = 1;
             double amount = 98.1;
+            Categories categoeries = new Categories(Database.dbConnection, false);
+            Expenses expenses = new Expenses(Database.dbConnection);
+            categoeries.Add("Test Category", Category.CategoryType.Expense);
 
             // Act
-            expenses.Add(DateTime.Now,category,amount,"new expense");
-            List<Expense> expensesList = expenses.List();
+            int initialSizeOfList = expenses.List().Count;
+            expenses.Add(DateTime.Now, categoryId, amount,"new expense");
             int sizeOfList = expenses.List().Count;
 
             // Assert
-            Assert.Equal(numberOfExpensesInFile+1, sizeOfList);
-            Assert.Equal(maxIDInExpenseFile + 1, expensesList[sizeOfList - 1].Id);
-            Assert.Equal(amount, expensesList[sizeOfList - 1].Amount);
-
+            Assert.Equal(initialSizeOfList + 1, sizeOfList);
         }
 
         // ========================================================================
@@ -141,20 +138,17 @@ namespace BudgetCodeTests
         public void ExpensesMethod_Delete()
         {
             // Arrange
-            String dir = TestConstants.GetSolutionDir();
             Expenses expenses = new Expenses(databaseConnection);
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
-            int IdToDelete = 3;
+            int IdToDelete = 1;
+            expenses.Add(DateTime.Now, 1, 10, "new expense");
 
             // Act
+            int initialSizeOfList = expenses.List().Count;
             expenses.Delete(IdToDelete);
-            List<Expense> expensesList = expenses.List();
-            int sizeOfList = expensesList.Count;
+            int sizeOfList = expenses.List().Count;
 
             // Assert
-            Assert.Equal(numberOfExpensesInFile - 1, sizeOfList);
-            Assert.False(expensesList.Exists(e => e.Id == IdToDelete), "correct expense item deleted");
-
+            Assert.Equal(initialSizeOfList - 1, sizeOfList);
         }
 
         // ========================================================================

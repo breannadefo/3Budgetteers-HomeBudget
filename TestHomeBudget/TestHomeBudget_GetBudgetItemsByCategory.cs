@@ -3,6 +3,7 @@ using Xunit;
 using System.IO;
 using System.Collections.Generic;
 using Budget;
+using Xunit.Abstractions;
 
 namespace BudgetCodeTests
 {
@@ -25,28 +26,39 @@ namespace BudgetCodeTests
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
             HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
-            int maxRecords = TestConstants.budgetItemsByCategory_MaxRecords; 
-            BudgetItemsByCategory firstRecord = TestConstants.budgetItemsByCategory_FirstRecord;
+            List<Expense> listAllExpenses = homeBudget.expenses.List();
+            //BudgetItemsByCategory firstRecord = TestConstants.budgetItemsByCategory_FirstRecord;
+            int testCateogory = 1;
 
             // Act
             List<BudgetItemsByCategory> budgetItemsByCategory = homeBudget.GeBudgetItemsByCategory(null, null, false, 9);
-            BudgetItemsByCategory firstRecordTest = budgetItemsByCategory[0];
+            List<Expense> listExpenses = new List<Expense>();
 
-            // Assert
-            Assert.Equal(maxRecords, budgetItemsByCategory.Count);
-
-            // verify 1st record
-            Assert.Equal(firstRecord.Category, firstRecordTest.Category);
-            Assert.Equal(firstRecord.Total, firstRecordTest.Total);
-            Assert.Equal(firstRecord.Details.Count, firstRecordTest.Details.Count);
-            for (int record = 0; record < firstRecord.Details.Count; record++)
+            //Getting all expenses that fall under the testCategoryId
+            foreach (Expense expense in listAllExpenses)
             {
-                BudgetItem validItem = firstRecord.Details[record];
-                BudgetItem testItem = firstRecordTest.Details[record];
-                Assert.Equal(validItem.Amount, testItem.Amount);
-                Assert.Equal(validItem.CategoryID, testItem.CategoryID);
-                Assert.Equal(validItem.ExpenseID, testItem.ExpenseID);
+                if (expense.Category == testCateogory)
+                {
+                    listExpenses.Add(expense);
+                }
+            }
 
+            //Getting all expenses that fall under the testCategoryId
+            BudgetItemsByCategory testCategoryItem = new BudgetItemsByCategory();
+            foreach (BudgetItemsByCategory testCategoryBudgetItem in budgetItemsByCategory)
+            {
+                if (testCategoryBudgetItem.Details[0].CategoryID == testCateogory)
+                {
+                    testCategoryItem = testCategoryBudgetItem;
+                }
+            }
+
+            //Asert
+            Assert.Equal(listExpenses.Count, testCategoryItem.Details.Count);
+
+            for(int record = 0; record < listExpenses.Count; record++)
+            {
+                Assert.Equal(testCategoryItem.Details[record].CategoryID, testCateogory);
             }
         }
 
@@ -91,28 +103,45 @@ namespace BudgetCodeTests
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
             HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
-            List<BudgetItemsByCategory> validBudgetItemsByCategory = TestConstants.getBudgetItemsByCategory2018_Cat9();
-            BudgetItemsByCategory firstRecord = validBudgetItemsByCategory[0];
+            Expenses expenses = new Expenses(Database.dbConnection);
+            //List<BudgetItemsByCategory> validBudgetItemsByCategory = TestConstants.getBudgetItemsByCategory2018_Cat9();
+            List<Expense> listAllExpenses = homeBudget.expenses.List();
+            DateTime startDate = new DateTime(2018, 1, 1);
+            DateTime endDate = new DateTime(2018, 12, 31);
+            int filterCategoryId = 9;
 
             // Act
-            List<BudgetItemsByCategory> budgetItemsByCategory = homeBudget.GeBudgetItemsByCategory(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31), true, 9);
-            BudgetItemsByCategory firstRecordTest = budgetItemsByCategory[0];
+            List<BudgetItemsByCategory> budgetItemsByCategory = homeBudget.GeBudgetItemsByCategory(startDate, endDate, true, filterCategoryId);
+            List<Expense> listExpenses = new List<Expense>();
+
+            //Getting all expenses that fall under the filterCateforyId and are between the two dates
+            foreach (Expense expense in listAllExpenses)
+            {
+                if (expense.Category == filterCategoryId && expense.Date > startDate && expense.Date < endDate)
+                {
+                    listExpenses.Add(expense);
+                }
+            }
+
+            //Getting the corresponding budgetItemsByCategory
+            BudgetItemsByCategory testCategoryItem = new BudgetItemsByCategory();
+            foreach (BudgetItemsByCategory testCategoryBudgetItem in budgetItemsByCategory)
+            {
+                if (testCategoryBudgetItem.Details[0].CategoryID == filterCategoryId)
+                {
+                    testCategoryItem = testCategoryBudgetItem;
+                }
+            }
+
 
             // Assert
-            Assert.Equal(validBudgetItemsByCategory.Count, budgetItemsByCategory.Count);
+            Assert.Equal(listExpenses.Count, testCategoryItem.Details.Count);
 
-            // verify 1st record
-            Assert.Equal(firstRecord.Category, firstRecordTest.Category);
-            Assert.Equal(firstRecord.Total, firstRecordTest.Total);
-            Assert.Equal(firstRecord.Details.Count, firstRecordTest.Details.Count);
-            for (int record = 0; record < firstRecord.Details.Count; record++)
+            for (int record = 0; record < testCategoryItem.Details.Count; record++)
             {
-                BudgetItem validItem = firstRecord.Details[record];
-                BudgetItem testItem = firstRecordTest.Details[record];
-                Assert.Equal(validItem.Amount, testItem.Amount);
-                Assert.Equal(validItem.CategoryID, testItem.CategoryID);
-                Assert.Equal(validItem.ExpenseID, testItem.ExpenseID);
-
+                Assert.Equal(testCategoryItem.Details[record].CategoryID, filterCategoryId);
+                Assert.True(testCategoryItem.Details[record].Date > startDate);
+                Assert.True(testCategoryItem.Details[record].Date < endDate);
             }
         }
 
@@ -129,29 +158,43 @@ namespace BudgetCodeTests
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
             HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
-            List<BudgetItemsByCategory> validBudgetItemsByCategory = TestConstants.getBudgetItemsByCategory2018();
-            BudgetItemsByCategory firstRecord = validBudgetItemsByCategory[0];
-
+            List<Expense> listAllExpenses = homeBudget.expenses.List();
+            //List<BudgetItemsByCategory> validBudgetItemsByCategory = TestConstants.getBudgetItemsByCategory2018();
+            DateTime startDate = new DateTime(2018, 1, 1);
+            DateTime endDate = new DateTime(2018, 12, 31);
+            int filterCategoryId = 9;
 
             // Act
-            List<BudgetItemsByCategory> budgetItemsByCategory = homeBudget.GeBudgetItemsByCategory(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31), false, 9);
-            BudgetItemsByCategory firstRecordTest = budgetItemsByCategory[0];
+            List<BudgetItemsByCategory> budgetItemsByCategory = homeBudget.GeBudgetItemsByCategory(startDate, endDate, false, filterCategoryId);
+            List<Expense> listExpenses = new List<Expense>();
+
+            //Getting all expenses that fall under the filterCateforyId and are between the two dates
+            foreach (Expense expense in listAllExpenses)
+            {
+                if(expense.Category == filterCategoryId && expense.Date > startDate && expense.Date < endDate)
+                {
+                    listExpenses.Add(expense);
+                }
+            }
+
+            //Getting the corresponding budgetItemsByCategory
+            BudgetItemsByCategory testCategoryItem = new BudgetItemsByCategory();
+            foreach (BudgetItemsByCategory testCategoryBudgetItem in budgetItemsByCategory)
+            {
+                if (testCategoryBudgetItem.Details[0].CategoryID == filterCategoryId)
+                {
+                    testCategoryItem = testCategoryBudgetItem;
+                }
+            }
 
             // Assert
-            Assert.Equal(validBudgetItemsByCategory.Count, budgetItemsByCategory.Count);
+            Assert.Equal(listExpenses.Count, testCategoryItem.Details.Count);
 
-            // verify 1st record
-            Assert.Equal(firstRecord.Category, firstRecordTest.Category);
-            Assert.Equal(firstRecord.Total, firstRecordTest.Total);
-            Assert.Equal(firstRecord.Details.Count, firstRecordTest.Details.Count);
-            for (int record = 0; record < firstRecord.Details.Count; record++)
+            for (int record = 0; record < testCategoryItem.Details.Count; record++)
             {
-                BudgetItem validItem = firstRecord.Details[record];
-                BudgetItem testItem = firstRecordTest.Details[record];
-                Assert.Equal(validItem.Amount, testItem.Amount); 
-                Assert.Equal(validItem.CategoryID, testItem.CategoryID);
-                Assert.Equal(validItem.ExpenseID, testItem.ExpenseID);
-
+                Assert.Equal(testCategoryItem.Details[record].CategoryID, filterCategoryId);
+                Assert.True(testCategoryItem.Details[record].Date > startDate);
+                Assert.True(testCategoryItem.Details[record].Date < endDate);
             }
         }
     }

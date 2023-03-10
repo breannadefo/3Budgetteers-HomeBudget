@@ -56,7 +56,7 @@ namespace BudgetCodeTests
             System.IO.File.Copy(goodDB, messyDB, true);
             HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
 
-            // Act
+            //Act
             List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(null, null, false, 9);
 
             // Assert
@@ -81,12 +81,23 @@ namespace BudgetCodeTests
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
             HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
-            int filterCategory = 9;
-            List<Expense> listExpenses = TestConstants.filteredbyCat9();
+            Expenses expenses = new Expenses(Database.dbConnection);
+            List<Expense> listAllExpenses = expenses.List();
             List<Category> listCategories = homeBudget.categories.List();
+            int filterCategory = 9;
 
-            // Act
+            // Act 
             List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(null, null, true, filterCategory);
+            List<Expense> listExpenses = new List<Expense>();
+            int index = 0;
+            foreach(Expense expense in listAllExpenses)
+            {
+                if(expense.Category == filterCategory)
+                {
+                    listExpenses.Add(expense);
+                }
+                index++;
+            }
 
             // Assert
             Assert.Equal(listExpenses.Count, budgetItems.Count);
@@ -113,11 +124,22 @@ namespace BudgetCodeTests
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
             HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
-            List<Expense> listExpenses = TestConstants.filteredbyYear2018();
+            Expenses expenses = new Expenses(Database.dbConnection);
+            List<Expense> listAllExpenses = expenses.List();
             List<Category> listCategories = homeBudget.categories.List();
+            DateTime startDate = new DateTime(2018, 1, 1);
+            DateTime endDate = new DateTime(2018, 12, 31);
 
             // Act
-            List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31), false, 0);
+            List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(startDate, endDate, false, 0);
+            List<Expense> listExpenses = new List<Expense>();
+            foreach (Expense expense in listAllExpenses)
+            {
+                if(expense.Date > startDate && expense.Date < endDate)
+                {
+                    listExpenses.Add(expense);
+                }
+            }
 
             // Assert
             Assert.Equal(listExpenses.Count, budgetItems.Count);
@@ -144,16 +166,35 @@ namespace BudgetCodeTests
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
             HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
-            List<Expense> listExpenses = TestConstants.filteredbyCat9();
-            List<Category> listCategories = homeBudget.categories.List();
+            Expenses expenses = new Expenses(Database.dbConnection);
+            List<Expense> listAllExpenses = expenses.List();
+            DateTime startDate = new DateTime(1900, 1, 1);
+            DateTime endDate = new DateTime(2500, 1, 1);
+            int filterCategory = 9;
+
 
             // Act
-            List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(null, null,  true, 9);
+            List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(null, null,  true, filterCategory);
+            List<Expense> listExpenses = new List<Expense>();
+            foreach (Expense expense in listAllExpenses)
+            {
+                if (expense.Category == filterCategory && expense.Date > startDate && expense.Date < endDate)
+                {
+                    listExpenses.Add(expense);
+                }
+            }
+
+            Double controlTotal = 0;
+            foreach (Expense expense in listExpenses)
+            {
+                controlTotal += expense.Amount;
+            }
+
             double total = budgetItems[budgetItems.Count-1].Balance;
             
 
             // Assert
-            Assert.Equal(TestConstants.filteredbyCat9Total, total);
+            Assert.Equal(controlTotal, total);
         }
 
         // ========================================================================
@@ -168,11 +209,23 @@ namespace BudgetCodeTests
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
             HomeBudget homeBudget = new HomeBudget(messyDB, inFile, false);
-            List<Expense> listExpenses = TestConstants.filteredbyYear2018AndCategory10();
+            Expenses expenses = new Expenses(Database.dbConnection);
+            List<Expense> listAllExpenses = expenses.List();
             List<Category> listCategories = homeBudget.categories.List();
+            DateTime startDate = new DateTime(2018, 1, 1);
+            DateTime endDate = new DateTime(2018, 12, 31);
+            int filterCategory = 10;
 
             // Act
-            List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31), true, 10);
+            List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(startDate, endDate, true, filterCategory);
+            List<Expense> listExpenses = new List<Expense>();
+            foreach(Expense expense in listAllExpenses)
+            {
+                if(expense.Category == filterCategory && expense.Date > startDate && expense.Date < endDate)
+                {
+                    listExpenses.Add(expense);
+                }
+            }
 
             // Assert
             Assert.Equal(listExpenses.Count, budgetItems.Count);
