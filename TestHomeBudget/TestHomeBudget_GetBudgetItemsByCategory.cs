@@ -76,6 +76,7 @@ namespace BudgetCodeTests
             int maxRecords20 = TestConstants.budgetItemsByCategory20;
 
             // Act
+            //why calling getbudgetitems by month?
             List<BudgetItemsByMonth> budgetItemsByCategory = homeBudget.GetBudgetItemsByMonth(null, null, true, 14);
 
             // Assert
