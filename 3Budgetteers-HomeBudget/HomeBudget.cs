@@ -4,6 +4,7 @@
 // ============================================================================
 
 using System.Collections.Generic;
+using System.Data.SQLite;
 
 namespace Budget
 {
@@ -591,47 +592,62 @@ namespace Budget
             // -----------------------------------------------------------------------
             List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID);
 
-            //get all budget items grouped by month
-            //once that is done, requery to get all bugdte items for specific month
-            //add those into the details of budget items by month
-            //seems useless to query twice
-            //wtv lets do it that way then see
-           
-            //Get all expenses grouped by month
-            string expenseQuery = "SELECT SUM(Amount), substr(Date ,1 ,7) FROM expenses WHERE Date >= startDate AND Date =< endDate GROUP BY substr(Date ,1 ,7);"
+            List<BudgetItemsByMonth> itemsByMonth = new List<BudgetItemsByMonth>();
 
-                //write query for categories and then inner join
-            string categoryQuery = "";
-            // -----------------------------------------------------------------------
-            // Group by year/month
-            // -----------------------------------------------------------------------
-            var GroupedByMonth = items.GroupBy(c => c.Date.Year.ToString("D4") + "/" + c.Date.Month.ToString("D2"));
+            const int sumColumn = 0, monthColumn = 1;
 
-            // -----------------------------------------------------------------------
-            // create new list
-            // -----------------------------------------------------------------------
-            var summary = new List<BudgetItemsByMonth>();
-            foreach (var MonthGroup in GroupedByMonth)
+            DateTime realStart = Start ?? new DateTime(1900, 1, 1);
+            DateTime realEnd = End ?? new DateTime(2500, 1, 1);
+
+            string startDate = realStart.ToString("yyyy-MM-dd");
+            string endDate = realEnd.ToString("yyyy-MM-dd");
+
+            SQLiteCommand cmd = Database.dbConnection.CreateCommand();
+            SQLiteDataReader reader;
+
+            if (FilterFlag)
             {
-                // calculate total for this month, and create list of details
-                double total = 0;
-                var details = new List<BudgetItem>();
-                foreach (var item in MonthGroup)
-                {
-                    total = total + item.Amount;
-                    details.Add(item);
-                }
+                cmd.CommandText = "SELECT SUM(Amount), substr(Date ,1 ,7) FROM expenses WHERE Date >= @startDate AND Date <= @endDate AND CategoryId != @catId GROUP BY substr(Date ,1 ,7);";
+                cmd.Parameters.Add(new SQLiteParameter("@catId", CategoryID));
+            }
+            else
+            {
+                cmd.CommandText = "SELECT SUM(Amount), substr(Date ,1 ,7) FROM expenses WHERE Date >= @startDate AND Date <= @endDate GROUP BY substr(Date ,1 ,7);";
+            }
+            cmd.Parameters.Add(new SQLiteParameter("@startDate", startDate));
+            cmd.Parameters.Add(new SQLiteParameter("@endDate", endDate));
 
-                // Add new BudgetItemsByMonth to our list
-                summary.Add(new BudgetItemsByMonth
+            reader = cmd.ExecuteReader();
+
+            if(reader.HasRows)
+            {
+                while (reader.Read())
                 {
-                    Month = MonthGroup.Key,
-                    Details = details,
-                    Total = total
-                });
+                    double sum = reader.GetDouble(sumColumn);
+
+                    string yearAndMonth = reader.GetString(monthColumn);
+
+                    int year = int.Parse(yearAndMonth.Substring(0, 4));
+                    int month = int.Parse(yearAndMonth.Substring(5, 2));
+
+                    int daysInMonth = DateTime.DaysInMonth(year, month);
+
+                    DateTime beginDate = new DateTime(year, month, 1);
+                    DateTime finishDate = beginDate.AddDays(daysInMonth - 1);
+
+                    List<BudgetItem> bi = GetBudgetItems(beginDate, finishDate, FilterFlag, CategoryID);
+
+                    itemsByMonth.Add(new BudgetItemsByMonth
+                    {
+                        Month = yearAndMonth,
+                        Details = bi,
+                        Total = sum
+                    });                    
+                }
             }
 
-            return summary;
+            return itemsByMonth;
+            //in theory should add the budget items by month properly
         }
 
         // ============================================================================
