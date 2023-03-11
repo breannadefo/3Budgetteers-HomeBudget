@@ -55,6 +55,8 @@ namespace BudgetCodeTests
 
         // ========================================================================
 
+        //Modify to use new DB
+
         [Fact]
         public void CategoriesMethod_ReadFromDatabase_ValidateCorrectDataWasRead()
         {
@@ -77,6 +79,8 @@ namespace BudgetCodeTests
         }
 
         // ========================================================================
+
+        //Modify to use new DB
 
         [Fact]
         public void CategoriesMethod_List_ReturnsListOfCategories()
