@@ -292,7 +292,7 @@ namespace Budget
         // ============================================================================
 
         /// <summary>
-        /// Retrieves all the budget items form the database groouped by their month.
+        /// Retrieves all the budget items form the database grouped by their month.
         /// As the class name suggests, the budget items are sorted by the month they occur in.
         /// 
         /// The method takes in the start date, end date, a FilterFlag which determines if the budget items will be filtered by
@@ -418,7 +418,7 @@ namespace Budget
 
             if (FilterFlag)
             {
-                cmd.CommandText = "SELECT SUM(Amount), substr(Date ,1 ,7) FROM expenses WHERE Date >= @startDate AND Date <= @endDate AND CategoryId != @catId GROUP BY substr(Date ,1 ,7);";
+                cmd.CommandText = "SELECT SUM(Amount), substr(Date ,1 ,7) FROM expenses WHERE Date >= @startDate AND Date <= @endDate AND CategoryId = @catId GROUP BY substr(Date ,1 ,7);";
                 cmd.Parameters.Add(new SQLiteParameter("@catId", CategoryID));
             }
             else
@@ -458,7 +458,6 @@ namespace Budget
             }
 
             return itemsByMonth;
-            //in theory should add the budget items by month properly
         }
 
         // ============================================================================
