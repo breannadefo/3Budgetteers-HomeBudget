@@ -73,7 +73,7 @@ namespace BudgetCodeTests
             homeBudget.expenses.Add(new DateTime(2020, 1, 9), 10, -4, "Sixth test expense");
 
             string[] expectedMonths = {"2018-01", "2019-01", "2020-01" };
-            double[] expectedTotals = { -5 , 15, -4};
+            double[] expectedTotals = { 10 , -8, 14};
 
             
             // Act
@@ -88,6 +88,7 @@ namespace BudgetCodeTests
                 Assert.Equal(1, budgetItemsByMonth[i].Details.Count);
                 Assert.Equal(expectedMonths[i], budgetItemsByMonth[i].Month);
                 Assert.Equal(expectedTotals[i], budgetItemsByMonth[i].Total);
+                Assert.Equal(9, budgetItemsByMonth[i].Details[0].CategoryID);
             }
         }
         // ========================================================================
@@ -110,7 +111,7 @@ namespace BudgetCodeTests
             homeBudget.expenses.Add(new DateTime(2020, 1, 9), 10, -4, "Sixth test expense");
 
             const string expectedMonth = "2018-01";
-            const double expectedTotal = -5;
+            const double expectedTotal = 10;
 
             // Act
             List<BudgetItemsByMonth> budgetItemsByMonth = homeBudget.GetBudgetItemsByMonth(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31), true, 9);
@@ -123,6 +124,7 @@ namespace BudgetCodeTests
             Assert.Equal(expectedMonth, firstRecordTest.Month);
             Assert.Equal(expectedTotal, firstRecordTest.Total);
             Assert.Equal(1, firstRecordTest.Details.Count);
+            Assert.Equal(9, firstRecordTest.Details[0].CategoryID);
         }
 
         // ========================================================================
