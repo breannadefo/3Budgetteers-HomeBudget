@@ -26,8 +26,7 @@ namespace BudgetCodeTests
             System.IO.File.Copy(goodDB, messyDB, true);
             HomeBudget homeBudget = new HomeBudget(messyDB, false);
             List<Expense> listAllExpenses = homeBudget.expenses.List();
-            //BudgetItemsByCategory firstRecord = TestConstants.budgetItemsByCategory_FirstRecord;
-            int testCateogory = 1;
+            int testCateogory = 9;
 
             // Act
             List<BudgetItemsByCategory> budgetItemsByCategory = homeBudget.GeBudgetItemsByCategory(null, null, false, 9);
@@ -72,22 +71,39 @@ namespace BudgetCodeTests
             String messyDB = $"{folder}\\messy.db";
             System.IO.File.Copy(goodDB, messyDB, true);
             HomeBudget homeBudget = new HomeBudget(messyDB, false);
-            int maxRecords14 = TestConstants.budgetItemsByCategory14;
-            int maxRecords20 = TestConstants.budgetItemsByCategory20;
+            List<Expense> listAllExpenses = homeBudget.expenses.List();
+            int testCategory = 14;
 
             // Act
-            //why calling getbudgetitems by month?
-            List<BudgetItemsByMonth> budgetItemsByCategory = homeBudget.GetBudgetItemsByMonth(null, null, true, 14);
+            List<BudgetItemsByCategory> budgetItemsByCategory = homeBudget.GeBudgetItemsByCategory(null, null, true, testCategory);
+            List<Expense> listExpenses = new List<Expense>();
 
-            // Assert
-            Assert.Equal(maxRecords14, budgetItemsByCategory.Count);
+            //Getting all expenses that fall under the testCategoryId
+            foreach (Expense expense in listAllExpenses)
+            {
+                if (expense.Category == testCategory)
+                {
+                    listExpenses.Add(expense);
+                }
+            }
 
+            //Getting all expenses that fall under the testCategoryId
+            BudgetItemsByCategory testCategoryItem = new BudgetItemsByCategory();
+            foreach (BudgetItemsByCategory testCategoryBudgetItem in budgetItemsByCategory)
+            {
+                if (testCategoryBudgetItem.Details[0].CategoryID == testCategory)
+                {
+                    testCategoryItem = testCategoryBudgetItem;
+                }
+            }
 
-            // Act
-            budgetItemsByCategory = homeBudget.GetBudgetItemsByMonth(null, null, true, 20);
+            //Asert
+            Assert.Equal(listExpenses.Count, testCategoryItem.Details.Count);
 
-            // Assert
-            Assert.Equal(maxRecords20, budgetItemsByCategory.Count);
+            for (int record = 0; record < listExpenses.Count; record++)
+            {
+                Assert.Equal(testCategoryItem.Details[record].CategoryID, testCategory);
+            }
 
         }
         // ========================================================================
