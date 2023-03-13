@@ -88,19 +88,19 @@ namespace BudgetCodeTests
         {
             // Arrange
             String folder = TestConstants.GetSolutionDir();
-            String newDB = $"{folder}\\{TestConstants.testDBInputFile}";
-            Database.existingDatabase(newDB);
+            String newDB = $"{folder}\\newDB.db";
+            Database.newDatabase(newDB);
             SQLiteConnection conn = Database.dbConnection;
-            Categories categories = new Categories(conn, false);
+            Categories categories = new Categories(conn, true);
+            int numberOfDefaultCategories = 16;
 
             // Act
             List<Category> list = categories.List();
 
             // Assert
-            Assert.Equal(numberOfCategoriesInFile, list.Count);
+            Assert.Equal(numberOfDefaultCategories, list.Count);
 
         }
-
 
         // ========================================================================
 
