@@ -23,12 +23,10 @@ namespace Budget
     // ====================================================================
 
     /// <summary>
-    /// Used to hold collections of Expense objects and to read/write from files that pertain to
-    /// expense information. It contains a default file name, a list that holds all of the Expense
-    /// objects, a file name, and a directory name. It has methods to manage the list of expenses,
-    /// and some to read/write to files that have or will soon hold information about the expenses.
-    /// Only the default file name is static, so to access anything else in the class, an instance
-    /// must be created first.
+    /// Used to access and edit a collection of Expense objects in the database and to read/write 
+    /// from files that pertain to expense information. It has methods to get a list of the expenses,
+    /// to add, update, and delete expenses from the database, and one to write the expenses information
+    /// to a file. To access anything in the class, an instance must be created first.
     /// </summary>
     public class Expenses
     {
@@ -89,18 +87,18 @@ namespace Budget
         }
 
         /// <summary>
-        /// Creates or adds a new Expense objects to the expenses list. To create a new expense, it 
-        /// needs an id, a date, a category, an amount, and a description. the date, category, amount,
-        /// and description are all passed into the method in parameters, but the id has to be
-        /// calculated based on the expense ids that already are in the database. It then adds the 
-        /// expense to the database.
+        /// Creates or adds a new Expense objects to the expenses table in the database. To create a 
+        /// new expense, it needs an id, a date, a category, an amount, and a description. The date, 
+        /// category, amount, and description are all passed into the method in parameters, but the 
+        /// id is automatically calculated based on the other ids once the expense is inserted into 
+        /// the expenses table.
         /// 
         /// <example>
         /// Here's an example of how to use the method:
         /// 
         /// <code>
         /// 
-        /// Expenses exp = new Expenses();
+        /// Expenses exp = new Expenses(Database.dbConnection);
         /// exp.Add(DateTime.Now, 9, 66.96, "Dining room chair");
         /// exp.Add(DateTime.Now, 9, 34.99, "2 gallon of pink paint");
         /// exp.Add(DateTime.Now, 14, 12.50, "Poutine");
@@ -152,7 +150,7 @@ namespace Budget
         /// 
         /// <code>
         /// 
-        /// Expenses exp = new Expenses();
+        /// Expenses exp = new Expenses(Database.dbConnection);
         /// exp.Add(DateTime.Now, 10, 14.87, "T-Shirt");
         /// exp.Add(DateTime.Now, 13, 60.00, "Monthly bus pass");
         /// 
@@ -207,7 +205,7 @@ namespace Budget
         //        this instance
         // ====================================================================
         /// <summary>
-        /// Creates a list of the expenses to return to the caller of the method.
+        /// Creates a list of the expenses from the database to return to the caller of the method.
         /// 
         /// <example>
         /// Here's an example of how to use this method:

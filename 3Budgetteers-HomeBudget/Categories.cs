@@ -24,10 +24,9 @@ namespace Budget
     // ====================================================================
 
     /// <summary>
-    /// Used to hold collections of Category objects and to read/write from files. It contains a default file name, the list
-    /// that holds all the category items, a file name, and a directory name. It has methods to manage the list of categories
-    /// and some to read/write to files that work specifically with getting or saving the information about the categories. 
-    /// Only the default file name is static, so to access anything else in the class, an instance must be created first.
+    /// Used to access and edit a collection of Category objects that are in a database. It has methods to get a list of all 
+    /// the categories, some to add, edit, or delete a category, and some to set up the values in the categories and categoryType
+    /// tables in the database. To access anything in the class, an instance must be created first.
     /// </summary>
     public class Categories
     {
@@ -255,10 +254,12 @@ namespace Budget
         /// 
         /// <example>
         /// Here is an example of how to use the method:
+        /// 
         /// <code>
         /// Categories c = new Categories(connection, true);
         /// c.Add("Test Grading", Category.CategoryType.Income);
         /// </code>
+        /// 
         /// This creates a new Categories object which gets 16 default categories. After the Add method is run, c would contain
         /// a list of 17 categories, with the last one being the "test" one that was just created.
         /// </example>
@@ -298,10 +299,12 @@ namespace Budget
         /// id, it searches for the row with that id in the database and then deletes that row.
         /// <example>
         /// Here is an example of how to use this method:
+        /// 
         /// <code>
         /// Categories c = new Categories(connection, true);
         /// c.Delete(1);
         /// </code>
+        /// 
         /// The Categories constructor creates a new object with 16 default categories. After calling the Delete method, only
         /// 15 will remain since the category with the id of 1 would have been removed from the list.
         /// </example>
@@ -364,9 +367,7 @@ namespace Budget
         /// 
         /// Now the category with an id of 17 has a description of "Test Value" instead of "TestCategory" and its category type is
         /// income instead of expense.
-        /// 
         /// </example>
-        /// 
         /// </summary>
         /// <param name="idToUpdate">The id of the category that will be updated.</param>
         /// <param name="newDescription">The new description that will replace the old description.</param>
@@ -453,9 +454,7 @@ namespace Budget
         /// 
         /// Since categories were deleted from the database and the list of categories was retrieved after those deletions,
         /// the number of categories in the list will be smaller than before the deletions.
-        /// 
         /// </example>
-        /// 
         /// </summary>
         /// <returns>A list of all the categories from the categories table.</returns>
         /// <exception cref="SQLiteException">Thrown when there is a problem reading from the database.</exception>
