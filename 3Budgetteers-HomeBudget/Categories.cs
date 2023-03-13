@@ -227,7 +227,7 @@ namespace Budget
             }
             catch (Exception e)
             {
-                throw new SQLiteException();
+                throw new SQLiteException(e.Message);
             }
         }
 

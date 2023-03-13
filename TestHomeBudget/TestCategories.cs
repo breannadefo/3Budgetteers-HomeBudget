@@ -271,7 +271,6 @@ namespace BudgetCodeTests
         }
 
         // ========================================================================
-
         
         [Fact]
         public void CategoriesMethod_UpdateCategory()
@@ -294,7 +293,35 @@ namespace BudgetCodeTests
             Assert.Equal(Category.CategoryType.Income, category.Type);
 
         }
-        
+
+        // ========================================================================
+
+        [Fact]
+        public void CategoriesMethod_ResetCategoryTypes_ErrorIfCategoriesStillExist()
+        {
+            // Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String newDB = $"{folder}\\newDB.db";
+            Database.newDatabase(newDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Categories categories = new Categories(conn, true);
+            bool resetThrows = false;
+
+            // Act
+            categories.SetCategoriesToDefaults();
+            
+            try
+            {
+                categories.ResetCategoryTypes();
+            }
+            catch (Exception ex)
+            {
+                resetThrows = true;
+            }
+            
+            // Assert
+            Assert.True(resetThrows);
+        }
     }
 }
 
