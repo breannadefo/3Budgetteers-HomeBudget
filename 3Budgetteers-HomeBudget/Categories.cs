@@ -272,10 +272,21 @@ namespace Budget
             sqlite_cmd = Database.dbConnection.CreateCommand();
 
             //Writing the insert command
-            sqlite_cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES (@Description, @Type);";
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", desc));
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Type", (int)type));
-            sqlite_cmd.ExecuteNonQuery();
+            try
+            {
+                sqlite_cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES (@Description, @Type);";
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", desc));
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@Type", (int)type));
+                sqlite_cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                throw new SQLiteException(e.Message);
+            }
+            finally
+            {
+                sqlite_cmd.Dispose();
+            }
         }
 
         // ====================================================================
