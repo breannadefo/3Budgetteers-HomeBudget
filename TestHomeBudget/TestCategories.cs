@@ -62,17 +62,18 @@ namespace BudgetCodeTests
         {
             // Arrange
             String folder = TestConstants.GetSolutionDir();
-            String existingDB = $"{folder}\\{TestConstants.testDBInputFile}";
-            Database.existingDatabase(existingDB);
+            String newDB = $"{folder}\\newDB.db";
+            Database.newDatabase(newDB);
             SQLiteConnection conn = Database.dbConnection;
+            int numberOfDefaultCategories = 16;
 
             // Act
-            Categories categories = new Categories(conn, false);
+            Categories categories = new Categories(conn, true);
             List<Category> list = categories.List();
             Category firstCategory = list[0];
 
             // Assert
-            Assert.Equal(numberOfCategoriesInFile, list.Count);
+            Assert.Equal(numberOfDefaultCategories, list.Count);
             Assert.Equal(firstCategoryInFile.Id, firstCategory.Id);
             Assert.Equal(firstCategoryInFile.Description, firstCategory.Description);
 
