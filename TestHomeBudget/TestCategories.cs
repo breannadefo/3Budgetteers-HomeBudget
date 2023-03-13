@@ -118,13 +118,14 @@ namespace BudgetCodeTests
             Category.CategoryType type = Category.CategoryType.Income;
 
             // Act
+            List<Category> beforeAddList = categories.List();
             categories.Add(descr,type);
-            List<Category> categoriesList = categories.List();
+            List<Category> afterAddList = categories.List();
             int sizeOfList = categories.List().Count;
 
             // Assert
-            Assert.Equal(numberOfCategoriesInFile + 1, sizeOfList);
-            Assert.Equal(descr, categoriesList[sizeOfList - 1].Description);
+            Assert.Equal(beforeAddList.Count + 1, sizeOfList);
+            Assert.Equal(descr, afterAddList[sizeOfList - 1].Description);
 
         }
 
