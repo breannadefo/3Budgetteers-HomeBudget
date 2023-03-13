@@ -121,7 +121,7 @@ namespace BudgetCodeTests
             List<Category> beforeAddList = categories.List();
             categories.Add(descr,type);
             List<Category> afterAddList = categories.List();
-            int sizeOfList = categories.List().Count;
+            int sizeOfList = afterAddList.Count;
 
             // Assert
             Assert.Equal(beforeAddList.Count + 1, sizeOfList);
@@ -145,13 +145,14 @@ namespace BudgetCodeTests
             int IdToDelete = 3;
 
             // Act
+            List<Category> beforeDeleteList = categories.List();
             categories.Delete(IdToDelete);
-            List<Category> categoriesList = categories.List();
-            int sizeOfList = categoriesList.Count;
+            List<Category> afterDeleteList = categories.List();
+            int sizeOfList = afterDeleteList.Count;
 
             // Assert
-            Assert.Equal(numberOfCategoriesInFile - 1, sizeOfList);
-            Assert.False(categoriesList.Exists(e => e.Id == IdToDelete), "correct Category item deleted");
+            Assert.Equal(beforeDeleteList.Count - 1, sizeOfList);
+            Assert.False(afterDeleteList.Exists(e => e.Id == IdToDelete), "correct Category item deleted");
 
         }
 
