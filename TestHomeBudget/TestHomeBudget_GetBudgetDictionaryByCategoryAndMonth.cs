@@ -68,10 +68,9 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
-            String messyDB = $"{folder}\\messy.db";
-            System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, false);
+
+            String uneditedDb = $"{folder}\\unedited.db";
+            HomeBudget homeBudget = new HomeBudget(uneditedDb, false);
 
             int maxRecords = TestConstants.budgetItemsByCategoryAndMonth_MaxRecords;
             Dictionary<string, object> totalsRecord = TestConstants.getBudgetItemsByCategoryAndMonthTotalsRecord();
