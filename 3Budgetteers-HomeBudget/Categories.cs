@@ -458,6 +458,8 @@ namespace Budget
         /// 
         /// </summary>
         /// <returns>A list of all the categories from the categories table.</returns>
+        /// <exception cref="SQLiteException">Thrown when there is a problem reading from the database.</exception>
+        /// <exception cref="Exception">Thrown when there is a problem parsing the data that is read from the database.</exception>
         public List<Category> List()
         {
             int idColumn = 0, descriptionColumn = 1, typeIdColumn = 2;
