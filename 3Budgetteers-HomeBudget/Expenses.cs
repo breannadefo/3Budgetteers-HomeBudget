@@ -36,7 +36,7 @@ namespace Budget
         /// Creates an instance of expenses object passing in a valid database connection.
         /// The DB connection is passed in to ensure there is a connection to a valid database.
         /// </summary>
-        /// <param name="conn"></param>
+        /// <param name="conn">The connection to the database.</param>
         public Expenses(System.Data.SQLite.SQLiteConnection conn)
         {
 
@@ -120,12 +120,23 @@ namespace Budget
             sqlite_cmd = Database.dbConnection.CreateCommand();
 
             //Writing the insert command
-            sqlite_cmd.CommandText = "INSERT INTO expenses (Date, Description, Amount, CategoryId) VALUES (@Date, @Description, @Amount, @CategoryId);";
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Date", date.ToString("yyyy-MM-dd")));
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", description));
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Amount", amount));
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@CategoryId", category));
-            sqlite_cmd.ExecuteNonQuery();
+            try
+            {
+                sqlite_cmd.CommandText = "INSERT INTO expenses (Date, Description, Amount, CategoryId) VALUES (@Date, @Description, @Amount, @CategoryId);";
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@Date", date.ToString("yyyy-MM-dd")));
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", description));
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@Amount", amount));
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@CategoryId", category));
+                sqlite_cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                throw new SQLiteException(e.Message);
+            }
+            finally
+            {
+                sqlite_cmd.Dispose();
+            }
         }
 
         // ====================================================================
