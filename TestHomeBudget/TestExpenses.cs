@@ -144,6 +144,39 @@ namespace BudgetCodeTests
         {
             // Arrange
             String folder = TestConstants.GetSolutionDir();
+            String newDB = $"{folder}\\newDB.db";
+            Database.newDatabase(newDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Categories toSetUpDatabase = new Categories(conn, true);
+            DateTime dates = DateTime.Now;
+            int catId1 = 9, catId2 = 11, catId3 = 4;
+            int numberOfExpenses = 3, firstId = 1;
+            double amount1 = -9.78, amount2 = -14.95, amount3 = -43.67;
+            string desc1 = "test obj 1", desc2 = "test obj 2", desc3 = "test obj 3";
+
+            // Act
+            Expenses expenses = new Expenses(conn);
+            expenses.Add(dates, catId1, amount1, desc1);
+            expenses.Add(dates, catId2, amount2, desc2);
+            expenses.Add(dates, catId3, amount3, desc3);
+
+            List<Expense> list = expenses.List();
+            Expense firstExpense = list[0];
+
+            // Assert
+            Assert.Equal(numberOfExpenses, list.Count);
+            Assert.Equal(firstId, firstExpense.Id);
+            Assert.Equal(catId1, firstExpense.Category);
+            Assert.Equal(amount1, firstExpense.Amount);
+            Assert.Equal(desc1, firstExpense.Description);
+            
+        }
+        /*
+         [Fact]
+        public void ExpensesMethod_ReadFromDatabase_ValidateCorrectDataWasRead()
+        {
+            // Arrange
+            String folder = TestConstants.GetSolutionDir();
             String existingDB = $"{folder}\\{TestConstants.testDBInputFile}";
             Database.existingDatabase(existingDB);
             SQLiteConnection conn = Database.dbConnection;
@@ -159,6 +192,7 @@ namespace BudgetCodeTests
             Assert.Equal(firstExpenseInFile.Description, firstExpense.Description);
 
         }
+         */
 
         //=============================================================================
 
