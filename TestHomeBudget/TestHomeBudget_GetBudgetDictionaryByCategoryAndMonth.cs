@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using Budget;
 using System.Dynamic;
+using System.Data.SQLite;
 
 namespace BudgetCodeTests
 {
@@ -20,12 +21,11 @@ namespace BudgetCodeTests
         public void HomeBudgetMethod_GetBudgetDictionaryByCategoryAndMonth_NoStartEnd_NoFilter_VerifyNumberOfRecords()
         {
             // Arrange
+            
             string folder = TestConstants.GetSolutionDir();
-           
-            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
-            String messyDB = $"{folder}\\messy.db";
-            System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, false);
+            
+            String uneditedDb = $"{folder}\\unedited.db";
+            HomeBudget homeBudget = new HomeBudget(uneditedDb, false);
 
             int maxRecords = TestConstants.budgetItemsByCategoryAndMonth_MaxRecords;
             Dictionary<string, object> firstRecord = TestConstants.getBudgetItemsByCategoryAndMonthFirstRecord();
@@ -45,10 +45,9 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
-            String messyDB = $"{folder}\\messy.db";
-            System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, false);
+
+            String uneditedDb = $"{folder}\\unedited.db";
+            HomeBudget homeBudget = new HomeBudget(uneditedDb, false);
 
             int maxRecords = TestConstants.budgetItemsByCategoryAndMonth_MaxRecords; 
             Dictionary<string,object> firstRecord = TestConstants.getBudgetItemsByCategoryAndMonthFirstRecord();
@@ -69,10 +68,9 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
-            String messyDB = $"{folder}\\messy.db";
-            System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, false);
+
+            String uneditedDb = $"{folder}\\unedited.db";
+            HomeBudget homeBudget = new HomeBudget(uneditedDb, false);
 
             int maxRecords = TestConstants.budgetItemsByCategoryAndMonth_MaxRecords;
             Dictionary<string, object> totalsRecord = TestConstants.getBudgetItemsByCategoryAndMonthTotalsRecord();
@@ -94,10 +92,9 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
-            String messyDB = $"{folder}\\messy.db";
-            System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, false);
+
+            String uneditedDb = $"{folder}\\unedited.db";
+            HomeBudget homeBudget = new HomeBudget(uneditedDb, false);
             List<Dictionary<string, object>> expectedResults =TestConstants.getBudgetItemsByCategoryAndMonthCat10();
 
             // Act
@@ -120,10 +117,9 @@ namespace BudgetCodeTests
         {
             // Arrange
             string folder = TestConstants.GetSolutionDir();
-            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
-            String messyDB = $"{folder}\\messy.db";
-            System.IO.File.Copy(goodDB, messyDB, true);
-            HomeBudget homeBudget = new HomeBudget(messyDB, false);
+
+            String uneditedDb = $"{folder}\\unedited.db";
+            HomeBudget homeBudget = new HomeBudget(uneditedDb, false);
             List<Dictionary<string, object>> expectedResults = TestConstants.getBudgetItemsByCategoryAndMonth2020();
 
             // Act

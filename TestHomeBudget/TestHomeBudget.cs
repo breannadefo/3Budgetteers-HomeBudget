@@ -17,7 +17,9 @@ namespace BudgetCodeTests
         public void HomeBudgetObject_New_WithFilename()
         {
             // Arrange
-            string file = TestConstants.GetSolutionDir() + "\\" + testInputFile;
+            string folder = TestConstants.GetSolutionDir();
+            String file = $"{folder}\\unedited.db";
+
             int numExpenses = TestConstants.numberOfExpensesInFile;
             int numCategories = TestConstants.numberOfCategoriesInFile;
 
