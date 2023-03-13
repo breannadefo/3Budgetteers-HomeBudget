@@ -36,7 +36,7 @@ namespace Budget
         /// Creates an instance of expenses object passing in a valid database connection.
         /// The DB connection is passed in to ensure there is a connection to a valid database.
         /// </summary>
-        /// <param name="conn"></param>
+        /// <param name="conn">The connection to the database.</param>
         public Expenses(System.Data.SQLite.SQLiteConnection conn)
         {
 
@@ -113,6 +113,7 @@ namespace Budget
         /// <param name="category">Represents the category the expense belongs to.</param>
         /// <param name="amount">Represents the monetary value of the expense.</param>
         /// <param name="description">Represents a description of what the expense is.</param>
+        /// <exception cref="SQLiteException">Thrown when there is a problem adding an expense to the table.</exception>
         public void Add(DateTime date, int category, Double amount, String description)
         {
             //Connecting to the database
@@ -120,12 +121,23 @@ namespace Budget
             sqlite_cmd = Database.dbConnection.CreateCommand();
 
             //Writing the insert command
-            sqlite_cmd.CommandText = "INSERT INTO expenses (Date, Description, Amount, CategoryId) VALUES (@Date, @Description, @Amount, @CategoryId);";
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Date", date.ToString("yyyy-MM-dd")));
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", description));
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Amount", amount));
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@CategoryId", category));
-            sqlite_cmd.ExecuteNonQuery();
+            try
+            {
+                sqlite_cmd.CommandText = "INSERT INTO expenses (Date, Description, Amount, CategoryId) VALUES (@Date, @Description, @Amount, @CategoryId);";
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@Date", date.ToString("yyyy-MM-dd")));
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", description));
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@Amount", amount));
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@CategoryId", category));
+                sqlite_cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                throw new SQLiteException(e.Message);
+            }
+            finally
+            {
+                sqlite_cmd.Dispose();
+            }
         }
 
         // ====================================================================
@@ -154,6 +166,8 @@ namespace Budget
         /// <param name="Id">Represents the expense id of the expense that will be deleted.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the id passed into the method
         /// doesn't match with any expense ids in the list.</exception>
+        /// <exception cref="SQLiteException">Thrown when there is a problem deleting an expense from
+        /// the expenses table.</exception>
         public void Delete(int Id)
         {
             try
@@ -219,6 +233,8 @@ namespace Budget
         /// 
         /// </summary>
         /// <returns>A list of all the expenses in the database.</returns>
+        /// <exception cref="SQLiteException">Thrown when there is a problem reading from the database.</exception>
+        /// <exception cref="Exception">Thrown when there is a problem parsing the data that is read from the database.</exception>
         public List<Expense> List()
         {
             const int idColumn = 0, dateColumn = 1, descriptionColumn = 2, amountColumn = 3, categoryIdColumn = 4;
@@ -231,26 +247,39 @@ namespace Budget
             cmd.CommandText = "SELECT Id, Date, Description, Amount, CategoryId FROM expenses ORDER BY Id ASC;";
 
             reader = cmd.ExecuteReader();
-            if (reader.HasRows)
+            try
             {
-                while (reader.Read())
+                if (reader.HasRows)
                 {
-                    int id = reader.GetInt32(idColumn);
+                    while (reader.Read())
+                    {
+                        int id = reader.GetInt32(idColumn);
 
-                    string date = reader.GetString(dateColumn);
-                    DateTime realDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                        string date = reader.GetString(dateColumn);
+                        DateTime realDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-                    string description = reader.GetString(descriptionColumn);
+                        string description = reader.GetString(descriptionColumn);
 
-                    double amount = reader.GetDouble(amountColumn);
+                        double amount = reader.GetDouble(amountColumn);
 
-                    int catId = reader.GetInt32(categoryIdColumn);
+                        int catId = reader.GetInt32(categoryIdColumn);
 
-                    list.Add(new Expense(id, realDate, catId, amount, description));
+                        list.Add(new Expense(id, realDate, catId, amount, description));
+                    }
                 }
             }
-
-            reader.Close();
+            catch (SQLiteException ex)
+            {
+                throw new SQLiteException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+            }
 
             return list;
         }

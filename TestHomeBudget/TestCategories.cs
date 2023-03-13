@@ -62,17 +62,18 @@ namespace BudgetCodeTests
         {
             // Arrange
             String folder = TestConstants.GetSolutionDir();
-            String existingDB = $"{folder}\\{TestConstants.testDBInputFile}";
-            Database.existingDatabase(existingDB);
+            String newDB = $"{folder}\\newDB.db";
+            Database.newDatabase(newDB);
             SQLiteConnection conn = Database.dbConnection;
+            int numberOfDefaultCategories = 16;
 
             // Act
-            Categories categories = new Categories(conn, false);
+            Categories categories = new Categories(conn, true);
             List<Category> list = categories.List();
             Category firstCategory = list[0];
 
             // Assert
-            Assert.Equal(numberOfCategoriesInFile, list.Count);
+            Assert.Equal(numberOfDefaultCategories, list.Count);
             Assert.Equal(firstCategoryInFile.Id, firstCategory.Id);
             Assert.Equal(firstCategoryInFile.Description, firstCategory.Description);
 
@@ -87,19 +88,19 @@ namespace BudgetCodeTests
         {
             // Arrange
             String folder = TestConstants.GetSolutionDir();
-            String newDB = $"{folder}\\{TestConstants.testDBInputFile}";
-            Database.existingDatabase(newDB);
+            String newDB = $"{folder}\\newDB.db";
+            Database.newDatabase(newDB);
             SQLiteConnection conn = Database.dbConnection;
-            Categories categories = new Categories(conn, false);
+            Categories categories = new Categories(conn, true);
+            int numberOfDefaultCategories = 16;
 
             // Act
             List<Category> list = categories.List();
 
             // Assert
-            Assert.Equal(numberOfCategoriesInFile, list.Count);
+            Assert.Equal(numberOfDefaultCategories, list.Count);
 
         }
-
 
         // ========================================================================
 
@@ -118,13 +119,14 @@ namespace BudgetCodeTests
             Category.CategoryType type = Category.CategoryType.Income;
 
             // Act
+            List<Category> beforeAddList = categories.List();
             categories.Add(descr,type);
-            List<Category> categoriesList = categories.List();
-            int sizeOfList = categories.List().Count;
+            List<Category> afterAddList = categories.List();
+            int sizeOfList = afterAddList.Count;
 
             // Assert
-            Assert.Equal(numberOfCategoriesInFile + 1, sizeOfList);
-            Assert.Equal(descr, categoriesList[sizeOfList - 1].Description);
+            Assert.Equal(beforeAddList.Count + 1, sizeOfList);
+            Assert.Equal(descr, afterAddList[sizeOfList - 1].Description);
 
         }
 
@@ -144,13 +146,14 @@ namespace BudgetCodeTests
             int IdToDelete = 3;
 
             // Act
+            List<Category> beforeDeleteList = categories.List();
             categories.Delete(IdToDelete);
-            List<Category> categoriesList = categories.List();
-            int sizeOfList = categoriesList.Count;
+            List<Category> afterDeleteList = categories.List();
+            int sizeOfList = afterDeleteList.Count;
 
             // Assert
-            Assert.Equal(numberOfCategoriesInFile - 1, sizeOfList);
-            Assert.False(categoriesList.Exists(e => e.Id == IdToDelete), "correct Category item deleted");
+            Assert.Equal(beforeDeleteList.Count - 1, sizeOfList);
+            Assert.False(afterDeleteList.Exists(e => e.Id == IdToDelete), "correct Category item deleted");
 
         }
 
@@ -271,7 +274,6 @@ namespace BudgetCodeTests
         }
 
         // ========================================================================
-
         
         [Fact]
         public void CategoriesMethod_UpdateCategory()
@@ -294,7 +296,35 @@ namespace BudgetCodeTests
             Assert.Equal(Category.CategoryType.Income, category.Type);
 
         }
-        
+
+        // ========================================================================
+
+        [Fact]
+        public void CategoriesMethod_ResetCategoryTypes_ErrorIfCategoriesStillExist()
+        {
+            // Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String newDB = $"{folder}\\newDB.db";
+            Database.newDatabase(newDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Categories categories = new Categories(conn, true);
+            bool resetThrows = false;
+
+            // Act
+            categories.SetCategoriesToDefaults();
+            
+            try
+            {
+                categories.ResetCategoryTypes();
+            }
+            catch (Exception ex)
+            {
+                resetThrows = true;
+            }
+            
+            // Assert
+            Assert.True(resetThrows);
+        }
     }
 }
 

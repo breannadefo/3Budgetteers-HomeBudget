@@ -227,7 +227,7 @@ namespace Budget
             }
             catch (Exception e)
             {
-                throw new SQLiteException();
+                throw new SQLiteException(e.Message);
             }
         }
 
@@ -272,10 +272,21 @@ namespace Budget
             sqlite_cmd = Database.dbConnection.CreateCommand();
 
             //Writing the insert command
-            sqlite_cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES (@Description, @Type);";
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", desc));
-            sqlite_cmd.Parameters.Add(new SQLiteParameter("@Type", (int)type));
-            sqlite_cmd.ExecuteNonQuery();
+            try
+            {
+                sqlite_cmd.CommandText = "INSERT INTO categories (Description, TypeId) VALUES (@Description, @Type);";
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@Description", desc));
+                sqlite_cmd.Parameters.Add(new SQLiteParameter("@Type", (int)type));
+                sqlite_cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                throw new SQLiteException(e.Message);
+            }
+            finally
+            {
+                sqlite_cmd.Dispose();
+            }
         }
 
         // ====================================================================
@@ -447,6 +458,8 @@ namespace Budget
         /// 
         /// </summary>
         /// <returns>A list of all the categories from the categories table.</returns>
+        /// <exception cref="SQLiteException">Thrown when there is a problem reading from the database.</exception>
+        /// <exception cref="Exception">Thrown when there is a problem parsing the data that is read from the database.</exception>
         public List<Category> List()
         {
             int idColumn = 0, descriptionColumn = 1, typeIdColumn = 2;
@@ -457,43 +470,56 @@ namespace Budget
             cmd = Database.dbConnection.CreateCommand();
 
             cmd.CommandText = "SELECT Id, Description, TypeId FROM categories ORDER BY Id ASC;";
-
+            
             reader = cmd.ExecuteReader();
-            if (reader.HasRows)
+            try
             {
-                Category.CategoryType type;
-                while (reader.Read())
+                if (reader.HasRows)
                 {
-                    object tempId = reader.GetValue(idColumn);
-                    string description = reader.GetString(descriptionColumn);
-                    object tempEnum = reader.GetValue(typeIdColumn);
+                    Category.CategoryType type;
+                    while (reader.Read())
+                    {
+                        object tempId = reader.GetValue(idColumn);
+                        string description = reader.GetString(descriptionColumn);
+                        object tempEnum = reader.GetValue(typeIdColumn);
 
-                    int convertedId = Convert.ToInt32(tempId);
-                    int convertedEnum = Convert.ToInt32(tempEnum);
+                        int convertedId = Convert.ToInt32(tempId);
+                        int convertedEnum = Convert.ToInt32(tempEnum);
                     
-                    if(convertedEnum == 1)
-                    {
-                        type = Category.CategoryType.Income;
-                    }
-                    else if(convertedEnum == 2)
-                    {
-                        type = Category.CategoryType.Expense;
-                    }
-                    else if(convertedEnum == 3)
-                    {
-                        type = Category.CategoryType.Credit;
-                    }
-                    else
-                    {
-                        type = Category.CategoryType.Savings;
-                    }
+                        if(convertedEnum == 1)
+                        {
+                            type = Category.CategoryType.Income;
+                        }
+                        else if(convertedEnum == 2)
+                        {
+                            type = Category.CategoryType.Expense;
+                        }
+                        else if(convertedEnum == 3)
+                        {
+                            type = Category.CategoryType.Credit;
+                        }
+                        else
+                        {
+                            type = Category.CategoryType.Savings;
+                        }
                     
-                    list.Add(new Category(convertedId, description, type)); 
+                        list.Add(new Category(convertedId, description, type)); 
                     
+                    }
                 }
             }
-
-            reader.Close();
+            catch (SQLiteException ex)
+            {
+                throw new SQLiteException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                reader.Close();
+            }
 
             return list;
         }
