@@ -24,5 +24,25 @@ namespace HomeBudgetWPF
         {
             InitializeComponent();
         }
+
+        private void btn_browseBudgetFolder_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btn_enterBudgetFolder_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btn_addNewExpense_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btn_addNewCategory_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
