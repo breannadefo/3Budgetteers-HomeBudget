@@ -7,4 +7,14 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+	<ItemGroup>
+		<Folder Include="dlls\HomeBudgetModel\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="HomeBudget">
+			<HintPath>dlls\HomeBudgetModel\HomeBudget.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
 </Project>
