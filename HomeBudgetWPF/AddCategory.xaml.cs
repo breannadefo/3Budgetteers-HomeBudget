@@ -32,5 +32,21 @@ namespace HomeBudgetWPF
             cmb_types.ItemsSource = Enum.GetValues(typeof(Category.CategoryType));
             cmb_types.SelectedItem = Category.CategoryType.Expense;
         }
+
+        private void btn_add_Click(object sender, RoutedEventArgs e)
+        {
+            string description = tbx_description.Text;
+
+            if (string.IsNullOrEmpty(description))
+            {
+                MessageBox.Show("Error! You must enter a category name.");
+            }
+            else
+            {
+                //call the presenter to add the category
+
+                //clear the values (just the category name)
+            }
+        }
     }
 }

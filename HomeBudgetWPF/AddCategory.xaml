@@ -8,16 +8,24 @@
         Title="AddCategory" Height="650" Width="450">
     <Grid>
         <StackPanel>
+            <!-- Title: Add Category -->
             <TextBlock Margin="25" FontSize="25"  Text="Add Category"
                        TextAlignment="Center" VerticalAlignment="Center"/>
 
+            <!-- Textbox for the Category Name -->
             <TextBlock Margin="15" FontSize="18" Text="Category Name:"/>
             <TextBox Margin="15, 0" FontSize="15" Height="40"
                      x:Name="tbx_description" TextWrapping="Wrap"
                      BorderBrush="Black" BorderThickness="2"/>
 
+            <!-- ComboBox for Category Type -->
             <TextBlock Margin="15" FontSize="18" Text="Category Type:"/>
             <ComboBox Margin="15, 0" FontSize="15" Height="35" x:Name="cmb_types"/>
+
+            <!-- Submit button -->
+            <Button Margin="15, 20" Height="40" Width="100" FontSize="18"
+                    HorizontalAlignment="Left" x:Name="btn_add"
+                    Click="btn_add_Click">Add</Button>
         </StackPanel>
     </Grid>
 </Window>
