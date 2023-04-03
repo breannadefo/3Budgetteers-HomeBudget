@@ -1,0 +1,23 @@
+﻿<Window x:Class="HomeBudgetWPF.AddCategory"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HomeBudgetWPF"
+        mc:Ignorable="d"
+        Title="AddCategory" Height="650" Width="450">
+    <Grid>
+        <StackPanel>
+            <TextBlock Margin="25" FontSize="25"  Text="Add Category"
+                       TextAlignment="Center" VerticalAlignment="Center"/>
+
+            <TextBlock Margin="15" FontSize="18" Text="Category Name:"/>
+            <TextBox Margin="15, 0" FontSize="15" Height="40"
+                     x:Name="tbx_description" TextWrapping="Wrap"
+                     BorderBrush="Black" BorderThickness="2"/>
+
+            <TextBlock Margin="15" FontSize="18" Text="Category Type:"/>
+            <ComboBox Margin="15, 0" FontSize="15" Height="35" x:Name="cmb_types"/>
+        </StackPanel>
+    </Grid>
+</Window>
