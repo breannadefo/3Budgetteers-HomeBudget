@@ -11,5 +11,6 @@ namespace HomeBudgetWPF
         public void ShowErrorMessage(string message);
 
         public void ShowSuccessMessage(string message);
+
     }
 }

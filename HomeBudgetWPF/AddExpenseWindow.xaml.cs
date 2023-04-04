@@ -17,11 +17,32 @@ namespace HomeBudgetWPF
     /// <summary>
     /// Interaction logic for AddExpenseWindow.xaml
     /// </summary>
-    public partial class AddExpenseWindow : Window
+    public partial class AddExpenseWindow : Window, ViewInterface
     {
-        public AddExpenseWindow()
+        Presenter _presenter;
+
+        public AddExpenseWindow(Presenter presenter)
         {
             InitializeComponent();
+            _presenter = presenter;
+            _presenter.SetView(this);
+        }
+
+        private void CreditCheckbox_Click(object sender, RoutedEventArgs e)
+        {
+            
+
+
+        }
+
+        public void ShowErrorMessage(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShowSuccessMessage(string message)
+        {
+            throw new NotImplementedException();
         }
     }
 }
