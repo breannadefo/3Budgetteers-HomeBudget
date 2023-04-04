@@ -35,14 +35,22 @@ namespace HomeBudgetWPF
 
         }
 
+        /// <summary>
+        /// Creates an error message pop up and displays it to the user
+        /// </summary>
+        /// <param name="message"> Message contained in the pop up </param>
         public void ShowErrorMessage(string message)
         {
-            throw new NotImplementedException();
+            MessageBox.Show(message, "Error", 0,  MessageBoxImage.Error);
         }
 
+        /// <summary>
+        /// Creates a success message pop up and displays it to the user
+        /// </summary>
+        /// <param name="message"> Message contained in the pop up </param>
         public void ShowSuccessMessage(string message)
         {
-            throw new NotImplementedException();
+            MessageBox.Show(message, "Success", 0);
         }
     }
 }
