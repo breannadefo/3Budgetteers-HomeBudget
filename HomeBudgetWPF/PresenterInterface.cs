@@ -9,7 +9,7 @@ namespace HomeBudgetWPF
 {
     public interface PresenterInterface
     {
-        public void AddCategory(string description, Category.CategoryType categoryType);
+        public void AddCategory(string description, string categoryType);
 
         public void AddExpense(string description, DateTime date, double amount, int categoryId);
 
