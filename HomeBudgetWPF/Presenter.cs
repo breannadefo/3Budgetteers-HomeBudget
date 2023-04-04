@@ -24,7 +24,20 @@ namespace HomeBudgetWPF
         /// <param name="categoryType"> The type of the category. For example, credit, expense, etc. </param>
         public void AddCategory(string description, string categoryType)
         {
-            _homeBudget.categories.Add(description, (Category.CategoryType)Enum.Parse(typeof(Category.CategoryType), categoryType));
+            if (String.IsNullOrEmpty(description))
+            {
+                _view.ShowErrorMessage("ERROR! The category description cannot be empty.");
+            }
+
+            Category.CategoryType type = (Category.CategoryType)Enum.Parse(typeof(Category.CategoryType), categoryType);
+            try
+            {
+                _homeBudget.categories.Add(description, type);
+            }
+            catch (Exception ex)
+            {
+                _view.ShowErrorMessage(ex.Message);
+            }
         }
 
         /// <summary>

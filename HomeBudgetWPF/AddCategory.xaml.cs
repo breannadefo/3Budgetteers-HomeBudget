@@ -23,12 +23,10 @@ namespace HomeBudgetWPF
     {
         Presenter _presenter;
 
-        public AddCategory()
+        public AddCategory(Presenter presenter)
         {
             InitializeComponent();
             InitializeComboBox();
-
-            _presenter = new Presenter(this);
         }
 
         private void InitializeComboBox()
