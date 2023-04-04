@@ -5,8 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HomeBudgetWPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="400">
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="0.5*"></RowDefinition>
+            <RowDefinition Height="0.5*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" 
+                   TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36" FontWeight="Bold">Welcome!</TextBlock>
+        <Label Content="Enter a folder to contain your budget: " Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="213" MinHeight="26" FontSize="14" Grid.RowSpan="2"/>
+        <TextBox Name="txb_budgetFolderPath" Grid.Row="1" Grid.Column="0" Height="30" Margin="10,0,10,0" Grid.ColumnSpan="3" Text="Enter budget folder..." Grid.RowSpan="2"></TextBox>
+        <Button Name="btn_browseBudgetFolder" Click="btn_browseBudgetFolder_Click" Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Center" MinWidth="60" MinHeight="20" Content="Browse"></Button>
+            <Button Name="btn_enterBudgetFolder" Click="btn_enterBudgetFolder_Click" Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Center" MinWidth="60" MinHeight="20" Content="Enter"></Button>
+        <Button Name="btn_addNewExpense" Click="btn_addNewExpense_Click" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Width="100" Height="25">New Expense</Button>
+        <Button Name="btn_addNewCategory" Click="btn_addNewCategory_Click" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="2" Width="100" Height="25">New Category</Button>
     </Grid>
 </Window>
