@@ -12,5 +12,7 @@ namespace HomeBudgetWPF
 
         public void ShowSuccessMessage(string message);
 
+        public void ResetValues();
+
     }
 }
