@@ -19,12 +19,16 @@ namespace HomeBudgetWPF
     /// <summary>
     /// Interaction logic for AddCategory.xaml
     /// </summary>
-    public partial class AddCategory : Window
+    public partial class AddCategory : Window, ViewInterface
     {
+        Presenter _presenter;
+
         public AddCategory()
         {
             InitializeComponent();
             InitializeComboBox();
+
+            _presenter = new Presenter(this);
         }
 
         private void InitializeComboBox()
@@ -36,17 +40,19 @@ namespace HomeBudgetWPF
         private void btn_add_Click(object sender, RoutedEventArgs e)
         {
             string description = tbx_description.Text;
+            string categoryType = cmb_types.SelectedItem.ToString();
 
-            if (string.IsNullOrEmpty(description))
-            {
-                MessageBox.Show("Error! You must enter a category name.");
-            }
-            else
-            {
-                //call the presenter to add the category
+            _presenter.AddCategory(description, categoryType);
+        }
 
-                //clear the values (just the category name)
-            }
+        public void ShowErrorMessage(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShowSuccessMessage(string message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

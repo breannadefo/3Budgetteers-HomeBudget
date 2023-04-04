@@ -20,12 +20,15 @@
 
             <!-- ComboBox for Category Type -->
             <TextBlock Margin="15" FontSize="18" Text="Category Type:"/>
-            <ComboBox Margin="15, 0" FontSize="15" Height="35" x:Name="cmb_types"/>
+            <ComboBox Margin="15, 0" FontSize="15" Height="35" 
+                      x:Name="cmb_types"/>
 
             <!-- Submit button -->
             <Button Margin="15, 20" Height="40" Width="100" FontSize="18"
                     HorizontalAlignment="Left" x:Name="btn_add"
                     Click="btn_add_Click">Add</Button>
+
+            <TextBlock x:Name="txtbox"></TextBlock>
         </StackPanel>
     </Grid>
 </Window>
