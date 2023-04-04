@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace HomeBudgetWPF
 {
@@ -35,13 +36,14 @@ namespace HomeBudgetWPF
         {
             if (String.IsNullOrEmpty(description))
             {
-                _view.ShowErrorMessage("ERROR! The category description cannot be empty.");
+                _view.ShowErrorMessage("There was a problem adding the cateory: \nThe category description cannot be empty.");
             }
 
             Category.CategoryType type = (Category.CategoryType)Enum.Parse(typeof(Category.CategoryType), categoryType);
             try
             {
                 _homeBudget.categories.Add(description, type);
+                _view.ShowSuccessMessage($"Successfully added a category with a description of '{description}' and a type of '{categoryType}'.");
             }
             catch (Exception ex)
             {

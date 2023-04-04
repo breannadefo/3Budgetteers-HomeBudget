@@ -45,12 +45,18 @@ namespace HomeBudgetWPF
 
         public void ShowErrorMessage(string message)
         {
-            throw new NotImplementedException();
+            MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public void ShowSuccessMessage(string message)
         {
-            throw new NotImplementedException();
+            MessageBox.Show(message, "Success!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+        }
+
+        public void ResetValues()
+        {
+            tbx_description.Text = null;
+            cmb_types.SelectedItem = Category.CategoryType.Expense;
         }
     }
 }
