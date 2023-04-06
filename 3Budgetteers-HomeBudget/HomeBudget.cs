@@ -103,7 +103,8 @@ namespace Budget
                 Database.existingDatabase(databaseFile);
             }
             else
-            {//If the database does not exist or the user wants to reset it we create a new one
+            {
+                //If the database does not exist or the user wants to reset it we create a new one
                 Database.newDatabase(databaseFile);
             }
 

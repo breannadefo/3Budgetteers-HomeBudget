@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Data.Entity;
 
 namespace HomeBudgetWPF
 {
@@ -55,7 +57,17 @@ namespace HomeBudgetWPF
         /// <param name="newDb"></param>
         public void InitializeHomeBudget(string database, bool newDb)
         {
+            if (!Directory.Exists(Path.GetDirectoryName(database)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(database));
+            }
+            //crashes if user tries to create a new datase twice
             _homeBudget = new HomeBudget(database, newDb);
+        }
+
+        public void CloseApp()
+        {
+            _homeBudget.CloseDB();
         }
     }
 }
