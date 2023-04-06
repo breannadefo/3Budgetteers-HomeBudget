@@ -67,7 +67,15 @@ namespace HomeBudgetWPF
 
         public void CloseApp()
         {
-            _homeBudget.CloseDB();
+            if(_homeBudget != null)
+            {
+                _homeBudget.CloseDB();
+            }
+        }
+
+        public bool VerifyHomeBudgetConnected()
+        {
+            return _homeBudget != null;
         }
     }
 }

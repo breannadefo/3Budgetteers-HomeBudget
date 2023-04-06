@@ -46,7 +46,6 @@ namespace HomeBudgetWPF
         private void btn_enterBudgetFolder_Click(object sender, RoutedEventArgs e)
         {
             
-            bool test = false;
             if(Directory.Exists(txb_budgetFolderPath.Text))
             {
                 p.InitializeHomeBudget(txb_budgetFolderPath.Text + "\\" + txb_budgetFileName.Text, (bool)chk_newBudget.IsChecked);
@@ -59,12 +58,16 @@ namespace HomeBudgetWPF
 
         private void btn_addNewExpense_Click(object sender, RoutedEventArgs e)
         {
-           
+            AddExpenseWindow newWindow = new AddExpenseWindow();
+            Visibility = Visibility.Hidden;
+            newWindow.Show();
         }
 
         private void btn_addNewCategory_Click(object sender, RoutedEventArgs e)
         {
-            
+            AddCategory newWindow = new AddCategory();
+            Visibility = Visibility.Hidden;
+            newWindow.Show();
         }
 
         public void ShowErrorMessage(string message)
