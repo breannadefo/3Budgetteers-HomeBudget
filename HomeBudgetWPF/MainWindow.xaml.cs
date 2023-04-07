@@ -21,11 +21,11 @@ namespace HomeBudgetWPF
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window , ViewInterface
+    public partial class MainWindow : Window, ViewInterface
     {
         Presenter p;
 
-        public MainWindow() 
+        public MainWindow()
         {
             InitializeComponent();
             p = new Presenter(this);
@@ -45,8 +45,8 @@ namespace HomeBudgetWPF
 
         private void btn_enterBudgetFolder_Click(object sender, RoutedEventArgs e)
         {
-            
-            if(Directory.Exists(txb_budgetFolderPath.Text))
+
+            if (Directory.Exists(txb_budgetFolderPath.Text))
             {
                 p.InitializeHomeBudget(txb_budgetFolderPath.Text + "\\" + txb_budgetFileName.Text, (bool)chk_newBudget.IsChecked);
             }
@@ -58,16 +58,32 @@ namespace HomeBudgetWPF
 
         private void btn_addNewExpense_Click(object sender, RoutedEventArgs e)
         {
-            AddExpenseWindow newWindow = new AddExpenseWindow();
-            Visibility = Visibility.Hidden;
-            newWindow.Show();
+            if (p.VerifyHomeBudgetConnected())
+            {
+                AddExpenseWindow newWindow = new AddExpenseWindow();
+                Visibility = Visibility.Hidden;
+                newWindow.Show();
+            }
+            else
+            {
+                MessageBox.Show("You need to enter a budget to work with!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
         }
 
         private void btn_addNewCategory_Click(object sender, RoutedEventArgs e)
         {
-            AddCategory newWindow = new AddCategory();
-            Visibility = Visibility.Hidden;
-            newWindow.Show();
+            if (p.VerifyHomeBudgetConnected())
+            {
+                AddCategory newWindow = new AddCategory();
+                Visibility = Visibility.Hidden;
+                newWindow.Show();
+            }
+            else
+            {
+                MessageBox.Show("You need to enter a budget to work with!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
         }
 
         public void ShowErrorMessage(string message)
@@ -83,7 +99,7 @@ namespace HomeBudgetWPF
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Do you wish to close the app?", "App closing", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            if(result == MessageBoxResult.No)
+            if (result == MessageBoxResult.No)
             {
                 e.Cancel = true;
             }
