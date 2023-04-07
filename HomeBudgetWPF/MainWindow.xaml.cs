@@ -54,6 +54,7 @@ namespace HomeBudgetWPF
             {
                 p.InitializeHomeBudget($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\Documents\\Budget\\{txb_budgetFileName.Text}.db", (bool)chk_newBudget.IsChecked);
             }
+            txblock_budgetInUse.Text = "There is a budget currently in use";
         }
 
         private void btn_addNewExpense_Click(object sender, RoutedEventArgs e)
