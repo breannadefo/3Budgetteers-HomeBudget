@@ -42,22 +42,22 @@ namespace HomeBudgetWPF
         }
 
         /// <summary>
-        /// 
+        /// Gets a list of all the catgeories.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of category objects.</returns>
         public List<Category> GetCategories()
         {
             return _homeBudget.categories.List();
         }
 
         /// <summary>
-        /// 
+        /// Initializes a homebudget. Creates a directory path towards the new budget file if one doesn't exist.
         /// </summary>
-        /// <param name="database"></param>
-        /// <param name="newDb"></param>
+        /// <param name="database">The path to the database file.</param>
+        /// <param name="newDb">True if the user wants to create a new database, false otherwise.</param>
         public void InitializeHomeBudget(string database, bool newDb)
         {
-            if (!Directory.Exists(Path.GetDirectoryName(database)))
+            if(!Directory.Exists(Path.GetDirectoryName(database)))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(database));
             }
@@ -65,6 +65,9 @@ namespace HomeBudgetWPF
             _homeBudget = new HomeBudget(database, newDb);
         }
 
+        /// <summary>
+        /// Called while trying to close the app. Closes the database connection if there is one active.
+        /// </summary>
         public void CloseApp()
         {
             if(_homeBudget != null)
@@ -73,6 +76,10 @@ namespace HomeBudgetWPF
             }
         }
 
+        /// <summary>
+        /// Determines whether or not a home budget is in use.
+        /// </summary>
+        /// <returns>True if there is a home budget, false otherwise.</returns>
         public bool VerifyHomeBudgetConnected()
         {
             return _homeBudget != null;
