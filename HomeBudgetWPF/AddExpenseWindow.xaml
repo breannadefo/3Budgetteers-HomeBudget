@@ -111,7 +111,7 @@
             </TextBlock>
             
             <!-- Add Expense -->
-            <Button Margin="5" Grid.Column="2" x:Name="AddExpenseButton" Click="CreditCheckbox_Click"
+            <Button Margin="5" Grid.Column="2" x:Name="AddExpenseButton" Click="AddExpenseButton_Click"
                     BorderBrush="#3C6255" BorderThickness="3" Background="#61876E" Foreground="#EAE7B1"
                     FontSize="20">
                 Add Expense
