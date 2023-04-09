@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Data.Entity;
 using System.Windows;
 
 namespace HomeBudgetWPF
@@ -77,11 +79,36 @@ namespace HomeBudgetWPF
         /// with the file provided in the parameters. If the newDb bool is false it will assume the database
         /// already exists. If it is true, it will asume it needs to create one.
         /// </summary>
-        /// <param name="database"> The filepath to the database file </param>
-        /// <param name="newDb"> If false, reads from existing database </param>
+        /// <param name="database">The path to the database file.</param>
+        /// <param name="newDb">True if the user wants to create a new database, false otherwise.</param>
         public void InitializeHomeBudget(string database, bool newDb)
         {
+            if(!Directory.Exists(Path.GetDirectoryName(database)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(database));
+            }
+            //crashes if user tries to create a new datase twice
             _homeBudget = new HomeBudget(database, newDb);
+        }
+
+        /// <summary>
+        /// Called while trying to close the app. Closes the database connection if there is one active.
+        /// </summary>
+        public void CloseApp()
+        {
+            if(_homeBudget != null)
+            {
+                _homeBudget.CloseDB();
+            }
+        }
+
+        /// <summary>
+        /// Determines whether or not a home budget is in use.
+        /// </summary>
+        /// <returns>True if there is a home budget, false otherwise.</returns>
+        public bool VerifyHomeBudgetConnected()
+        {
+            return _homeBudget != null;
         }
     }
 }
