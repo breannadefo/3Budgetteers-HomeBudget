@@ -52,5 +52,10 @@ namespace HomeBudgetWPF
         {
             MessageBox.Show(message, "Success", 0);
         }
+
+        public void ResetValues()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

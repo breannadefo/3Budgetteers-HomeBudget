@@ -61,7 +61,7 @@ namespace HomeBudgetWPF
         {
             if (p.VerifyHomeBudgetConnected())
             {
-                AddExpenseWindow newWindow = new AddExpenseWindow();
+                AddExpenseWindow newWindow = new AddExpenseWindow(p);
                 Visibility = Visibility.Hidden;
                 newWindow.Show();
             }
@@ -76,7 +76,7 @@ namespace HomeBudgetWPF
         {
             if (p.VerifyHomeBudgetConnected())
             {
-                AddCategory newWindow = new AddCategory();
+                AddCategory newWindow = new AddCategory(p);
                 this.Close();
                 newWindow.Show();
             }
@@ -108,6 +108,11 @@ namespace HomeBudgetWPF
             {
                 p.CloseApp();
             }
+        }
+
+        public void ResetValues()
+        {
+            throw new NotImplementedException();
         }
     }
 }
