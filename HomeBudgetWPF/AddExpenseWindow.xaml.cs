@@ -26,10 +26,22 @@ namespace HomeBudgetWPF
         {
             InitializeComponent();
             _presenter = presenter;
-            _presenter.SetView(this);
+            _presenter.SetView(this); 
             InitializeComboBox();
+            setDatePickerToToday();
         }
 
+        public AddExpenseWindow()
+        {
+            Presenter presenter = new Presenter(this);
+            InitializeComponent();
+            _presenter = presenter;
+            _presenter.SetView(this);
+            InitializeComboBox();
+            setDatePickerToToday();
+        }
+
+        #region Public Methods
         /// <summary>
         /// 
         /// </summary>
@@ -89,7 +101,15 @@ namespace HomeBudgetWPF
             {
                 if(int.TryParse(AmountTextBox.Text, out int result))
                 {
-                    amount = result;
+                    if(result < 0)
+                    {
+                        ShowErrorMessage("Amount cannot be negative");
+                    }
+                    else
+                    {
+                        amount = result;
+                    }
+
                 }
                 else
                 {
@@ -101,7 +121,13 @@ namespace HomeBudgetWPF
             //If no error has been encountered the values are added
             if(!errorFound)
             {
-                _presenter.AddExpense(description, date, amount, (int)categoryType);
+                _presenter.AddExpense(description, date, amount * -1, (int)categoryType);
+                if(CreditCheckbox.IsChecked == true)
+                {
+                    _presenter.AddExpense("credit", date, amount, (int)categoryType);
+                }
+
+                ResetValues();
             }
         }
 
@@ -125,21 +151,28 @@ namespace HomeBudgetWPF
         }
 
         /// <summary>
-        /// 
+        /// Resets the amount, description and checkbox to empty/unchecked
         /// </summary>
         public void ResetValues()
         {
-            throw new NotImplementedException();
+            DescriptionTextBox.Text = string.Empty;
+            AmountTextBox.Text = string.Empty;
+            CreditCheckbox.IsChecked = false;
         }
+        #endregion
 
-        /// <summary>
-        /// Occupies the categorytype combo box with the category types present in the
-        /// category types enum.
-        /// </summary>
+        #region Private Methods
         private void InitializeComboBox()
         {
             categoryComboBox.ItemsSource = Enum.GetValues(typeof(Category.CategoryType));
             categoryComboBox.SelectedItem = Category.CategoryType.Expense;
         }
+
+        private void setDatePickerToToday()
+        {
+            DateTime today = DateTime.Now;
+            DateTextBox.Text = today.ToString();
+        }
+        #endregion
     }
 }
