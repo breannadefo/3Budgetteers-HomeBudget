@@ -28,12 +28,33 @@ namespace HomeBudgetWPF
             _presenter.SetView(this);
         }
 
-        private void CreditCheckbox_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddExpenseButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            bool errorFound = false;
+            DateTime date;
+            if(DateTextBox.Text == null || DateTextBox.Text == string.Empty)
+            {
+                ShowErrorMessage("The date " + DateTextBox.Text + " is not valid");
+                errorFound = true;
+            }
+            else
+            {
+                date = DateTime.Parse(DateTextBox.Text);
+            }
+
+
+
+            string description = DescriptionTextBox.Text;
+
 
 
         }
+
 
         /// <summary>
         /// Creates an error message pop up and displays it to the user
@@ -51,6 +72,14 @@ namespace HomeBudgetWPF
         public void ShowSuccessMessage(string message)
         {
             MessageBox.Show(message, "Success", 0);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void ResetValues()
+        {
+            throw new NotImplementedException();
         }
     }
 }
