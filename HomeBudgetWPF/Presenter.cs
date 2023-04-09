@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Data.Entity;
+using System.Windows;
 
 namespace HomeBudgetWPF
 {
@@ -20,19 +21,42 @@ namespace HomeBudgetWPF
         }
 
         /// <summary>
-        /// Adds a new category to the database.
+        /// Sets the view to a new view
         /// </summary>
-        /// <param name="description"> Description of the category. Generally this is the name of the category </param>
-        /// <param name="categoryType"> The type of the category. For example, credit, expense, etc. </param>
-        public void AddCategory(string description, string categoryType)
+        /// <param name="view"> The new class that will be used as the view </param>
+        public void SetView(ViewInterface view)
         {
-            _homeBudget.categories.Add(description, (Category.CategoryType)Enum.Parse(typeof(Category.CategoryType), categoryType));
+            _view = view;
         }
 
         /// <summary>
-        /// Adds an expense to the database
+        /// Adds a new category to the database.
         /// </summary>
-        /// <param name="description"> Description of the expense. </param>
+        /// <param name="description"> Description of the category. Generally this is the name of the category </param>
+        /// <param name="categoryType"> The type of the category. For example, credit, expense, etc </param>
+        public void AddCategory(string description, string categoryType)
+        {
+            if (String.IsNullOrEmpty(description))
+            {
+                _view.ShowErrorMessage("There was a problem adding the cateory: \nThe category description cannot be empty.");
+            }
+
+            Category.CategoryType type = (Category.CategoryType)Enum.Parse(typeof(Category.CategoryType), categoryType);
+            try
+            {
+                _homeBudget.categories.Add(description, type);
+                _view.ShowSuccessMessage($"Successfully added a category with a description of '{description}' and a type of '{categoryType}'.");
+            }
+            catch (Exception ex)
+            {
+                _view.ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Adds an expense to the database.
+        /// </summary>
+        /// <param name="description"> Description of the expense </param>
         /// <param name="date"> The date on which the expense was inccured </param>
         /// <param name="amount"> The total amunt of the expense. This value should be postive </param>
         /// <param name="categoryId"> The id of the category </param>
@@ -42,16 +66,18 @@ namespace HomeBudgetWPF
         }
 
         /// <summary>
-        /// Gets a list of all the catgeories.
+        /// Retrieves a list of all the categories
         /// </summary>
-        /// <returns>A list of category objects.</returns>
+        /// <returns> A list of all categories in the database </returns>
         public List<Category> GetCategories()
         {
             return _homeBudget.categories.List();
         }
 
         /// <summary>
-        /// Initializes a homebudget. Creates a directory path towards the new budget file if one doesn't exist.
+        /// Initializes a homa budget instance and saves it to the backing field. Intializes the database
+        /// with the file provided in the parameters. If the newDb bool is false it will assume the database
+        /// already exists. If it is true, it will asume it needs to create one.
         /// </summary>
         /// <param name="database">The path to the database file.</param>
         /// <param name="newDb">True if the user wants to create a new database, false otherwise.</param>

@@ -17,11 +17,40 @@ namespace HomeBudgetWPF
     /// <summary>
     /// Interaction logic for AddExpenseWindow.xaml
     /// </summary>
-    public partial class AddExpenseWindow : Window
+    public partial class AddExpenseWindow : Window, ViewInterface
     {
-        public AddExpenseWindow()
+        Presenter _presenter;
+
+        public AddExpenseWindow(Presenter presenter)
         {
             InitializeComponent();
+            _presenter = presenter;
+            _presenter.SetView(this);
+        }
+
+        private void CreditCheckbox_Click(object sender, RoutedEventArgs e)
+        {
+            
+
+
+        }
+
+        /// <summary>
+        /// Creates an error message pop up and displays it to the user
+        /// </summary>
+        /// <param name="message"> Message contained in the pop up </param>
+        public void ShowErrorMessage(string message)
+        {
+            MessageBox.Show(message, "Error", 0,  MessageBoxImage.Error);
+        }
+
+        /// <summary>
+        /// Creates a success message pop up and displays it to the user
+        /// </summary>
+        /// <param name="message"> Message contained in the pop up </param>
+        public void ShowSuccessMessage(string message)
+        {
+            MessageBox.Show(message, "Success", 0);
         }
     }
 }
