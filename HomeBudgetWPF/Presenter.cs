@@ -110,5 +110,14 @@ namespace HomeBudgetWPF
         {
             return _homeBudget != null;
         }
+
+        /// <summary>
+        /// Retrieves a list of all the categories from the database
+        /// </summary>
+        /// <returns> List of category objects </returns>
+        public List<Category> GetAllCategories()
+        {
+            return _homeBudget.categories.List();
+        }
     }
 }
