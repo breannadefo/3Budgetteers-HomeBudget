@@ -43,16 +43,18 @@ namespace HomeBudgetWPF
 
         #region Public Methods
         /// <summary>
-        /// 
+        /// Adds a new expense based on user inputs. All user inputs are validated. If any of the
+        /// user inputs are invalid the method shows the user an error messages and does not add
+        /// the expense. All user inputs remain uncahnged
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender"> The button that triggered the method </param>
+        /// <param name="e"> Contains information pertaining to the button click event </param>
         private void AddExpenseButton_Click(object sender, RoutedEventArgs e)
         {
             bool errorFound = false;
 
             //Validates the category
-            Category.CategoryType categoryType = Category.CategoryType.Credit;
+            Category category = null;
             if (categoryComboBox.Text == null || categoryComboBox.Text.ToString() == string.Empty)
             {
                 ShowErrorMessage("Please select a category type from the drop down menu");
@@ -60,9 +62,14 @@ namespace HomeBudgetWPF
             }
             else
             {
-                if(!Enum.TryParse<Category.CategoryType>(categoryComboBox.SelectedValue.ToString(), out categoryType))
+                List<Category> categories = _presenter.GetCategories();
+                foreach (Category categoryFromList in categories)
                 {
-                    errorFound = true;
+                    if (categoryFromList.ToString() == categoryComboBox.Text.ToString())
+                    {
+                        category = categoryFromList;
+                        break;
+                    }
                 }
             }
 
@@ -109,7 +116,6 @@ namespace HomeBudgetWPF
                     {
                         amount = result;
                     }
-
                 }
                 else
                 {
@@ -121,17 +127,41 @@ namespace HomeBudgetWPF
             //If no error has been encountered the values are added
             if(!errorFound)
             {
-                _presenter.AddExpense(description, date, amount * -1, (int)categoryType);
+                if (category.Type == Category.CategoryType.Expense || category.Type == Category.CategoryType.Savings)
+                {
+                    _presenter.AddExpense(description, date, amount * -1, category.Id);
+                }
+                else
+                {
+                    _presenter.AddExpense(description, date, amount, category.Id);
+                }
+                
+
                 if(CreditCheckbox.IsChecked == true)
                 {
-                    _presenter.AddExpense("credit", date, amount, (int)categoryType);
+                    _presenter.AddExpense("credit", date, amount, 8);
                 }
 
+                ShowExpenseAddedMessage(description);
                 ResetValues();
             }
         }
 
-
+        /// <summary>
+        /// Resets the values in the user input boxes to their default values if the user clicks
+        /// yes on the pop up.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CancelExpenseButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult answer = MessageBox.Show("Are you sure you want to cancel the current expense? This will remove the inputs you have made", "Cancel Expense", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (answer == MessageBoxResult.Yes)
+            {
+                this.ResetValues();
+            }
+        }
+        
         /// <summary>
         /// Creates an error message pop up and displays it to the user
         /// </summary>
@@ -159,19 +189,39 @@ namespace HomeBudgetWPF
             AmountTextBox.Text = string.Empty;
             CreditCheckbox.IsChecked = false;
         }
+
+        private void AddExpenseWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if(DescriptionTextBox.Text.ToString() != string.Empty || AmountTextBox.Text != string.Empty)
+            {
+                MessageBoxResult result = MessageBox.Show("You have unsaved changes, do you still want to close the expenses window?", "App closing", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.No)
+                {
+                    e.Cancel = true;
+                }
+                else
+                {
+                    _presenter.CloseApp();
+                }
+            }
+        }
         #endregion
 
         #region Private Methods
         private void InitializeComboBox()
         {
-            categoryComboBox.ItemsSource = Enum.GetValues(typeof(Category.CategoryType));
-            categoryComboBox.SelectedItem = Category.CategoryType.Expense;
+            categoryComboBox.ItemsSource = _presenter.GetAllCategories();
         }
 
         private void setDatePickerToToday()
         {
             DateTime today = DateTime.Now;
             DateTextBox.Text = today.ToString();
+        }
+
+        private void ShowExpenseAddedMessage(string description)
+        {
+            MessageBox.Show("Expense " + description + " has been added succesfully!", "Expense Added Succesfully", 0, MessageBoxImage.Information);
         }
         #endregion
     }
