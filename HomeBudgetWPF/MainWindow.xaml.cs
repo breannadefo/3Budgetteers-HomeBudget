@@ -76,7 +76,7 @@ namespace HomeBudgetWPF
         {
             if (p.VerifyHomeBudgetConnected())
             {
-                AddCategory newWindow = new AddCategory(p);
+                AddCategory newWindow = new AddCategory(p, this);
                 Visibility = Visibility.Hidden;
                 newWindow.Show();
             }

@@ -22,19 +22,19 @@ namespace HomeBudgetWPF
     public partial class AddCategory : Window, ViewInterface
     {
         Presenter _presenter;
-        Window _previousWindow;
+        Window _homePage;
 
         /// <summary>
         /// Creates a new window that allows the user to add a new category to their database.
         /// </summary>
         /// <param name="presenter">The presenter object that contains logic methods.</param>
-        public AddCategory(Presenter presenter, Window previousWindow)
+        public AddCategory(Presenter presenter, Window homePage)
         {
             InitializeComponent();
             InitializeComboBox();
             _presenter = presenter;
             _presenter.SetView(this);
-            _previousWindow = previousWindow;
+            _homePage = homePage;
         }
 
         private void InitializeComboBox()
@@ -100,24 +100,22 @@ namespace HomeBudgetWPF
 
         private void btn_homeScreen_Click(object sender, RoutedEventArgs e)
         {
-            if (_previousWindow is MainWindow)
+            if (_homePage is MainWindow)
             {
-                this.Close();
-                _previousWindow.Visibility = Visibility.Visible;
+                Close();
+                _homePage.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                MessageBox.Show("SOMETHING HORRIBLE HAS GONE WRONG!!");
             }
         }
 
         private void btn_AddExpense_Click(object sender, RoutedEventArgs e)
         {
-            if (_previousWindow is MainWindow)
-            {
-                this.Close();
-                _previousWindow.Visibility = Visibility.Visible;
-            }
-            else
-            {
-
-            }
+            AddExpenseWindow addExpense = new AddExpenseWindow(_presenter, _homePage);
+            Close();
+            addExpense.Show();
         }
     }
 }
