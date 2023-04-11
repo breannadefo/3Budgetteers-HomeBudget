@@ -15,7 +15,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-
 namespace HomeBudgetWPF
 {
     /// <summary>
@@ -37,24 +36,24 @@ namespace HomeBudgetWPF
             this.p = p;
         }
 
-        //OPTIONAL FOR LATER
         private void btn_browseBudgetFolder_Click(object sender, RoutedEventArgs e)
         {
-
+            System.Windows.Forms.FolderBrowserDialog folder = new System.Windows.Forms.FolderBrowserDialog();
+            System.Windows.Forms.DialogResult result= folder.ShowDialog();
+         
+            if(result == System.Windows.Forms.DialogResult.OK)
+            {
+                txb_budgetFolderPath.Text = folder.SelectedPath;
+            }
         }
 
         private void btn_enterBudgetFolder_Click(object sender, RoutedEventArgs e)
         {
-
-            if (Directory.Exists(txb_budgetFolderPath.Text))
+            if (p.EnterHomeBudget(txb_budgetFileName.Text,txb_budgetFolderPath.Text,(bool)chk_newBudget.IsChecked))
             {
-                p.InitializeHomeBudget(txb_budgetFolderPath.Text + "\\" + txb_budgetFileName.Text, (bool)chk_newBudget.IsChecked);
+                txblock_budgetInUse.Text = "There is a budget currently in use";
             }
-            else
-            {
-                p.InitializeHomeBudget($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\Documents\\Budget\\{txb_budgetFileName.Text}.db", (bool)chk_newBudget.IsChecked);
-            }
-            txblock_budgetInUse.Text = "There is a budget currently in use";
+            
         }
 
         private void btn_addNewExpense_Click(object sender, RoutedEventArgs e)
@@ -106,7 +105,7 @@ namespace HomeBudgetWPF
             }
             else
             {
-                p.CloseApp();
+                p.CloseBudgetConnection();
             }
         }
 

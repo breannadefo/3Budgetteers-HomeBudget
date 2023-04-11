@@ -21,12 +21,14 @@ namespace HomeBudgetWPF
     public partial class AddExpenseWindow : Window, ViewInterface
     {
         Presenter _presenter;
+        Window _homePage;
 
-        public AddExpenseWindow(Presenter presenter)
+        public AddExpenseWindow(Presenter presenter, Window homePage)
         {
             InitializeComponent();
             _presenter = presenter;
-            _presenter.SetView(this); 
+            _presenter.SetView(this);
+            _homePage = homePage;
             InitializeComboBox();
             setDatePickerToToday();
         }
@@ -201,16 +203,48 @@ namespace HomeBudgetWPF
                 }
                 else
                 {
-                    _presenter.CloseApp();
+                    _presenter.CloseBudgetConnection();
                 }
             }
+        }
+
+        private void searchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            List<Category> categories = _presenter.GetCategories();
+            if (searchBox.Text == "")
+                return;
+
+            int index = categories.FindIndex((category) => category.Description.ToLower().StartsWith(searchBox.Text.ToLower()));
+            if (index != -1)
+                categoryComboBox.SelectedIndex = index;
+        }
+
+        private void CurrentDatabaseButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Unhide the home page
+        }
+
+        private void ModifyCategoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            AddCategory addCategoryWindow = new AddCategory(this._presenter);
+            addCategoryWindow.Show();
         }
         #endregion
 
         #region Private Methods
         private void InitializeComboBox()
         {
-            categoryComboBox.ItemsSource = _presenter.GetAllCategories();
+            categoryComboBox.ItemsSource = _presenter.GetCategories();
+        }
+
+        private void InitializeComboBox(object sender, RoutedEventArgs e)
+        {
+            categoryComboBox.ItemsSource = _presenter.GetCategories();
+        }
+
+        private void InitializeComboBox(object sender, EventArgs e)
+        {
+            categoryComboBox.ItemsSource = _presenter.GetCategories();
         }
 
         private void setDatePickerToToday()
@@ -224,5 +258,6 @@ namespace HomeBudgetWPF
             MessageBox.Show("Expense " + description + " has been added succesfully!", "Expense Added Succesfully", 0, MessageBoxImage.Information);
         }
         #endregion
+
     }
 }
