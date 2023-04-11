@@ -27,6 +27,8 @@ namespace HomeBudgetWPF
         {
             InitializeComponent();
             InitializeComboBox();
+            _presenter = presenter;
+            _presenter.SetView(this);
         }
 
         private void InitializeComboBox()

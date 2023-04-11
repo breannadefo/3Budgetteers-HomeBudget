@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Data.Entity;
 using System.Windows;
+using System.ComponentModel;
 
 namespace HomeBudgetWPF
 {
@@ -30,22 +31,43 @@ namespace HomeBudgetWPF
         }
 
         /// <summary>
-        /// Adds a new category to the database.
+        /// Adds a new category to the database. The description provided cannot be empty or the same as an already existing category. If
+        /// the description is invalid, the category will not be added.
         /// </summary>
         /// <param name="description"> Description of the category. Generally this is the name of the category </param>
         /// <param name="categoryType"> The type of the category. For example, credit, expense, etc </param>
         public void AddCategory(string description, string categoryType)
         {
+            bool canAdd = true;
+
             if (String.IsNullOrEmpty(description))
             {
-                _view.ShowErrorMessage("There was a problem adding the cateory: \nThe category description cannot be empty.");
+                _view.ShowErrorMessage("There was a problem adding the category: \nThe category description cannot be empty.");
             }
 
             Category.CategoryType type = (Category.CategoryType)Enum.Parse(typeof(Category.CategoryType), categoryType);
+
+            List<Category> categories = GetCategories();
+            foreach(Category category in categories)
+            {
+                if (category.Description == description)
+                {
+                    canAdd = false;
+                    break;
+                }
+            }
+
             try
             {
-                _homeBudget.categories.Add(description, type);
-                _view.ShowSuccessMessage($"Successfully added a category with a description of '{description}' and a type of '{categoryType}'.");
+                if (canAdd)
+                {
+                    _homeBudget.categories.Add(description, type);
+                    _view.ShowSuccessMessage($"Successfully added a category with a description of '{description}' and a type of '{categoryType}'.");
+                }
+                else
+                {
+                    _view.ShowErrorMessage("There was a problem adding the category: \nThis category already exists.");
+                }
             }
             catch (Exception ex)
             {
