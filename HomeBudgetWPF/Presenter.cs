@@ -83,6 +83,7 @@ namespace HomeBudgetWPF
         /// <param name="newDb">True if the user wants to create a new database, false otherwise.</param>
         public void InitializeHomeBudget(string database, bool newDb)
         {
+            CloseBudgetConnection();
             if(!Directory.Exists(Path.GetDirectoryName(database)))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(database));
@@ -92,9 +93,9 @@ namespace HomeBudgetWPF
         }
 
         /// <summary>
-        /// Called while trying to close the app. Closes the database connection if there is one active.
+        /// Closes the database connection if there is one active.
         /// </summary>
-        public void CloseApp()
+        public void CloseBudgetConnection()
         {
             if(_homeBudget != null)
             {
@@ -109,6 +110,44 @@ namespace HomeBudgetWPF
         public bool VerifyHomeBudgetConnected()
         {
             return _homeBudget != null;
+        }
+
+        /// <summary>
+        /// Retrieves a list of all the categories from the database
+        /// </summary>
+        /// <returns> List of category objects </returns>
+        public List<Category> GetAllCategories()
+        {
+            return _homeBudget.categories.List();
+        }
+
+        /// <summary>
+        /// Creates a home budget instance. Handles error validation for valid input.
+        /// </summary>
+        /// <param name="budgetFileName">The name of the budget file to be created.</param>
+        /// <param name="budgetFolderPath">The folder of the budget to be created.</param>
+        /// <param name="newDb">A boolean, true if the user wishes to create a new DB,
+        ///  false if they wish to use an existing one.</param>
+        /// <returns>True if the database is created properly, false otherwise.</returns>
+        public bool EnterHomeBudget(string budgetFileName, string budgetFolderPath, bool newDb)
+        {
+            if (budgetFileName.Contains(" "))
+            {
+                _view.ShowErrorMessage("The file name cannot contain a string!");
+                return false;
+            }
+            else
+            {
+                if (Directory.Exists(budgetFolderPath))
+                {
+                    InitializeHomeBudget(budgetFolderPath+ "\\" + budgetFileName+ ".db", newDb);
+                }
+                else
+                {
+                    InitializeHomeBudget($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\Documents\\Budget\\{budgetFileName}.db", newDb);
+                }
+                return true;
+            }
         }
     }
 }

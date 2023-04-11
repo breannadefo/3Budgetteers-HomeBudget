@@ -203,7 +203,7 @@ namespace HomeBudgetWPF
                 }
                 else
                 {
-                    _presenter.CloseApp();
+                    _presenter.CloseBudgetConnection();
                 }
             }
         }
