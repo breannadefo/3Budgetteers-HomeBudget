@@ -121,6 +121,14 @@ namespace HomeBudgetWPF
             return _homeBudget.categories.List();
         }
 
+        /// <summary>
+        /// Creates a home budget instance. Handles error validation for valid input.
+        /// </summary>
+        /// <param name="budgetFileName">The name of the budget file to be created.</param>
+        /// <param name="budgetFolderPath">The folder of the budget to be created.</param>
+        /// <param name="newDb">A boolean, true if the user wishes to create a new DB,
+        ///  false if they wish to use an existing one.</param>
+        /// <returns>True if the database is created properly, false otherwise.</returns>
         public bool EnterHomeBudget(string budgetFileName, string budgetFolderPath, bool newDb)
         {
             if (budgetFileName.Contains(" "))

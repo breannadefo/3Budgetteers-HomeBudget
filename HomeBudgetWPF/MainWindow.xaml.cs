@@ -36,7 +36,6 @@ namespace HomeBudgetWPF
             this.p = p;
         }
 
-        //OPTIONAL FOR LATER
         private void btn_browseBudgetFolder_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Forms.FolderBrowserDialog folder = new System.Windows.Forms.FolderBrowserDialog();
