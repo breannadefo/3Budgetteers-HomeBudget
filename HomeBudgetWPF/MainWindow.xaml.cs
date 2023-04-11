@@ -60,7 +60,7 @@ namespace HomeBudgetWPF
         {
             if (p.VerifyHomeBudgetConnected())
             {
-                AddExpenseWindow newWindow = new AddExpenseWindow(p);
+                AddExpenseWindow newWindow = new AddExpenseWindow(p, this);
                 Visibility = Visibility.Hidden;
                 newWindow.Show();
             }
@@ -75,8 +75,8 @@ namespace HomeBudgetWPF
         {
             if (p.VerifyHomeBudgetConnected())
             {
-                AddCategory newWindow = new AddCategory(p);
-                this.Close();
+                AddCategory newWindow = new AddCategory(p, this);
+                Visibility = Visibility.Hidden;
                 newWindow.Show();
             }
             else
