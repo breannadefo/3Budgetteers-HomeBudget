@@ -50,7 +50,7 @@ namespace HomeBudgetWPF
             List<Category> categories = GetCategories();
             foreach(Category category in categories)
             {
-                if (category.Description == description)
+                if (category.Description.ToLower() == description.ToLower())
                 {
                     canAdd = false;
                     break;
@@ -63,10 +63,12 @@ namespace HomeBudgetWPF
                 {
                     _homeBudget.categories.Add(description, type);
                     _view.ShowSuccessMessage($"Successfully added a category with a description of '{description}' and a type of '{categoryType}'.");
+                    _view.ResetValues();
                 }
                 else
                 {
                     _view.ShowErrorMessage("There was a problem adding the category: \nThis category already exists.");
+                    _view.ResetValues();
                 }
             }
             catch (Exception ex)
