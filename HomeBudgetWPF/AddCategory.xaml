@@ -10,16 +10,45 @@
         Width="500"
         Background="#a6bb8d">
     <Grid>
-        <StackPanel> 
+        <StackPanel>
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Button to get back to the main page -->
+                <Button Margin="10, 20, 5, 20" Height="40" FontSize="20"
+                        x:Name="btn_homeScreen"
+                        BorderBrush="#3c6255" BorderThickness="2"
+                        Background="#61876E" Foreground="#eae7b1"
+                        Grid.Column="0" Click="btn_homeScreen_Click"
+                        HorizontalContentAlignment="Center">
+                    HomeScreen
+                </Button>
+
+                <!-- Button to get back to the main page -->
+                <Button Margin="5, 20, 10, 20" Height="40" FontSize="20" 
+                        x:Name="btn_AddExpense"
+                        BorderBrush="#3c6255" BorderThickness="2"
+                        Background="#61876E" Foreground="#eae7b1"
+                        Grid.Column="1" Click="btn_AddExpense_Click" 
+                        HorizontalContentAlignment="Center">
+                    Add Expense
+                </Button>
+            </Grid>
             <!-- Title: Add Category -->
             <Border Margin="15" BorderBrush="#3c6255" 
-                    BorderThickness="2" Background="#eae7b1" >
+                    BorderThickness="2" Background="#eae7b1">
                 <TextBlock Padding="10" FontSize="35"  Text="Add Category"
                        Foreground="#61876e" FontWeight="DemiBold"
                        TextDecorations="Underline"
                        TextAlignment="Center" VerticalAlignment="Center"/>
             </Border>
-            
+
             <!-- Textbox for the Category Name -->
             <TextBlock Margin="15" FontSize="20" Text="Category Name:"
                        Foreground="#3c6255" FontWeight="DemiBold"/>
@@ -41,7 +70,6 @@
                     BorderBrush="#3c6255" BorderThickness="2"
                     Background="#61876E" Foreground="#eae7b1"
                     Click="btn_add_Click">Add</Button>
-            <TextBlock x:Name="txtbox"></TextBlock>
         </StackPanel>
     </Grid>
 </Window>

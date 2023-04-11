@@ -43,6 +43,7 @@ namespace HomeBudgetWPF
             if (String.IsNullOrEmpty(description))
             {
                 _view.ShowErrorMessage("There was a problem adding the category: \nThe category description cannot be empty.");
+                return;
             }
 
             Category.CategoryType type = (Category.CategoryType)Enum.Parse(typeof(Category.CategoryType), categoryType);

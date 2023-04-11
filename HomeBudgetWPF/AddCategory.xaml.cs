@@ -95,5 +95,15 @@ namespace HomeBudgetWPF
                 }
             }
         }
+
+        private void btn_homeScreen_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btn_AddExpense_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
