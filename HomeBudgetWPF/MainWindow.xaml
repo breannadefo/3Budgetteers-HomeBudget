@@ -27,7 +27,7 @@
         <CheckBox Grid.Row="1" VerticalAlignment="Center" Margin="20,0,0,0" Name="chk_newBudget" Grid.ColumnSpan="3">Create a new budget database</CheckBox>
         <TextBox Name="txb_budgetFileName" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30" Margin="10,0,10,0">Enter a budget file name...</TextBox>
         <TextBox Name="txb_budgetFolderPath" Grid.Row="2" Grid.Column="0" Height="30" Margin="10,0,10,0" Grid.ColumnSpan="3" Text="Enter budget folder (Optional)..."/>
-        <Button Name="btn_browseBudgetFolder" Click="btn_browseBudgetFolder_Click" Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Center" MinWidth="60" MinHeight="20" Content="Browse" Grid.RowSpan="2"></Button>
+        <Button Name="btn_browseBudgetFolder" Click="btn_browseBudgetFolder_Click" Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Center" MinWidth="60" MinHeight="20" Content="Browse Folders" Grid.RowSpan="2"></Button>
             <Button Name="btn_enterBudgetFolder" Click="btn_enterBudgetFolder_Click" Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Center" MinWidth="60" MinHeight="20" Content="Enter"></Button>
         <TextBlock Name="txblock_budgetInUse" Grid.Row="3" Grid.ColumnSpan="3" VerticalAlignment="Top" Margin="10,0,10,0" Height="20">There is no budget currently in use</TextBlock>
         <Button Name="btn_addNewExpense" Click="btn_addNewExpense_Click" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Width="100" Height="25">New Expense</Button>
