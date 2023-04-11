@@ -27,7 +27,7 @@
                         Background="#61876E" Foreground="#eae7b1"
                         Grid.Column="0" Click="btn_homeScreen_Click"
                         HorizontalContentAlignment="Center">
-                    HomeScreen
+                    Home Screen
                 </Button>
 
                 <!-- Button to get back to the main page -->
