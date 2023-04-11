@@ -83,6 +83,7 @@ namespace HomeBudgetWPF
         /// <param name="newDb">True if the user wants to create a new database, false otherwise.</param>
         public void InitializeHomeBudget(string database, bool newDb)
         {
+            CloseBudgetConnection();
             if(!Directory.Exists(Path.GetDirectoryName(database)))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(database));
@@ -92,9 +93,9 @@ namespace HomeBudgetWPF
         }
 
         /// <summary>
-        /// Called while trying to close the app. Closes the database connection if there is one active.
+        /// Closes the database connection if there is one active.
         /// </summary>
-        public void CloseApp()
+        public void CloseBudgetConnection()
         {
             if(_homeBudget != null)
             {
@@ -118,6 +119,27 @@ namespace HomeBudgetWPF
         public List<Category> GetAllCategories()
         {
             return _homeBudget.categories.List();
+        }
+
+        public bool EnterHomeBudget(string budgetFileName, string budgetFolderPath, bool newDb)
+        {
+            if (budgetFileName.Contains(" "))
+            {
+                _view.ShowErrorMessage("The file name cannot contain a string!");
+                return false;
+            }
+            else
+            {
+                if (Directory.Exists(budgetFolderPath))
+                {
+                    InitializeHomeBudget(budgetFolderPath+ "\\" + budgetFileName+ ".db", newDb);
+                }
+                else
+                {
+                    InitializeHomeBudget($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\Documents\\Budget\\{budgetFileName}.db", newDb);
+                }
+                return true;
+            }
         }
     }
 }

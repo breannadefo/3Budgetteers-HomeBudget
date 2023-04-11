@@ -50,22 +50,11 @@ namespace HomeBudgetWPF
 
         private void btn_enterBudgetFolder_Click(object sender, RoutedEventArgs e)
         {
-            if (txb_budgetFileName.Text.Contains(" "))
+            if (p.EnterHomeBudget(txb_budgetFileName.Text,txb_budgetFolderPath.Text,(bool)chk_newBudget.IsChecked))
             {
-                ShowErrorMessage("The file name cannot contain a string!");
+                txblock_budgetInUse.Text = "There is a budget currently in use";
             }
-            else
-            {
-                if (Directory.Exists(txb_budgetFolderPath.Text))
-                {
-                    p.InitializeHomeBudget(txb_budgetFolderPath.Text + "\\" + txb_budgetFileName.Text + ".db", (bool)chk_newBudget.IsChecked);
-                }
-                else
-                {
-                    p.InitializeHomeBudget($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\Documents\\Budget\\{txb_budgetFileName.Text}.db", (bool)chk_newBudget.IsChecked);
-                }
-            }
-            txblock_budgetInUse.Text = "There is a budget currently in use";
+            
         }
 
         private void btn_addNewExpense_Click(object sender, RoutedEventArgs e)
@@ -117,7 +106,7 @@ namespace HomeBudgetWPF
             }
             else
             {
-                p.CloseApp();
+                p.CloseBudgetConnection();
             }
         }
 
