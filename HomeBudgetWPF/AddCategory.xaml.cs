@@ -75,5 +75,25 @@ namespace HomeBudgetWPF
             tbx_description.Text = null;
             cmb_types.SelectedItem = Category.CategoryType.Expense;
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            string description = txb_description.Text;
+            string message = "A description was entered but no category was added for it. Are you sure you wish to exit the screen?";
+            
+            if (!String.IsNullOrEmpty(description))
+            {
+                MessageBoxResult result = MessageBox.Show(message, "Unsaved changes", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.No)
+                {
+                    e.Cancel();
+                }
+                else
+                {
+                    _presenter.CloseApp();
+                }
+            }
+        }
     }
 }
