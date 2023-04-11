@@ -226,7 +226,7 @@ namespace HomeBudgetWPF
 
         private void ModifyCategoryButton_Click(object sender, RoutedEventArgs e)
         {
-            AddCategory addCategoryWindow = new AddCategory(this._presenter);
+            AddCategory addCategoryWindow = new AddCategory(this._presenter, _homePage);
             addCategoryWindow.Show();
         }
         #endregion
