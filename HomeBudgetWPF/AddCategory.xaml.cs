@@ -23,6 +23,10 @@ namespace HomeBudgetWPF
     {
         Presenter _presenter;
 
+        /// <summary>
+        /// Creates a new window that allows the user to add a new category to their database.
+        /// </summary>
+        /// <param name="presenter">The presenter object that contains logic methods.</param>
         public AddCategory(Presenter presenter)
         {
             InitializeComponent();
@@ -45,16 +49,27 @@ namespace HomeBudgetWPF
             _presenter.AddCategory(description, categoryType);
         }
 
+        /// <summary>
+        /// Displays a pop up that shows an error message.
+        /// </summary>
+        /// <param name="message">The error message to be displayed.</param>
         public void ShowErrorMessage(string message)
         {
             MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
+        /// <summary>
+        /// Displays a pop up that confirms that the category was added.
+        /// </summary>
+        /// <param name="message">The success message to be displayed.</param>
         public void ShowSuccessMessage(string message)
         {
             MessageBox.Show(message, "Success!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
 
+        /// <summary>
+        /// Resets the description and category type values to their default values.
+        /// </summary>
         public void ResetValues()
         {
             tbx_description.Text = null;
