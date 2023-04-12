@@ -221,7 +221,15 @@ namespace HomeBudgetWPF
 
         private void CurrentDatabaseButton_Click(object sender, RoutedEventArgs e)
         {
-            //Unhide the home page
+            if (_homePage is MainWindow)
+            {
+                Close();
+                _homePage.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                MessageBox.Show("We have a big problem");
+            }
         }
 
         private void ModifyCategoryButton_Click(object sender, RoutedEventArgs e)
