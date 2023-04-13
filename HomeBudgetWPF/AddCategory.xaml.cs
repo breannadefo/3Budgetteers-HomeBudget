@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -41,6 +42,7 @@ namespace HomeBudgetWPF
             _presenter = presenter;
             _presenter.SetView(this);
             _homePage = homePage;
+            _expensePage = expensePage;
         }
 
         #endregion
@@ -53,7 +55,7 @@ namespace HomeBudgetWPF
         /// <param name="message">The error message to be displayed.</param>
         public void ShowErrorMessage(string message)
         {
-            MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         /// <summary>
@@ -62,7 +64,7 @@ namespace HomeBudgetWPF
         /// <param name="message">The success message to be displayed.</param>
         public void ShowSuccessMessage(string message)
         {
-            MessageBox.Show(message, "Success!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            System.Windows.MessageBox.Show(message, "Success!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
 
         /// <summary>
@@ -97,49 +99,46 @@ namespace HomeBudgetWPF
             string description = tbx_description.Text;
             string message = "A description was entered but no category was added for it. Are you sure you wish to exit the screen?";
             
-            if (!String.IsNullOrEmpty(description))
-            {
-                MessageBoxResult result = MessageBox.Show(message, "Unsaved changes", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-                if (result == MessageBoxResult.No)
-                {
-                    e.Cancel = true;
-                }
-                else if (_expensePage != null)
-                {
-                    _expensePage.Visibility = Visibility.Visible;
-                }
-                else 
-                {
-                    _presenter.CloseBudgetConnection();
-                    _homePage.Close();
-                }
-            }
-            else
+            if (CheckForWantToLeaveWithUnsavedChanges(message))
             {
                 _presenter.CloseBudgetConnection();
                 _homePage.Close();
+            }
+            else
+            {
+                e.Cancel = true;
             }
         }
 
         private void btn_homeScreen_Click(object sender, RoutedEventArgs e)
         {
-            if (_homePage is MainWindow)
-            {
-                Close();
-                _homePage.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                MessageBox.Show("SOMETHING HORRIBLE HAS GONE WRONG!!");
-            }
+            this.Visibility = Visibility.Hidden;
+            _homePage.Visibility = Visibility.Visible;
         }
 
         private void btn_AddExpense_Click(object sender, RoutedEventArgs e)
         {
-            AddExpenseWindow addExpense = new AddExpenseWindow(_presenter, _homePage);
-            Close();
-            addExpense.Show();
+            if (CheckForWantToLeaveWithUnsavedChanges("There are unsaved changes. Do you still want to leave?"))
+            {
+                _expensePage.Visibility = Visibility.Visible;
+                this.Visibility = Visibility.Hidden;
+                ResetValues();
+            }
+        }
+
+        private bool CheckForWantToLeaveWithUnsavedChanges(string message)
+        {
+            if (!String.IsNullOrEmpty(tbx_description.Text))
+            {
+                MessageBoxResult result = System.Windows.MessageBox.Show(message, "Unsaved changes", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.No)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         #endregion
