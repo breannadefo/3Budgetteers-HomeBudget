@@ -225,7 +225,7 @@ namespace HomeBudgetWPF
         {
             if (_homePage is MainWindow)
             {
-                Close();
+                this.Visibility = Visibility.Hidden;
                 _homePage.Visibility = Visibility.Visible;
             }
             else
@@ -236,8 +236,7 @@ namespace HomeBudgetWPF
 
         private void ModifyCategoryButton_Click(object sender, RoutedEventArgs e)
         {
-            AddCategory addCategoryWindow = new AddCategory(this._presenter, _homePage);
-            addCategoryWindow.Show();
+            _addCategoryPage.Visibility = Visibility.Visible;
         }
         #endregion
 

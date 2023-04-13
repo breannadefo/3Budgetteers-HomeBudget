@@ -101,8 +101,17 @@ namespace HomeBudgetWPF
             
             if (CheckForWantToLeaveWithUnsavedChanges(message))
             {
-                _presenter.CloseBudgetConnection();
-                _homePage.Close();
+                if (_expensePage.Visibility == Visibility.Hidden)
+                {
+                    _expensePage.Close();
+                    _homePage.Close();
+                }
+                else
+                {
+                    e.Cancel = true;
+                    this.Visibility = Visibility.Hidden;
+                    ResetValues();
+                }
             }
             else
             {
@@ -113,6 +122,7 @@ namespace HomeBudgetWPF
         private void btn_homeScreen_Click(object sender, RoutedEventArgs e)
         {
             this.Visibility = Visibility.Hidden;
+            _expensePage.Visibility = Visibility.Hidden;
             _homePage.Visibility = Visibility.Visible;
         }
 
@@ -122,6 +132,7 @@ namespace HomeBudgetWPF
             {
                 _expensePage.Visibility = Visibility.Visible;
                 this.Visibility = Visibility.Hidden;
+                _homePage.Visibility = Visibility.Hidden;
                 ResetValues();
             }
         }

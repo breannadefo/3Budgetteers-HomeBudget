@@ -64,13 +64,12 @@ namespace HomeBudgetWPF
                 {
                     _homeBudget.categories.Add(description, type);
                     _view.ShowSuccessMessage($"Successfully added a category with a description of '{description}' and a type of '{categoryType}'.");
-                    _view.ResetValues();
                 }
                 else
                 {
                     _view.ShowErrorMessage("There was a problem adding the category: \nThis category already exists.");
-                    _view.ResetValues();
                 }
+                _view.ResetValues();
             }
             catch (Exception ex)
             {
