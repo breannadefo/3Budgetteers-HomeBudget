@@ -21,14 +21,14 @@ namespace HomeBudgetWPF
     /// </summary>
     public partial class AddCategory : Window, ViewInterface
     {
-        Presenter _presenter;
+        PresenterInterface _presenter;
         Window _homePage;
 
         /// <summary>
         /// Creates a new window that allows the user to add a new category to their database.
         /// </summary>
         /// <param name="presenter">The presenter object that contains logic methods.</param>
-        public AddCategory(Presenter presenter, Window homePage)
+        public AddCategory(PresenterInterface presenter, Window homePage)
         {
             InitializeComponent();
             InitializeComboBox();

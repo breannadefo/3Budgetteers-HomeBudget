@@ -16,5 +16,13 @@ namespace HomeBudgetWPF
         public List<Category> GetCategories();
 
         public void InitializeHomeBudget(string database, bool newDb);
+
+        public bool EnterHomeBudget(string budgetFileName, string budgetFolderPath, bool newDb);
+
+        public bool VerifyHomeBudgetConnected();
+
+        public void CloseBudgetConnection();
+
+        public void SetView(ViewInterface view);
     }
 }

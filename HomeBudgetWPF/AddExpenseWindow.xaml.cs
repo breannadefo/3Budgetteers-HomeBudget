@@ -20,25 +20,15 @@ namespace HomeBudgetWPF
     /// </summary>
     public partial class AddExpenseWindow : Window, ViewInterface
     {
-        Presenter _presenter;
+        PresenterInterface _presenter;
         Window _homePage;
 
-        public AddExpenseWindow(Presenter presenter, Window homePage)
+        public AddExpenseWindow(PresenterInterface presenter, Window homePage)
         {
             InitializeComponent();
             _presenter = presenter;
             _presenter.SetView(this);
             _homePage = homePage;
-            InitializeComboBox();
-            setDatePickerToToday();
-        }
-
-        public AddExpenseWindow()
-        {
-            Presenter presenter = new Presenter(this);
-            InitializeComponent();
-            _presenter = presenter;
-            _presenter.SetView(this);
             InitializeComboBox();
             setDatePickerToToday();
         }

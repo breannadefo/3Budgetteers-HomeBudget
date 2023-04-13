@@ -138,15 +138,6 @@ namespace HomeBudgetWPF
         }
 
         /// <summary>
-        /// Retrieves a list of all the categories from the database
-        /// </summary>
-        /// <returns> List of category objects </returns>
-        public List<Category> GetAllCategories()
-        {
-            return _homeBudget.categories.List();
-        }
-
-        /// <summary>
         /// Creates a home budget instance. Handles error validation for valid input.
         /// </summary>
         /// <param name="budgetFileName">The name of the budget file to be created.</param>
