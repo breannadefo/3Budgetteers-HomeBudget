@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Data.Entity;
 using System.Windows;
-using System.ComponentModel;
+using System.ComponentModel; 
 
 namespace HomeBudgetWPF
 {
@@ -79,15 +79,110 @@ namespace HomeBudgetWPF
         }
 
         /// <summary>
-        /// Adds an expense to the database.
+        /// Adds a new expense based on user inputs. All user inputs are validated. If any of the
+        /// user inputs are invalid the method shows the user an error messages and does not add
+        /// the expense. All user inputs remain uncahnged
         /// </summary>
         /// <param name="description"> Description of the expense </param>
         /// <param name="date"> The date on which the expense was inccured </param>
         /// <param name="amount"> The total amunt of the expense. This value should be postive </param>
         /// <param name="categoryId"> The id of the category </param>
-        public void AddExpense(string description, DateTime date, double amount, int categoryId) 
+        public void AddExpense(string description, string date, string amount, string category, bool credit) 
         {
-            _homeBudget.expenses.Add(date, categoryId, amount, description);
+            bool errorFound = false;
+
+            //Validates the category
+            Category verifiedCategory = null;
+            if (category == null || category == string.Empty)
+            {
+                _view.ShowErrorMessage("Please select a category type from the drop down menu");
+                errorFound = true;
+            }
+            else
+            {
+                List<Category> categories = this.GetCategories();
+                foreach (Category categoryFromList in categories)
+                {
+                    if (categoryFromList.ToString() == category)
+                    {
+                        verifiedCategory = categoryFromList;
+                        break;
+                    }
+                }
+            }
+
+            //Validates the date
+            DateTime verifiedDate = DateTime.Now;
+            if (date == null || date == string.Empty)
+            {
+                _view.ShowErrorMessage("The date " + date + " is not valid");
+                errorFound = true;
+            }
+            else
+            {
+                verifiedDate = DateTime.Parse(date);
+            }
+
+            //Validates the description
+            string verifiedDescription = string.Empty;
+            if (description == null || description == string.Empty)
+            {
+                _view.ShowErrorMessage("The description cannot be empty");
+                errorFound = true;
+            }
+            else
+            {
+                verifiedDescription = description;
+            }
+
+            //Validates amount
+            int verifiedAmount = 0;
+            if (amount == null || amount == string.Empty)
+            {
+                _view.ShowErrorMessage("Amount cannot be none. Please input an amount for the expense");
+                errorFound = true;
+            }
+            else
+            {
+                if (int.TryParse(amount, out int result))
+                {
+                    if (result < 0)
+                    {
+                        _view.ShowErrorMessage("Amount cannot be negative");
+                    }
+                    else
+                    {
+                        verifiedAmount = result;
+                    }
+                }
+                else
+                {
+                    _view.ShowErrorMessage("Amount cannt be a word or contain letters. It must be a number represting the cost of the expense");
+                    errorFound = true;
+                }
+            }
+
+            //If no error has been encountered the values are added
+            if (!errorFound)
+            {
+                if (verifiedCategory.Type == Category.CategoryType.Expense || verifiedCategory.Type == Category.CategoryType.Savings)
+                {
+                    _homeBudget.expenses.Add(verifiedDate, verifiedCategory.Id, verifiedAmount * -1, verifiedDescription);
+                }
+                else
+                {
+                    _homeBudget.expenses.Add(verifiedDate, verifiedCategory.Id, verifiedAmount, verifiedDescription);
+                }
+
+
+                if (credit == true)
+                {
+                    _homeBudget.expenses.Add(verifiedDate, 8, verifiedAmount, "Credit");
+                }
+
+                _view.ShowSuccessMessage(verifiedDescription);
+                _view.ResetValues();
+            }
         }
 
         /// <summary>

@@ -43,110 +43,16 @@ namespace HomeBudgetWPF
             setDatePickerToToday();
         }
 
-        #region Public Methods
+        #region Methods
         /// <summary>
-        /// Adds a new expense based on user inputs. All user inputs are validated. If any of the
-        /// user inputs are invalid the method shows the user an error messages and does not add
-        /// the expense. All user inputs remain uncahnged
+
         /// </summary>
         /// <param name="sender"> The button that triggered the method </param>
         /// <param name="e"> Contains information pertaining to the button click event </param>
         private void AddExpenseButton_Click(object sender, RoutedEventArgs e)
         {
-            bool errorFound = false;
-
-            //Validates the category
-            Category category = null;
-            if (categoryComboBox.Text == null || categoryComboBox.Text.ToString() == string.Empty)
-            {
-                ShowErrorMessage("Please select a category type from the drop down menu");
-                errorFound = true;
-            }
-            else
-            {
-                List<Category> categories = _presenter.GetCategories();
-                foreach (Category categoryFromList in categories)
-                {
-                    if (categoryFromList.ToString() == categoryComboBox.Text.ToString())
-                    {
-                        category = categoryFromList;
-                        break;
-                    }
-                }
-            }
-
-            //Validates the date
-            DateTime date = DateTime.Now;
-            if(DateTextBox.Text == null || DateTextBox.Text == string.Empty)
-            {
-                ShowErrorMessage("The date " + DateTextBox.Text + " is not valid");
-                errorFound = true;
-            }
-            else
-            {
-                date = DateTime.Parse(DateTextBox.Text);
-            }
-
-            //Validates the description
-            string description = string.Empty;
-            if(DescriptionTextBox.Text == null || DescriptionTextBox.Text == string.Empty)
-            {
-                ShowErrorMessage("The description cannot be empty");
-                errorFound = true;
-            }
-            else
-            {
-                description = DescriptionTextBox.Text;
-            }
-
-            //Validates amount
-            int amount = 0;
-            if(AmountTextBox.Text == null || AmountTextBox.Text == string.Empty)
-            {
-                ShowErrorMessage("Amount cannot be none. Please input an amount for the expense");
-                errorFound = true;
-            }
-            else
-            {
-                if(int.TryParse(AmountTextBox.Text, out int result))
-                {
-                    if(result < 0)
-                    {
-                        ShowErrorMessage("Amount cannot be negative");
-                    }
-                    else
-                    {
-                        amount = result;
-                    }
-                }
-                else
-                {
-                    ShowErrorMessage("Amount cannt be a word or contain letters. It must be a number represting the cost of the expense");
-                    errorFound = true;
-                }
-            }
-
-            //If no error has been encountered the values are added
-            if(!errorFound)
-            {
-                if (category.Type == Category.CategoryType.Expense || category.Type == Category.CategoryType.Savings)
-                {
-                    _presenter.AddExpense(description, date, amount * -1, category.Id);
-                }
-                else
-                {
-                    _presenter.AddExpense(description, date, amount, category.Id);
-                }
-                
-
-                if(CreditCheckbox.IsChecked == true)
-                {
-                    _presenter.AddExpense("credit", date, amount, 8);
-                }
-
-                ShowExpenseAddedMessage(description);
-                ResetValues();
-            }
+            bool checkbox = (bool)CreditCheckbox.IsChecked;
+            _presenter.AddExpense(DescriptionTextBox.Text, DateTextBox.Text, AmountTextBox.Text, categoryComboBox.Text, checkbox);
         }
 
         /// <summary>
@@ -237,9 +143,7 @@ namespace HomeBudgetWPF
             AddCategory addCategoryWindow = new AddCategory(this._presenter, _homePage);
             addCategoryWindow.Show();
         }
-        #endregion
 
-        #region Private Methods
         private void InitializeComboBox()
         {
             categoryComboBox.ItemsSource = _presenter.GetCategories();
