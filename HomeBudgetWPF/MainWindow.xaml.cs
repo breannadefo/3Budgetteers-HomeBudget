@@ -59,7 +59,7 @@ namespace HomeBudgetWPF
                 _newExpenseWindow.Visibility = Visibility.Hidden;
                 _newCategoryWindow = new AddCategory(p, this, _newExpenseWindow);
                 _newCategoryWindow.Visibility = Visibility.Hidden;
-
+                _newExpenseWindow.AddCategoryPage = _newCategoryWindow;
             }
 
         }

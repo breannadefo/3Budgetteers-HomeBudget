@@ -21,19 +21,31 @@ namespace HomeBudgetWPF
     public partial class AddExpenseWindow : Window, ViewInterface
     {
         PresenterInterface _presenter;
-        Window _homePage;
+        Window _homePage, _addCategoryPage;
 
-        public AddExpenseWindow(PresenterInterface presenter, Window homePage)
+        public AddExpenseWindow(PresenterInterface presenter, Window homePage, Window addCategoryPage = null)
         {
             InitializeComponent();
             _presenter = presenter;
             _presenter.SetView(this);
             _homePage = homePage;
+            _addCategoryPage = addCategoryPage;
             InitializeComboBox();
             setDatePickerToToday();
         }
 
+        #region Properties
+
+        public Window AddCategoryPage
+        {
+            get { return _addCategoryPage; }
+            set { _addCategoryPage = value; }
+        }
+
+        #endregion
+
         #region Public Methods
+
         /// <summary>
         /// Adds a new expense based on user inputs. All user inputs are validated. If any of the
         /// user inputs are invalid the method shows the user an error messages and does not add
