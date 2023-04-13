@@ -21,8 +21,14 @@ namespace HomeBudgetWPF
     /// </summary>
     public partial class AddCategory : Window, ViewInterface
     {
+        #region backing fields
+
         PresenterInterface _presenter;
         Window _homePage;
+
+        #endregion
+
+        #region constructor
 
         /// <summary>
         /// Creates a new window that allows the user to add a new category to their database.
@@ -37,19 +43,9 @@ namespace HomeBudgetWPF
             _homePage = homePage;
         }
 
-        private void InitializeComboBox()
-        {
-            cmb_types.ItemsSource = Enum.GetValues(typeof(Category.CategoryType));
-            cmb_types.SelectedItem = Category.CategoryType.Expense;
-        }
+        #endregion
 
-        private void btn_add_Click(object sender, RoutedEventArgs e)
-        {
-            string description = tbx_description.Text;
-            string categoryType = cmb_types.SelectedItem.ToString();
-
-            _presenter.AddCategory(description, categoryType);
-        }
+        #region public methods
 
         /// <summary>
         /// Displays a pop up that shows an error message.
@@ -76,6 +72,24 @@ namespace HomeBudgetWPF
         {
             tbx_description.Text = null;
             cmb_types.SelectedItem = Category.CategoryType.Expense;
+        }
+
+        #endregion
+
+        #region private methods
+
+        private void InitializeComboBox()
+        {
+            cmb_types.ItemsSource = Enum.GetValues(typeof(Category.CategoryType));
+            cmb_types.SelectedItem = Category.CategoryType.Expense;
+        }
+
+        private void btn_add_Click(object sender, RoutedEventArgs e)
+        {
+            string description = tbx_description.Text;
+            string categoryType = cmb_types.SelectedItem.ToString();
+
+            _presenter.AddCategory(description, categoryType);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -117,5 +131,8 @@ namespace HomeBudgetWPF
             Close();
             addExpense.Show();
         }
+
+        #endregion
+
     }
 }
