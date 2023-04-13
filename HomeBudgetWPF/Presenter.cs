@@ -8,6 +8,8 @@ using System.IO;
 using System.Data.Entity;
 using System.Windows;
 using System.ComponentModel; 
+using System.ComponentModel;
+using Microsoft.Win32;
 
 namespace HomeBudgetWPF
 {
@@ -16,7 +18,10 @@ namespace HomeBudgetWPF
         ViewInterface _view;
         HomeBudget _homeBudget;
 
-        public Presenter(ViewInterface view) 
+        const string registrySubKey = @"SOFTWARE\BudgetApplication";
+        const string previousDBKey = "Previous database";
+
+        public Presenter(ViewInterface view)
         {
             _view = view;
         }
@@ -49,7 +54,7 @@ namespace HomeBudgetWPF
             Category.CategoryType type = (Category.CategoryType)Enum.Parse(typeof(Category.CategoryType), categoryType);
 
             List<Category> categories = GetCategories();
-            foreach(Category category in categories)
+            foreach (Category category in categories)
             {
                 if (category.Description.ToLower() == description.ToLower())
                 {
@@ -87,6 +92,7 @@ namespace HomeBudgetWPF
         /// <param name="date"> The date on which the expense was inccured </param>
         /// <param name="amount"> The total amunt of the expense. This value should be postive </param>
         /// <param name="categoryId"> The id of the category </param>
+
         public void AddExpense(string description, string date, string amount, string category, bool credit) 
         {
             bool errorFound = false;
@@ -204,7 +210,7 @@ namespace HomeBudgetWPF
         public void InitializeHomeBudget(string database, bool newDb)
         {
             CloseBudgetConnection();
-            if(!Directory.Exists(Path.GetDirectoryName(database)))
+            if (!Directory.Exists(Path.GetDirectoryName(database)))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(database));
             }
@@ -217,7 +223,7 @@ namespace HomeBudgetWPF
         /// </summary>
         public void CloseBudgetConnection()
         {
-            if(_homeBudget != null)
+            if (_homeBudget != null)
             {
                 _homeBudget.CloseDB();
             }
@@ -251,6 +257,7 @@ namespace HomeBudgetWPF
         /// <returns>True if the database is created properly, false otherwise.</returns>
         public bool EnterHomeBudget(string budgetFileName, string budgetFolderPath, bool newDb)
         {
+            string fullDbPath;
             if (budgetFileName.Contains(" "))
             {
                 _view.ShowErrorMessage("The file name cannot contain a string!");
@@ -260,13 +267,41 @@ namespace HomeBudgetWPF
             {
                 if (Directory.Exists(budgetFolderPath))
                 {
-                    InitializeHomeBudget(budgetFolderPath+ "\\" + budgetFileName+ ".db", newDb);
+                    fullDbPath = budgetFolderPath + "\\" + budgetFileName + ".db";
                 }
                 else
                 {
-                    InitializeHomeBudget($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\Documents\\Budget\\{budgetFileName}.db", newDb);
+                    fullDbPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\Documents\\Budget\\{budgetFileName}.db";
                 }
+                //write to registry
+                RegistryKey key = Registry.CurrentUser.CreateSubKey(registrySubKey);
+
+                key.SetValue(previousDBKey, fullDbPath);
+                key.Close();
+                InitializeHomeBudget(fullDbPath, newDb);
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the previous database path from the registry and initilazes the homebudget using
+        /// this path.
+        /// </summary>
+        /// <returns>True if there was a previous budget and it was initialized without error, false otherwise.</returns>
+        public bool UsePreviousBudget()
+        {
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(registrySubKey);
+
+            if (key != null && key.GetValue(previousDBKey) != null)
+            {
+                InitializeHomeBudget(key.GetValue(previousDBKey).ToString(), false);
+                key.Close();
+                return true;
+            }
+            else
+            {
+                _view.ShowErrorMessage("There was no previous budget in use.");
+                return false;
             }
         }
     }
