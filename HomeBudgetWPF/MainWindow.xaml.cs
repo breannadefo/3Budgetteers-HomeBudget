@@ -22,7 +22,9 @@ namespace HomeBudgetWPF
     /// </summary>
     public partial class MainWindow : Window, ViewInterface
     {
-        Presenter p;
+        PresenterInterface p;
+        AddExpenseWindow _newExpenseWindow;
+        AddCategory _newCategoryWindow;
 
         public MainWindow()
         {
@@ -52,17 +54,22 @@ namespace HomeBudgetWPF
             if (p.EnterHomeBudget(txb_budgetFileName.Text,txb_budgetFolderPath.Text,(bool)chk_newBudget.IsChecked))
             {
                 txblock_budgetInUse.Text = "There is a budget currently in use";
+
+                _newExpenseWindow = new AddExpenseWindow(p, this);
+                _newExpenseWindow.Visibility = Visibility.Hidden;
+                _newCategoryWindow = new AddCategory(p, this, _newExpenseWindow);
+                _newCategoryWindow.Visibility = Visibility.Hidden;
+
             }
-            
+
         }
 
         private void btn_addNewExpense_Click(object sender, RoutedEventArgs e)
         {
             if (p.VerifyHomeBudgetConnected())
             {
-                AddExpenseWindow newWindow = new AddExpenseWindow(p, this);
                 Visibility = Visibility.Hidden;
-                newWindow.Show();
+                _newExpenseWindow.Visibility = Visibility.Visible;
             }
             else
             {
@@ -75,9 +82,8 @@ namespace HomeBudgetWPF
         {
             if (p.VerifyHomeBudgetConnected())
             {
-                AddCategory newWindow = new AddCategory(p, this);
                 Visibility = Visibility.Hidden;
-                newWindow.Show();
+                _newCategoryWindow.Visibility = Visibility.Visible;
             }
             else
             {

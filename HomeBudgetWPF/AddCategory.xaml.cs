@@ -24,7 +24,7 @@ namespace HomeBudgetWPF
         #region backing fields
 
         PresenterInterface _presenter;
-        Window _homePage;
+        Window _homePage, _expensePage;
 
         #endregion
 
@@ -34,7 +34,7 @@ namespace HomeBudgetWPF
         /// Creates a new window that allows the user to add a new category to their database.
         /// </summary>
         /// <param name="presenter">The presenter object that contains logic methods.</param>
-        public AddCategory(PresenterInterface presenter, Window homePage)
+        public AddCategory(PresenterInterface presenter, Window homePage, Window expensePage = null)
         {
             InitializeComponent();
             InitializeComboBox();
@@ -105,10 +105,20 @@ namespace HomeBudgetWPF
                 {
                     e.Cancel = true;
                 }
-                else
+                else if (_expensePage != null)
+                {
+                    _expensePage.Visibility = Visibility.Visible;
+                }
+                else 
                 {
                     _presenter.CloseBudgetConnection();
+                    _homePage.Close();
                 }
+            }
+            else
+            {
+                _presenter.CloseBudgetConnection();
+                _homePage.Close();
             }
         }
 
