@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="400"
         Closing="Window_Closing"
+        Background="#a6bb8d"
         >
     <Grid>
         <Grid.RowDefinitions>
@@ -21,17 +22,43 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" 
+        
+        <!-- Title: Welcome -->
+        <Border Margin="15" BorderBrush="#3c6255" Grid.ColumnSpan="4" BorderThickness="4" Background="#eae7b1">
+            <TextBlock Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" Foreground="#61876e" TextDecorations="Underline"
                    TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36" FontWeight="Bold">Welcome!</TextBlock>
-        <Label Content="Enter a folder to contain your budget: " Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="213" MinHeight="26" FontSize="14" Grid.RowSpan="2"/>
-        <CheckBox Grid.Row="1" VerticalAlignment="Center" Margin="20,0,0,0" Name="chk_newBudget" Grid.ColumnSpan="3">Create a new budget database</CheckBox>
-        <TextBox Name="txb_budgetFileName" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30" Margin="10,0,10,0">Enter a budget file name...</TextBox>
-        <TextBox Name="txb_budgetFolderPath" Grid.Row="2" Grid.Column="0" Height="30" Margin="10,0,10,0" Grid.ColumnSpan="3" Text="Enter budget folder (Optional)..."/>
-        <Button Name="btn_browseBudgetFolder" Click="btn_browseBudgetFolder_Click" Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Center" MinWidth="60" MinHeight="20" Content="Browse Folders" Grid.RowSpan="2"></Button>
-            <Button Name="btn_enterBudgetFolder" Click="btn_enterBudgetFolder_Click" Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Center" MinWidth="60" MinHeight="20" Content="Enter"></Button>
-        <TextBlock Name="txblock_budgetInUse" Grid.Row="3" Grid.ColumnSpan="3" VerticalAlignment="Top" Margin="10,0,10,0" Height="20">There is no budget currently in use</TextBlock>
-        <Button Name="btn_previousBudget" Click="btn_previousBudget_Click" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Top" Height="25" Margin="50,0,50,0">Previous budget</Button>
-        <Button Name="btn_addNewExpense" Click="btn_addNewExpense_Click" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Width="100" Height="25">New Expense</Button>
-        <Button Name="btn_addNewCategory" Click="btn_addNewCategory_Click" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="2" Width="100" Height="25">New Category</Button>
+        </Border>
+
+        <!-- Entering information about the database -->
+        <Label Foreground="#3C6255" Content="Enter a folder to contain your budget: " Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="213" MinHeight="26" FontSize="14" Grid.RowSpan="2"/>
+        <CheckBox Foreground="#3C6255" BorderBrush="#3C6255" BorderThickness="1" Background="#EAE7B1"
+                  Grid.Row="1" VerticalAlignment="Center" Margin="20,0,0,0" Name="chk_newBudget" Grid.ColumnSpan="3">Create a new budget database</CheckBox>
+        <TextBox Name="txb_budgetFileName" BorderBrush="#3c6255" BorderThickness="2" Background="#eae7b1" Foreground="#3c6255"
+                 Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="30" Margin="10,0,10,0">Enter a budget file name...</TextBox>
+        <TextBox Name="txb_budgetFolderPath" BorderBrush="#3c6255" BorderThickness="2" Background="#eae7b1" Foreground="#3c6255"
+                 Grid.Row="2" Grid.Column="0" Height="30" Margin="10,0,10,0" Grid.ColumnSpan="3" Text="Enter budget folder (Optional)..."/>
+        
+        <!-- Button to get the folder -->
+        <Button Name="btn_browseBudgetFolder" BorderBrush="#3c6255" BorderThickness="2" Background="#61876E" Foreground="#eae7b1" Margin="7,0" HorizontalAlignment="Stretch"
+                Click="btn_browseBudgetFolder_Click" Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" Height="25"  MinWidth="60" MinHeight="20" Content="Browse Folders" Grid.RowSpan="2"></Button>
+        
+        <!-- Button to open the database -->
+        <Button Name="btn_enterBudgetFolder" BorderBrush="#3c6255" BorderThickness="2" Background="#61876E" Foreground="#eae7b1" Margin="7,0" HorizontalAlignment="Stretch"
+                Click="btn_enterBudgetFolder_Click" Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" Height="25" MinWidth="60" MinHeight="20" Content="Enter"/>
+
+        <!-- Indication of whether or not a database is in use -->
+        <TextBlock Foreground="#3C6255" Name="txblock_budgetInUse" Grid.Row="3" Grid.ColumnSpan="3" VerticalAlignment="Top" Margin="10,0,10,0" Height="20">There is no budget currently in use</TextBlock>
+        
+        <!-- Button to get the previous database -->
+        <Button Name="btn_previousBudget" BorderBrush="#3c6255" BorderThickness="2" Background="#61876E" Foreground="#eae7b1"
+                Click="btn_previousBudget_Click" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Top" Height="25" Margin="50,0,50,0">Previous budget</Button>
+        
+        <!-- Button to go to the add expense page -->
+        <Button Name="btn_addNewExpense" BorderBrush="#3c6255" BorderThickness="2" Background="#61876E" Foreground="#eae7b1"
+                Click="btn_addNewExpense_Click" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Width="100" Height="25">New Expense</Button>
+        
+        <!-- Button to go to the add category page -->
+        <Button Name="btn_addNewCategory" BorderBrush="#3c6255" BorderThickness="2" Background="#61876E" Foreground="#eae7b1"
+                Click="btn_addNewCategory_Click" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="2" Width="100" Height="25">New Category</Button>
     </Grid>
 </Window>
