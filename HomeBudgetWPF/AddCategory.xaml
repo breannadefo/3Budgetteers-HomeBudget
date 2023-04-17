@@ -41,9 +41,10 @@
                     Add Expense
                 </Button>
             </Grid>
+            
             <!-- Title: Add Category -->
             <Border Margin="15" BorderBrush="#3c6255" 
-                    BorderThickness="2" Background="#eae7b1">
+                    BorderThickness="4" Background="#eae7b1">
                 <TextBlock Padding="10" FontSize="35"  Text="Add Category"
                        Foreground="#61876e" FontWeight="DemiBold"
                        TextDecorations="Underline"
