@@ -142,7 +142,7 @@ namespace HomeBudgetWPF
             }
 
             //Validates amount
-            int verifiedAmount = 0;
+            double verifiedAmount = 0;
             if (amount == null || amount == string.Empty)
             {
                 _view.ShowErrorMessage("Amount cannot be none. Please input an amount for the expense");
@@ -150,7 +150,7 @@ namespace HomeBudgetWPF
             }
             else
             {
-                if (int.TryParse(amount, out int result))
+                if (double.TryParse(amount, out double result))
                 {
                     if (result < 0)
                     {
