@@ -20,30 +20,45 @@ namespace HomeBudgetWPF
     /// </summary>
     public partial class AddExpenseWindow : Window, ViewInterface
     {
-        Presenter _presenter;
-        Window _homePage;
+        PresenterInterface _presenter;
+        MainWindow _homePage;
+        AddCategory _addCategoryPage;
 
-        public AddExpenseWindow(Presenter presenter, Window homePage)
+        /// <summary>
+        /// Creates a new window where the user can add expenses to their budget.
+        /// </summary>
+        /// <param name="presenter">The presenter object that contains logic methods.</param>
+        /// <param name="homePage">The home page window.</param>
+        /// <param name="addCategoryPage">The window where the user can add categories. It is set to null if no value is provided.</param>
+        public AddExpenseWindow(PresenterInterface presenter, MainWindow homePage, AddCategory addCategoryPage = null)
         {
             InitializeComponent();
             _presenter = presenter;
-            _presenter.SetView(this);
             _homePage = homePage;
+            _addCategoryPage = addCategoryPage;
             InitializeComboBox();
             setDatePickerToToday();
         }
 
-        public AddExpenseWindow()
+        #region Properties
+
+        public AddCategory AddCategoryPage
         {
-            Presenter presenter = new Presenter(this);
-            InitializeComponent();
-            _presenter = presenter;
-            _presenter.SetView(this);
-            InitializeComboBox();
-            setDatePickerToToday();
+            get { return _addCategoryPage; }
+            set { _addCategoryPage = value; }
         }
 
-        #region Methods
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Adds a new expense based on user inputs. All user inputs are validated. If any of the
+        /// user inputs are invalid the method shows the user an error messages and does not add
+        /// the expense. All user inputs remain uncahnged
+        /// </summary>
+        /// <param name="sender"> The button that triggered the method </param>
+        /// <param name="e"> Contains information pertaining to the button click event </param>
         private void AddExpenseButton_Click(object sender, RoutedEventArgs e)
         {
             bool checkbox = (bool)CreditCheckbox.IsChecked;
@@ -74,7 +89,7 @@ namespace HomeBudgetWPF
         /// <param name="message"> Message contained in the pop up </param>
         public void ShowSuccessMessage(string message)
         {
-            MessageBox.Show(message, "Success", 0);
+            MessageBox.Show(message, "Success", 0, MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -95,11 +110,20 @@ namespace HomeBudgetWPF
                 if (result == MessageBoxResult.No)
                 {
                     e.Cancel = true;
+                    return;
                 }
-                else
-                {
-                    _presenter.CloseBudgetConnection();
-                }
+            }
+
+            CloseOtherPages();
+        }
+
+        private void CloseOtherPages()
+        {
+            if (_addCategoryPage.Visibility != Visibility.Visible
+                && _homePage.Visibility != Visibility.Visible)
+            {
+                _addCategoryPage.Close();
+                _homePage.Close();
             }
         }
 
@@ -116,21 +140,18 @@ namespace HomeBudgetWPF
 
         private void CurrentDatabaseButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_homePage is MainWindow)
-            {
-                Close();
-                _homePage.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                MessageBox.Show("We have a big problem");
-            }
+            this.Visibility = Visibility.Hidden;
+            _addCategoryPage.Visibility = Visibility.Hidden;
+            _homePage.Visibility = Visibility.Visible;
+            _presenter.SetView(_homePage);
         }
 
         private void ModifyCategoryButton_Click(object sender, RoutedEventArgs e)
         {
-            AddCategory addCategoryWindow = new AddCategory(this._presenter, _homePage);
-            addCategoryWindow.Show();
+            _homePage.Visibility = Visibility.Hidden;
+            _addCategoryPage.Visibility = Visibility.Visible;
+            _addCategoryPage.FromAddExpense = true;
+            _presenter.SetView(_addCategoryPage);
         }
 
         private void InitializeComboBox()
@@ -154,10 +175,6 @@ namespace HomeBudgetWPF
             DateTextBox.Text = today.ToString();
         }
 
-        private void ShowExpenseAddedMessage(string description)
-        {
-            MessageBox.Show("Expense " + description + " has been added succesfully!", "Expense Added Succesfully", 0, MessageBoxImage.Information);
-        }
         #endregion
 
     }

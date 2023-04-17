@@ -69,13 +69,12 @@ namespace HomeBudgetWPF
                 {
                     _homeBudget.categories.Add(description, type);
                     _view.ShowSuccessMessage($"Successfully added a category with a description of '{description}' and a type of '{categoryType}'.");
-                    _view.ResetValues();
                 }
                 else
                 {
                     _view.ShowErrorMessage("There was a problem adding the category: \nThis category already exists.");
-                    _view.ResetValues();
                 }
+                _view.ResetValues();
             }
             catch (Exception ex)
             {
@@ -170,7 +169,7 @@ namespace HomeBudgetWPF
                 }
                 else
                 {
-                    _view.ShowErrorMessage("Amount cannt be a word or contain letters. It must be a number represting the cost of the expense");
+                    _view.ShowErrorMessage("Amount cannot be a word or contain letters. It must be a number representing the cost of the expense");
                     errorFound = true;
                 }
             }
@@ -193,7 +192,7 @@ namespace HomeBudgetWPF
                     _homeBudget.expenses.Add(verifiedDate, 8, verifiedAmount, "Credit");
                 }
 
-                _view.ShowSuccessMessage(verifiedDescription);
+                _view.ShowSuccessMessage("Expense " + verifiedDescription + " has been added succesfully!");
                 _view.ResetValues();
             }
         }
@@ -243,15 +242,6 @@ namespace HomeBudgetWPF
         public bool VerifyHomeBudgetConnected()
         {
             return _homeBudget != null;
-        }
-
-        /// <summary>
-        /// Retrieves a list of all the categories from the database
-        /// </summary>
-        /// <returns> List of category objects </returns>
-        public List<Category> GetAllCategories()
-        {
-            return _homeBudget.categories.List();
         }
 
         /// <summary>
