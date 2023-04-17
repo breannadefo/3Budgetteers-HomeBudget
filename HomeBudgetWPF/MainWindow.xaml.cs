@@ -115,8 +115,8 @@ namespace HomeBudgetWPF
             }
             else
             {
-                p.CloseBudgetConnection();
                 CloseOtherPages();
+                p.CloseBudgetConnection();
             }
         }
 
@@ -142,6 +142,11 @@ namespace HomeBudgetWPF
         {
             if (p.UsePreviousBudget())
             {
+                _newExpenseWindow = new AddExpenseWindow(p, this);
+                _newExpenseWindow.Visibility = Visibility.Hidden;
+                _newCategoryWindow = new AddCategory(p, this, _newExpenseWindow);
+                _newCategoryWindow.Visibility = Visibility.Hidden;
+                _newExpenseWindow.AddCategoryPage = _newCategoryWindow;
                 txblock_budgetInUse.Text = "There is a budget currently in use";
             }
         }
