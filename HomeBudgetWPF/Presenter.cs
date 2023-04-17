@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Data.Entity;
 using System.Windows;
-using System.ComponentModel; 
+using System.ComponentModel;
 using System.ComponentModel;
 using Microsoft.Win32;
 
@@ -92,7 +92,7 @@ namespace HomeBudgetWPF
         /// <param name="amount"> The total amunt of the expense. This value should be postive </param>
         /// <param name="category"> The category that will be associated with this expense </param>
 
-        public void AddExpense(string description, string date, string amount, string category, bool credit) 
+        public void AddExpense(string description, string date, string amount, string category, bool credit)
         {
             bool errorFound = false;
 
@@ -115,7 +115,7 @@ namespace HomeBudgetWPF
                     }
                 }
 
-                if(verifiedCategory == null)
+                if (verifiedCategory == null)
                 {
                     _view.ShowErrorMessage("Category " + category + " does not exist");
                 }
@@ -216,6 +216,7 @@ namespace HomeBudgetWPF
         public void InitializeHomeBudget(string database, bool newDb)
         {
             CloseBudgetConnection();
+            //Only here for the default directory if the user inputted one isn't valid.. should probably change
             if (!Directory.Exists(Path.GetDirectoryName(database)))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(database));
@@ -232,6 +233,7 @@ namespace HomeBudgetWPF
             if (_homeBudget != null)
             {
                 _homeBudget.CloseDB();
+                _homeBudget = null;
             }
         }
 
@@ -257,7 +259,7 @@ namespace HomeBudgetWPF
             string fullDbPath;
             if (budgetFileName.Contains(" "))
             {
-                _view.ShowErrorMessage("The file name cannot contain a string!");
+                _view.ShowErrorMessage("The file name cannot contain a space!");
                 return false;
             }
             else

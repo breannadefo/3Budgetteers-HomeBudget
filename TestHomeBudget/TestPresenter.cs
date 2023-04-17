@@ -4,12 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HomeBudgetWPF;
+using Microsoft.Win32;
 
 namespace TestHomeBudget
 {
     [Collection("Sequential")]
     public class TestPresenter
     {
+        //same keys as used in the presenter
+        const string registrySubKey = @"SOFTWARE\BudgetApplication";
+        const string previousDBKey = "Previous database";
+     
         #region Test Add Category
         [Fact]
         public void AddCategoryValidParameters()
@@ -25,7 +30,7 @@ namespace TestHomeBudget
             Assert.True(view.CalledResetValues);
             Assert.True(view.CalledSuccessMessage);
         }
-        
+
 
         [Fact]
         public void AddCategoryNullDescription()
@@ -121,7 +126,7 @@ namespace TestHomeBudget
             Assert.False(view.CalledSuccessMessage);
         }
 
-        
+
         [Fact]
         public void InvalidExpenseEmptyAmount()
         {
@@ -136,7 +141,7 @@ namespace TestHomeBudget
             Assert.False(view.CalledResetValues);
             Assert.False(view.CalledSuccessMessage);
         }
-        
+
         //Testing Amount
         [Fact]
         public void InvalidExpenseNullAmount()
@@ -152,7 +157,7 @@ namespace TestHomeBudget
             Assert.False(view.CalledResetValues);
             Assert.False(view.CalledSuccessMessage);
         }
-        
+
         [Fact]
         public void InvalidExpenseStringAmount()
         {
@@ -167,7 +172,7 @@ namespace TestHomeBudget
             Assert.False(view.CalledResetValues);
             Assert.False(view.CalledSuccessMessage);
         }
-        
+
         [Fact]
         public void InvalidExpenseNegativeAmount()
         {
@@ -186,7 +191,7 @@ namespace TestHomeBudget
 
         #region Test Home Page
         [Fact]
-        public void TestEnterHomeBudget_ValidBudget()
+        public void TestEnterHomeBudget_ValidBudgetDirectoryExists()
         {
             //Arrange
             TestView view = new TestView();
@@ -196,8 +201,109 @@ namespace TestHomeBudget
             //store in user's home directory to garantee the directory exists on any machine
             string budgetFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
+            //Act
+            p.EnterHomeBudget(budgetFileName, budgetFolderPath, true);
 
-    }
+            //Assert
+            Assert.True(p.VerifyHomeBudgetConnected());
+            Assert.False(view.CalledShowErrorMessages);
+
+            p.CloseBudgetConnection();
+        }
+
+        [Fact]
+        public void TestEnterHomeBudget_ValidBudgetDirectoryDoesNotExist()
+        {
+            //Arrange
+            TestView view = new TestView();
+            Presenter p = new Presenter(view);
+
+            string budgetFileName = "testBudget";
+            //store in user's home directory to garantee the directory exists on any machine
+            string budgetFolderPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\this\\does\\not\\exist\\hopefully";
+
+            //Act
+            p.EnterHomeBudget(budgetFileName, budgetFolderPath, true);
+
+            //Assert
+            Assert.True(p.VerifyHomeBudgetConnected());
+            Assert.False(view.CalledShowErrorMessages);
+            
+            p.CloseBudgetConnection();
+        }
+
+        [Fact]
+        public void TestEnterHomeBudget_InvalidBudgetFileName()
+        {
+            //Arrange
+            TestView view = new TestView();
+            Presenter p = new Presenter(view);
+
+            string budgetFileName = "test Budget";
+            //store in user's home directory to garantee the directory exists on any machine
+            string budgetFolderPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\Documents\\Budget\\";
+
+            //Act
+            p.EnterHomeBudget(budgetFileName, budgetFolderPath, true);
+
+            //Assert
+            Assert.False(p.VerifyHomeBudgetConnected());
+            Assert.True(view.CalledShowErrorMessages);
+
+            p.CloseBudgetConnection();
+        }
+
+        [Fact]
+        public void TestUsePreviousBudget_PreviousBudgetUsed()
+        {
+            //Arrange
+            TestView view = new TestView();
+            Presenter p = new Presenter(view);
+
+            string budgetFileName = "testBudget";
+            //store in user's home directory to garantee the directory exists on any machine
+            string budgetFolderPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\Documents\\Budget\\";
+
+            //Act
+            p.EnterHomeBudget(budgetFileName, budgetFolderPath, true);
+            p.CloseBudgetConnection();
+
+            //Assert
+            Assert.True(p.UsePreviousBudget());
+            Assert.True(p.VerifyHomeBudgetConnected());
+            Assert.False(view.CalledShowErrorMessages);
+
+            p.CloseBudgetConnection();
+        }
+
+        [Fact]
+        public void TestUsePreviousBudget_PreviousBudgetNotUsed()
+        {
+            //Arrange
+            TestView view = new TestView();
+            Presenter p = new Presenter(view);
+
+            string budgetFileName = "testBudget";
+            //store in user's home directory to garantee the directory exists on any machine
+            string budgetFolderPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\Documents\\Budget\\";
+
+            //Act
+            //Create a home budget and save the it to the registry
+            p.EnterHomeBudget(budgetFileName, budgetFolderPath, true);
+            p.CloseBudgetConnection();
+
+            //delete the registry's key
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(registrySubKey, true);
+            key.DeleteValue(previousDBKey);
+            key.Close();
+
+            //Assert
+            Assert.False(p.UsePreviousBudget());
+            Assert.False(p.VerifyHomeBudgetConnected());
+            Assert.True(view.CalledShowErrorMessages);
+
+            p.CloseBudgetConnection();
+        }
         #endregion
     }
 }
