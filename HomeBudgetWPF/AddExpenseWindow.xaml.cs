@@ -44,23 +44,12 @@ namespace HomeBudgetWPF
         }
 
         #region Methods
-        /// <summary>
-
-        /// </summary>
-        /// <param name="sender"> The button that triggered the method </param>
-        /// <param name="e"> Contains information pertaining to the button click event </param>
         private void AddExpenseButton_Click(object sender, RoutedEventArgs e)
         {
             bool checkbox = (bool)CreditCheckbox.IsChecked;
             _presenter.AddExpense(DescriptionTextBox.Text, DateTextBox.Text, AmountTextBox.Text, categoryComboBox.Text, checkbox);
         }
 
-        /// <summary>
-        /// Resets the values in the user input boxes to their default values if the user clicks
-        /// yes on the pop up.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CancelExpenseButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult answer = MessageBox.Show("Are you sure you want to cancel the current expense? This will remove the inputs you have made", "Cancel Expense", MessageBoxButton.YesNo, MessageBoxImage.Warning);

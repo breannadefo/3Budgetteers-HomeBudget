@@ -91,7 +91,7 @@ namespace HomeBudgetWPF
         /// <param name="description"> Description of the expense </param>
         /// <param name="date"> The date on which the expense was inccured </param>
         /// <param name="amount"> The total amunt of the expense. This value should be postive </param>
-        /// <param name="categoryId"> The id of the category </param>
+        /// <param name="category"> The category that will be associated with this expense </param>
 
         public void AddExpense(string description, string date, string amount, string category, bool credit) 
         {
@@ -115,6 +115,11 @@ namespace HomeBudgetWPF
                         break;
                     }
                 }
+
+                if(verifiedCategory == null)
+                {
+                    _view.ShowErrorMessage("Category " + category + " does not exist");
+                }
             }
 
             //Validates the date
@@ -126,7 +131,8 @@ namespace HomeBudgetWPF
             }
             else
             {
-                verifiedDate = DateTime.Parse(date);
+                if (!DateTime.TryParse(date, out verifiedDate))
+                    _view.ShowErrorMessage("Invalid Date");
             }
 
             //Validates the description
@@ -142,7 +148,7 @@ namespace HomeBudgetWPF
             }
 
             //Validates amount
-            int verifiedAmount = 0;
+            double verifiedAmount = 0;
             if (amount == null || amount == string.Empty)
             {
                 _view.ShowErrorMessage("Amount cannot be none. Please input an amount for the expense");
@@ -150,11 +156,12 @@ namespace HomeBudgetWPF
             }
             else
             {
-                if (int.TryParse(amount, out int result))
+                if (double.TryParse(amount, out double result))
                 {
                     if (result < 0)
                     {
                         _view.ShowErrorMessage("Amount cannot be negative");
+                        errorFound = true;
                     }
                     else
                     {
