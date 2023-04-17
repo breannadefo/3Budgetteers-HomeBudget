@@ -25,7 +25,8 @@ namespace HomeBudgetWPF
         #region backing fields
 
         PresenterInterface _presenter;
-        Window _homePage, _expensePage;
+        MainWindow _homePage;
+        AddExpenseWindow _expensePage;
         bool _cameFromAddExpensePage = false;
 
         #endregion
@@ -37,13 +38,12 @@ namespace HomeBudgetWPF
         /// </summary>
         /// <param name="presenter">The presenter object that contains logic methods.</param>
         /// <param name="homePage">The main window.</param>
-        /// <param name="expensePage">The add expense window. It is set as null if no value is provided.</param>
-        public AddCategory(PresenterInterface presenter, Window homePage, Window expensePage = null)
+        /// <param name="expensePage">The window where the user can add expenses. It is set as null if no value is provided.</param>
+        public AddCategory(PresenterInterface presenter, MainWindow homePage, AddExpenseWindow expensePage = null)
         {
             InitializeComponent();
             InitializeComboBox();
             _presenter = presenter;
-            _presenter.SetView(this);
             _homePage = homePage;
             _expensePage = expensePage;
         }
@@ -150,6 +150,7 @@ namespace HomeBudgetWPF
                 _expensePage.Visibility = Visibility.Hidden;
                 _homePage.Visibility = Visibility.Visible;
                 ResetValues();
+                _presenter.SetView(_homePage);
 
                 FromAddExpense = false;
             }
@@ -163,6 +164,7 @@ namespace HomeBudgetWPF
                 this.Visibility = Visibility.Hidden;
                 _homePage.Visibility = Visibility.Hidden;
                 ResetValues();
+                _presenter.SetView(_expensePage);
 
                 FromAddExpense = false;
             }

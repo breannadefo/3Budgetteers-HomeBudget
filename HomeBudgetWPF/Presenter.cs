@@ -169,7 +169,7 @@ namespace HomeBudgetWPF
                 }
                 else
                 {
-                    _view.ShowErrorMessage("Amount cannt be a word or contain letters. It must be a number represting the cost of the expense");
+                    _view.ShowErrorMessage("Amount cannot be a word or contain letters. It must be a number representing the cost of the expense");
                     errorFound = true;
                 }
             }
@@ -192,7 +192,7 @@ namespace HomeBudgetWPF
                     _homeBudget.expenses.Add(verifiedDate, 8, verifiedAmount, "Credit");
                 }
 
-                _view.ShowSuccessMessage(verifiedDescription);
+                _view.ShowSuccessMessage("Expense " + verifiedDescription + " has been added succesfully!");
                 _view.ResetValues();
             }
         }

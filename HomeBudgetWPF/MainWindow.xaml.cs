@@ -71,6 +71,7 @@ namespace HomeBudgetWPF
                 Visibility = Visibility.Hidden;
                 _newCategoryWindow.Visibility= Visibility.Hidden;
                 _newExpenseWindow.Visibility = Visibility.Visible;
+                p.SetView(_newExpenseWindow);
             }
             else
             {
@@ -86,6 +87,7 @@ namespace HomeBudgetWPF
                 Visibility = Visibility.Hidden;
                 _newExpenseWindow.Visibility = Visibility.Hidden;
                 _newCategoryWindow.Visibility = Visibility.Visible;
+                p.SetView(_newCategoryWindow);
             }
             else
             {
@@ -120,11 +122,14 @@ namespace HomeBudgetWPF
 
         private void CloseOtherPages()
         {
-            if (_newExpenseWindow.Visibility != Visibility.Visible 
-                && _newCategoryWindow.Visibility != Visibility.Visible)
+            if (p.VerifyHomeBudgetConnected())
             {
-                _newExpenseWindow.Close();
-                _newCategoryWindow.Close();
+                if (_newExpenseWindow.Visibility != Visibility.Visible 
+                    && _newCategoryWindow.Visibility != Visibility.Visible)
+                {
+                    _newExpenseWindow.Close();
+                    _newCategoryWindow.Close();
+                }
             }
         }
 

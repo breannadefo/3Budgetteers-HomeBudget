@@ -24,5 +24,7 @@ namespace HomeBudgetWPF
         public void CloseBudgetConnection();
 
         public void SetView(ViewInterface view);
+
+        public bool UsePreviousBudget();
     }
 }

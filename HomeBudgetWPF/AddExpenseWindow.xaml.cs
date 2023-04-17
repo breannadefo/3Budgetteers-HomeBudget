@@ -21,14 +21,19 @@ namespace HomeBudgetWPF
     public partial class AddExpenseWindow : Window, ViewInterface
     {
         PresenterInterface _presenter;
-        Window _homePage;
+        MainWindow _homePage;
         AddCategory _addCategoryPage;
 
-        public AddExpenseWindow(PresenterInterface presenter, Window homePage, AddCategory addCategoryPage = null)
+        /// <summary>
+        /// Creates a new window where the user can add expenses to their budget.
+        /// </summary>
+        /// <param name="presenter">The presenter object that contains logic methods.</param>
+        /// <param name="homePage">The home page window.</param>
+        /// <param name="addCategoryPage">The window where the user can add categories. It is set to null if no value is provided.</param>
+        public AddExpenseWindow(PresenterInterface presenter, MainWindow homePage, AddCategory addCategoryPage = null)
         {
             InitializeComponent();
             _presenter = presenter;
-            _presenter.SetView(this);
             _homePage = homePage;
             _addCategoryPage = addCategoryPage;
             InitializeComboBox();
@@ -84,7 +89,7 @@ namespace HomeBudgetWPF
         /// <param name="message"> Message contained in the pop up </param>
         public void ShowSuccessMessage(string message)
         {
-            MessageBox.Show(message, "Success", 0);
+            MessageBox.Show(message, "Success", 0, MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -135,16 +140,10 @@ namespace HomeBudgetWPF
 
         private void CurrentDatabaseButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_homePage is MainWindow)
-            {
-                this.Visibility = Visibility.Hidden;
-                _addCategoryPage.Visibility = Visibility.Hidden;
-                _homePage.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                MessageBox.Show("We have a big problem");
-            }
+            this.Visibility = Visibility.Hidden;
+            _addCategoryPage.Visibility = Visibility.Hidden;
+            _homePage.Visibility = Visibility.Visible;
+            _presenter.SetView(_homePage);
         }
 
         private void ModifyCategoryButton_Click(object sender, RoutedEventArgs e)
@@ -152,6 +151,7 @@ namespace HomeBudgetWPF
             _homePage.Visibility = Visibility.Hidden;
             _addCategoryPage.Visibility = Visibility.Visible;
             _addCategoryPage.FromAddExpense = true;
+            _presenter.SetView(_addCategoryPage);
         }
 
         private void InitializeComboBox()
@@ -175,10 +175,6 @@ namespace HomeBudgetWPF
             DateTextBox.Text = today.ToString();
         }
 
-        private void ShowExpenseAddedMessage(string description)
-        {
-            MessageBox.Show("Expense " + description + " has been added succesfully!", "Expense Added Succesfully", 0, MessageBoxImage.Information);
-        }
         #endregion
 
     }
