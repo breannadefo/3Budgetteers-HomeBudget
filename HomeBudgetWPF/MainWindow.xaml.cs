@@ -69,6 +69,7 @@ namespace HomeBudgetWPF
             if (p.VerifyHomeBudgetConnected())
             {
                 Visibility = Visibility.Hidden;
+                _newCategoryWindow.Visibility= Visibility.Hidden;
                 _newExpenseWindow.Visibility = Visibility.Visible;
             }
             else
@@ -83,6 +84,7 @@ namespace HomeBudgetWPF
             if (p.VerifyHomeBudgetConnected())
             {
                 Visibility = Visibility.Hidden;
+                _newExpenseWindow.Visibility = Visibility.Hidden;
                 _newCategoryWindow.Visibility = Visibility.Visible;
             }
             else
@@ -112,6 +114,17 @@ namespace HomeBudgetWPF
             else
             {
                 p.CloseBudgetConnection();
+                CloseOtherPages();
+            }
+        }
+
+        private void CloseOtherPages()
+        {
+            if (_newExpenseWindow.Visibility != Visibility.Visible 
+                && _newCategoryWindow.Visibility != Visibility.Visible)
+            {
+                _newExpenseWindow.Close();
+                _newCategoryWindow.Close();
             }
         }
 

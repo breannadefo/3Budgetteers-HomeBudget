@@ -26,6 +26,7 @@ namespace HomeBudgetWPF
 
         PresenterInterface _presenter;
         Window _homePage, _expensePage;
+        bool _cameFromAddExpensePage = false;
 
         #endregion
 
@@ -35,6 +36,8 @@ namespace HomeBudgetWPF
         /// Creates a new window that allows the user to add a new category to their database.
         /// </summary>
         /// <param name="presenter">The presenter object that contains logic methods.</param>
+        /// <param name="homePage">The main window.</param>
+        /// <param name="expensePage">The add expense window. It is set as null if no value is provided.</param>
         public AddCategory(PresenterInterface presenter, Window homePage, Window expensePage = null)
         {
             InitializeComponent();
@@ -43,6 +46,16 @@ namespace HomeBudgetWPF
             _presenter.SetView(this);
             _homePage = homePage;
             _expensePage = expensePage;
+        }
+
+        #endregion
+
+        #region properties
+
+        public bool FromAddExpense
+        {
+            get { return _cameFromAddExpensePage; }
+            set { _cameFromAddExpensePage = value; }
         }
 
         #endregion
@@ -101,16 +114,16 @@ namespace HomeBudgetWPF
             
             if (CheckForWantToLeaveWithUnsavedChanges(message))
             {
-                if (_expensePage.Visibility == Visibility.Hidden)
+                if (FromAddExpense == false)
                 {
-                    _expensePage.Close();
-                    _homePage.Close();
+                    CloseOtherPages();
                 }
                 else
                 {
                     e.Cancel = true;
                     this.Visibility = Visibility.Hidden;
                     ResetValues();
+                    FromAddExpense = false;
                 }
             }
             else
@@ -119,11 +132,27 @@ namespace HomeBudgetWPF
             }
         }
 
+        private void CloseOtherPages()
+        {
+            if (_expensePage.Visibility != Visibility.Visible
+                && _homePage.Visibility != Visibility.Visible)
+            {
+                _expensePage.Close();
+                _homePage.Close();
+            }
+        }
+
         private void btn_homeScreen_Click(object sender, RoutedEventArgs e)
         {
-            this.Visibility = Visibility.Hidden;
-            _expensePage.Visibility = Visibility.Hidden;
-            _homePage.Visibility = Visibility.Visible;
+            if (CheckForWantToLeaveWithUnsavedChanges("There are unsaved changes. Do you still want to leave?"))
+            {
+                this.Visibility = Visibility.Hidden;
+                _expensePage.Visibility = Visibility.Hidden;
+                _homePage.Visibility = Visibility.Visible;
+                ResetValues();
+
+                FromAddExpense = false;
+            }
         }
 
         private void btn_AddExpense_Click(object sender, RoutedEventArgs e)
@@ -134,6 +163,8 @@ namespace HomeBudgetWPF
                 this.Visibility = Visibility.Hidden;
                 _homePage.Visibility = Visibility.Hidden;
                 ResetValues();
+
+                FromAddExpense = false;
             }
         }
 

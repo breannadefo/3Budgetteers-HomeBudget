@@ -21,9 +21,10 @@ namespace HomeBudgetWPF
     public partial class AddExpenseWindow : Window, ViewInterface
     {
         PresenterInterface _presenter;
-        Window _homePage, _addCategoryPage;
+        Window _homePage;
+        AddCategory _addCategoryPage;
 
-        public AddExpenseWindow(PresenterInterface presenter, Window homePage, Window addCategoryPage = null)
+        public AddExpenseWindow(PresenterInterface presenter, Window homePage, AddCategory addCategoryPage = null)
         {
             InitializeComponent();
             _presenter = presenter;
@@ -36,7 +37,7 @@ namespace HomeBudgetWPF
 
         #region Properties
 
-        public Window AddCategoryPage
+        public AddCategory AddCategoryPage
         {
             get { return _addCategoryPage; }
             set { _addCategoryPage = value; }
@@ -202,11 +203,20 @@ namespace HomeBudgetWPF
                 if (result == MessageBoxResult.No)
                 {
                     e.Cancel = true;
+                    return;
                 }
-                else
-                {
-                    _presenter.CloseBudgetConnection();
-                }
+            }
+
+            CloseOtherPages();
+        }
+
+        private void CloseOtherPages()
+        {
+            if (_addCategoryPage.Visibility != Visibility.Visible
+                && _homePage.Visibility != Visibility.Visible)
+            {
+                _addCategoryPage.Close();
+                _homePage.Close();
             }
         }
 
@@ -226,6 +236,7 @@ namespace HomeBudgetWPF
             if (_homePage is MainWindow)
             {
                 this.Visibility = Visibility.Hidden;
+                _addCategoryPage.Visibility = Visibility.Hidden;
                 _homePage.Visibility = Visibility.Visible;
             }
             else
@@ -236,7 +247,9 @@ namespace HomeBudgetWPF
 
         private void ModifyCategoryButton_Click(object sender, RoutedEventArgs e)
         {
+            _homePage.Visibility = Visibility.Hidden;
             _addCategoryPage.Visibility = Visibility.Visible;
+            _addCategoryPage.FromAddExpense = true;
         }
         #endregion
 
