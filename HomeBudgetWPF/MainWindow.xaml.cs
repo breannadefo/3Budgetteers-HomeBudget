@@ -41,9 +41,9 @@ namespace HomeBudgetWPF
         private void btn_browseBudgetFolder_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Forms.FolderBrowserDialog folder = new System.Windows.Forms.FolderBrowserDialog();
-            System.Windows.Forms.DialogResult result= folder.ShowDialog();
-         
-            if(result == System.Windows.Forms.DialogResult.OK)
+            System.Windows.Forms.DialogResult result = folder.ShowDialog();
+
+            if (result == System.Windows.Forms.DialogResult.OK)
             {
                 txb_budgetFolderPath.Text = folder.SelectedPath;
             }
@@ -51,7 +51,7 @@ namespace HomeBudgetWPF
 
         private void btn_enterBudgetFolder_Click(object sender, RoutedEventArgs e)
         {
-            if (p.EnterHomeBudget(txb_budgetFileName.Text,txb_budgetFolderPath.Text,(bool)chk_newBudget.IsChecked))
+            if (p.EnterHomeBudget(txb_budgetFileName.Text, txb_budgetFolderPath.Text, (bool)chk_newBudget.IsChecked))
             {
                 txblock_budgetInUse.Text = "There is a budget currently in use";
 
@@ -131,6 +131,14 @@ namespace HomeBudgetWPF
         public void ResetValues()
         {
             throw new NotImplementedException();
+        }
+
+        private void btn_previousBudget_Click(object sender, RoutedEventArgs e)
+        {
+            if (p.UsePreviousBudget())
+            {
+                txblock_budgetInUse.Text = "There is a budget currently in use";
+            }
         }
     }
 }

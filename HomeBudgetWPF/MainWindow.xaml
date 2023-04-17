@@ -30,6 +30,7 @@
         <Button Name="btn_browseBudgetFolder" Click="btn_browseBudgetFolder_Click" Grid.Row="1" Grid.Column="4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Center" MinWidth="60" MinHeight="20" Content="Browse Folders" Grid.RowSpan="2"></Button>
             <Button Name="btn_enterBudgetFolder" Click="btn_enterBudgetFolder_Click" Grid.Row="2" Grid.Column="4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Center" MinWidth="60" MinHeight="20" Content="Enter"></Button>
         <TextBlock Name="txblock_budgetInUse" Grid.Row="3" Grid.ColumnSpan="3" VerticalAlignment="Top" Margin="10,0,10,0" Height="20">There is no budget currently in use</TextBlock>
+        <Button Name="btn_previousBudget" Click="btn_previousBudget_Click" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Top" Height="25" Margin="50,0,50,0">Previous budget</Button>
         <Button Name="btn_addNewExpense" Click="btn_addNewExpense_Click" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Width="100" Height="25">New Expense</Button>
         <Button Name="btn_addNewCategory" Click="btn_addNewCategory_Click" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="2" Width="100" Height="25">New Category</Button>
     </Grid>

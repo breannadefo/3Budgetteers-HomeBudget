@@ -11,7 +11,7 @@ namespace HomeBudgetWPF
     {
         public void AddCategory(string description, string categoryType);
 
-        public void AddExpense(string description, DateTime date, double amount, int categoryId);
+        public void AddExpense(string description, string date, string amount, string categpory, bool credit);
 
         public List<Category> GetCategories();
 
