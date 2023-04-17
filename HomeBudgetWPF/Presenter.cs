@@ -270,7 +270,7 @@ namespace HomeBudgetWPF
                 {
                     fullDbPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\Documents\\Budget\\{budgetFileName}.db";
                 }
-                //write to registry
+                //write to registry for saving it on next run
                 RegistryKey key = Registry.CurrentUser.CreateSubKey(registrySubKey);
 
                 key.SetValue(previousDBKey, fullDbPath);

@@ -183,5 +183,21 @@ namespace TestHomeBudget
             Assert.False(view.CalledSuccessMessage);
         }
         #endregion
+
+        #region Test Home Page
+        [Fact]
+        public void TestEnterHomeBudget_ValidBudget()
+        {
+            //Arrange
+            TestView view = new TestView();
+            Presenter p = new Presenter(view);
+
+            string budgetFileName = "testBudget";
+            //store in user's home directory to garantee the directory exists on any machine
+            string budgetFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+
+    }
+        #endregion
     }
 }
