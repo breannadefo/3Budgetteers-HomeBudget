@@ -46,7 +46,6 @@ namespace TestHomeBudget
         }
         #endregion
 
-
         #region Test Add Expense
         //Testing Success
         [Fact]
@@ -126,7 +125,7 @@ namespace TestHomeBudget
             Assert.False(view.CalledSuccessMessage);
         }
 
-
+        //Testing Amount
         [Fact]
         public void InvalidExpenseEmptyAmount()
         {
@@ -142,7 +141,6 @@ namespace TestHomeBudget
             Assert.False(view.CalledSuccessMessage);
         }
 
-        //Testing Amount
         [Fact]
         public void InvalidExpenseNullAmount()
         {

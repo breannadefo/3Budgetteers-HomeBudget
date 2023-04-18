@@ -131,7 +131,10 @@ namespace HomeBudgetWPF
             else
             {
                 if (!DateTime.TryParse(date, out verifiedDate))
+                {
                     _view.ShowErrorMessage("Invalid Date");
+                    errorFound = true;
+                }
             }
 
             //Validates the description
@@ -302,6 +305,24 @@ namespace HomeBudgetWPF
                 _view.ShowErrorMessage("There was no previous budget in use.");
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Modifies an already existing expense that has the id passed into the function. The paramaters of the old expense are
+        /// replaced by the new values provided to the function. If any of the data is invalid or the id does not correspond to 
+        /// and existing expense an error message is shown to the user and the expense is not updated.
+        /// </summary>
+        /// <param name="oldExpenseId"></param>
+        /// <param name="description"> New description of the expense </param>
+        /// <param name="date">New date of the expense </param>
+        /// <param name="amount"> New amount of the expense </param>
+        /// <param name="categpory"> New caegory of the expense </param>
+        /// <param name="credit"> if true, the expense becomes credit, when false it is no longer credit </param>
+        public void UpdateExpense(int oldExpenseId, string description, string date, string amount, string categpory, bool credit)
+        {
+            
+
+
         }
     }
 }
