@@ -33,5 +33,10 @@ namespace HomeBudgetWPF
         {
 
         }
+
+        private void btn_HomePage_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

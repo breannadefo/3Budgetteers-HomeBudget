@@ -35,12 +35,29 @@
         </Border>
 
         <!-- Filter options -->
-        <StackPanel Grid.Column="0" Grid.Row="1" Grid.RowSpan="4">
+        <StackPanel Grid.Column="0" Grid.Row="1" Grid.RowSpan="4" Margin="10">
+            <!-- Start date picker -->
+            <Label>
+                <StackPanel HorizontalAlignment="Stretch">
+                    <TextBlock Margin="0, 5" x:Name="txb_start" Text="Start Date"/>
+                    <DatePicker Name="dp_startDate" HorizontalAlignment="Stretch"></DatePicker>
+                </StackPanel>
+            </Label>
             
+
+            <!-- End date picker -->
+            <Label Content="End Date" Margin="0, 5, 0, 0"></Label>
+            <DatePicker Name="dp_endDate" ></DatePicker>
+            
+            <!-- Filter by a category -->
+            <TextBlock Margin="0, 5"
+                x:Name="txb_filter" Text="Choose a category to filter by: (optional)"/>
+            <ComboBox Name="cmb_categories" Margin="0, 5"/>
+
         </StackPanel>
 
         <!-- Buttons to add an expense or a category -->
-        <Grid VerticalAlignment="Stretch" Grid.Row="5">
+        <Grid VerticalAlignment="Stretch" Grid.Row="5" Margin="0,0,5,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -77,5 +94,12 @@
                 Home Page
             </Button>
         </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="5" Margin="10">
+            <DataGrid Name="dg_displayExpenses">
+                
+            </DataGrid>
+        </Grid>
+        
     </Grid>
 </Window>
