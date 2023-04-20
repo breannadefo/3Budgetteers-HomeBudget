@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Budget;
 
 namespace HomeBudgetWPF
 {
@@ -22,6 +23,13 @@ namespace HomeBudgetWPF
         public DisplayExpenses()
         {
             InitializeComponent();
+            InitializeComboBox();
+        }
+
+        private void InitializeComboBox()
+        {
+            cmb_categories.ItemsSource = Enum.GetValues(typeof(Category.CategoryType));
+            cmb_categories.SelectedItem = Category.CategoryType.Expense;
         }
 
         private void btn_AddExpense_Click(object sender, RoutedEventArgs e)
