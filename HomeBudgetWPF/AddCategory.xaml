@@ -22,16 +22,6 @@
                 </Grid.RowDefinitions>
 
                 <!-- Button to get back to the main page -->
-                <Button Margin="10, 20, 5, 20" Height="40" FontSize="20"
-                        x:Name="btn_homeScreen"
-                        BorderBrush="#3c6255" BorderThickness="2"
-                        Background="#61876E" Foreground="#eae7b1"
-                        Grid.Column="0" Click="btn_homeScreen_Click"
-                        HorizontalContentAlignment="Center">
-                    Home Screen
-                </Button>
-
-                <!-- Button to get back to the main page -->
                 <Button Margin="5, 20, 10, 20" Height="40" FontSize="20" 
                         x:Name="btn_AddExpense"
                         BorderBrush="#3c6255" BorderThickness="2"

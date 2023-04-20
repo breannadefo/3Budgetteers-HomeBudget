@@ -20,8 +20,16 @@ namespace HomeBudgetWPF
     /// </summary>
     public partial class DisplayExpenses : Window
     {
-        public DisplayExpenses()
+        MainWindow mainWindow;
+        UpdateExpenseWindow updateExpenseWindow;
+        AddExpenseWindow addExpenseWindow;
+        AddCategory addCategoryWindow;
+        PresenterInterface presenterInterface;
+
+        public DisplayExpenses(MainWindow window, PresenterInterface p)
         {
+            this.mainWindow = window;
+            this.presenterInterface = p;
             InitializeComponent();
             InitializeComboBox();
         }
@@ -34,7 +42,8 @@ namespace HomeBudgetWPF
 
         private void btn_AddExpense_Click(object sender, RoutedEventArgs e)
         {
-
+            addExpenseWindow = new AddExpenseWindow(presenterInterface, this);
+            addExpenseWindow.Show();
         }
 
         private void btn_AddCategory_Click(object sender, RoutedEventArgs e)

@@ -21,8 +21,7 @@ namespace HomeBudgetWPF
     public partial class AddExpenseWindow : Window, ViewInterface
     {
         PresenterInterface _presenter;
-        MainWindow _homePage;
-        AddCategory _addCategoryPage;
+        DisplayExpenses displayWindow;
 
         /// <summary>
         /// Creates a new window where the user can add expenses to their budget.
@@ -30,12 +29,11 @@ namespace HomeBudgetWPF
         /// <param name="presenter">The presenter object that contains logic methods.</param>
         /// <param name="homePage">The home page window.</param>
         /// <param name="addCategoryPage">The window where the user can add categories. It is set to null if no value is provided.</param>
-        public AddExpenseWindow(PresenterInterface presenter, MainWindow homePage, AddCategory addCategoryPage = null)
+        public AddExpenseWindow(PresenterInterface presenter, DisplayExpenses display)
         {
             InitializeComponent();
             _presenter = presenter;
-            _homePage = homePage;
-            _addCategoryPage = addCategoryPage;
+            displayWindow = display;
             InitializeComboBox();
             setDatePickerToToday();
         }
@@ -113,20 +111,13 @@ namespace HomeBudgetWPF
                     return;
                 }
             }
-
-            CloseOtherPages();
+            displayWindow.Visibility = Visibility.Visible;
         }
 
-        private void CloseOtherPages()
+        private void CloseWindow(object sender, System.ComponentModel.CancelEventArgs e,bool openCategory)
         {
-            if (_addCategoryPage.Visibility != Visibility.Visible
-                && _homePage.Visibility != Visibility.Visible)
-            {
-                _addCategoryPage.Close();
-                _homePage.Close();
-            }
-        }
 
+        }
         private void searchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             List<Category> categories = _presenter.GetCategories();
@@ -138,20 +129,11 @@ namespace HomeBudgetWPF
                 categoryComboBox.SelectedIndex = index;
         }
 
-        private void CurrentDatabaseButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Visibility = Visibility.Hidden;
-            _addCategoryPage.Visibility = Visibility.Hidden;
-            _homePage.Visibility = Visibility.Visible;
-            _presenter.SetView(_homePage);
-        }
-
         private void ModifyCategoryButton_Click(object sender, RoutedEventArgs e)
         {
-            _homePage.Visibility = Visibility.Hidden;
-            _addCategoryPage.Visibility = Visibility.Visible;
-            _addCategoryPage.FromAddExpense = true;
-            _presenter.SetView(_addCategoryPage);
+            AddCategory addCategoryPage = new AddCategory(presenter, displayWindow);
+            this.Close();
+            addCategoryPage.Show();
         }
 
         private void InitializeComboBox()

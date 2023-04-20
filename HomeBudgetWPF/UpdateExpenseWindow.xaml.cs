@@ -22,12 +22,14 @@ namespace HomeBudgetWPF
     {
         PresenterInterface _presenter;
         Expense _expense;
+        DisplayExpenses _displayExpensesWindow;
 
-        public UpdateExpenseWindow(PresenterInterface Presenter, Expense Expense)
+        public UpdateExpenseWindow(PresenterInterface Presenter, Expense Expense, DisplayExpenses display)
         {
             InitializeComponent();
             _presenter = Presenter;
             _expense = Expense;
+            _displayExpensesWindow = display;
             IntializWithOldValues();
         }
 
@@ -56,9 +58,10 @@ namespace HomeBudgetWPF
         }
         #endregion
 
+        //button to open add category window
         private void ModifyCategoryButton_Click(object sender, RoutedEventArgs e)
         {
-
+            AddCategory cat = new AddCategory(_presenter, _displayExpensesWindow, this);
         }
 
         private void CancelExpenseButton_Click(object sender, RoutedEventArgs e)
