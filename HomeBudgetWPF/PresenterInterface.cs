@@ -15,6 +15,8 @@ namespace HomeBudgetWPF
 
         public void UpdateExpense(int oldExpenseId, string description, string date, string amount, string categpory, bool credit);
 
+        public void DeleteExpense(int expenseId);
+
         public List<Category> GetCategories();
 
         public void InitializeHomeBudget(string database, bool newDb);
