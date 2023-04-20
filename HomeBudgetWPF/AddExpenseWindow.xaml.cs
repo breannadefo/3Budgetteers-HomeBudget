@@ -114,10 +114,6 @@ namespace HomeBudgetWPF
             displayWindow.Visibility = Visibility.Visible;
         }
 
-        private void CloseWindow(object sender, System.ComponentModel.CancelEventArgs e,bool openCategory)
-        {
-
-        }
         private void searchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             List<Category> categories = _presenter.GetCategories();
