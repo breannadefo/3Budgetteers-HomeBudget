@@ -23,7 +23,7 @@ namespace HomeBudgetWPF
         public DisplayExpenses()
         {
             InitializeComponent();
-            InitializeComboBox();
+            //InitializeComboBox();
         }
 
         private void InitializeComboBox()

@@ -5,7 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HomeBudgetWPF"
         mc:Ignorable="d"
-        Title="DisplayExpenses" Height="450" Width="800">
+        Title="DisplayExpenses" 
+        Height="450" 
+        Width="800"
+        Background="#a6bb8d"
+        ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -37,40 +41,69 @@
         <!-- Filter options -->
         <StackPanel Grid.Column="0" Grid.Row="1" Grid.RowSpan="4" Margin="10">
 
-            <Grid Margin="0, 0, 0, 10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <Border Margin="0,0,0,3" BorderBrush="#3C6255" BorderThickness="1">
+                <Grid Margin="0, 0, 0, 10" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <!-- Start date picker -->
-                <Label>
-                    <StackPanel HorizontalAlignment="Stretch">
-                        <TextBlock Margin="0, 5" x:Name="txb_start" Text="Start Date:" FontSize="14px"/>
-                        <DatePicker Name="dp_startDate" HorizontalAlignment="Stretch"></DatePicker>
-                    </StackPanel>
-                </Label>
+                    <!-- Start date picker -->
+                    <Label>
+                        <StackPanel HorizontalAlignment="Stretch">
+                            <TextBlock Margin="0, 5" x:Name="txb_start" Text="Start Date:" 
+                                       FontSize="14px" Foreground="#3C6255"/>
+                            <DatePicker Name="dp_startDate" HorizontalAlignment="Stretch" Background="White"></DatePicker>
+                        </StackPanel>
+                    </Label>
 
-                <!-- End date picker -->
-                <Label Grid.Column="1">
-                    <StackPanel HorizontalAlignment="Stretch">
-                        <TextBlock Margin="0, 5" Name="txb_end" Text="End Date:" FontSize="14px"/>
-                        <DatePicker Name="dp_endDate" HorizontalAlignment="Stretch"></DatePicker>
-                    </StackPanel>
-                </Label>
-            </Grid>
+                    <!-- End date picker -->
+                    <Label Grid.Column="1">
+                        <StackPanel HorizontalAlignment="Stretch">
+                            <TextBlock Margin="0, 5" Name="txb_end" Text="End Date:" 
+                                       FontSize="14px" Foreground="#3C6255"/>
+                            <DatePicker Name="dp_endDate" HorizontalAlignment="Stretch" Background="White"></DatePicker>
+                        </StackPanel>
+                    </Label>
+                </Grid>
+            </Border>
+            
 
             <!-- Filter by a category -->
-            <TextBlock Margin="0, 5" FontSize="14px" TextWrapping="Wrap"
-                x:Name="txb_filter" Text="Choose a category to filter by: (optional)"/>
-            <ComboBox Name="cmb_categories" Margin="0, 5, 0, 10" FontSize="14px"/>
+            <Label BorderBrush="#3C6255" BorderThickness="1">
+                <StackPanel Width="237">
+                    <TextBlock Margin="0, 5" FontSize="14px" TextWrapping="Wrap" Foreground="#3C6255"
+                                x:Name="txb_filter" Text="Choose a category to filter by: (optional)"/>
+                    <ComboBox Name="cmb_categories" Margin="0, 5, 0, 10" FontSize="14px"
+                              Background="#eae7b1" HorizontalAlignment="Stretch">
+                        <!-- Got how to do this from this website: -->
+                        <!-- https://social.technet.microsoft.com/wiki/contents/articles/24240.changing-the-background-color-of-a-combobox-in-wpf-on-windows-8.aspx -->
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter Property="Background" Value="#eae7b1"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                    </ComboBox>
+                </StackPanel>
+            </Label>
 
             <!-- Grouping by Month and/or Category -->
-            <Label Margin="0, 5">
+            <Label Margin="0, 5" BorderBrush="#3C6255" BorderThickness="1">
                 <StackPanel HorizontalAlignment="Stretch">
-                    <TextBlock Margin="0, 5" Name="txb_grouping" Text="Group by Month/Category" FontSize="14px"/>
-                    <CheckBox Content="Month" Margin="5" Name="ckb_month" Click="ckb_GroupingAltered" FontSize="14px"/>
-                    <CheckBox Content="Category" Margin="5, 0, 5, 5" Name="ckb_category" Click="ckb_GroupingAltered" FontSize="14px"/>
+                    <TextBlock Margin="0, 5" Name="txb_grouping" Text="Group by Month/Category"
+                               FontSize="14px" Foreground="#3C6255"/>
+                    <CheckBox Content="Month" Margin="5" Name="ckb_month" Click="ckb_GroupingAltered"
+                              FontSize="12px" Foreground="#3C6255" Background="#eae7b1">
+                        <CheckBox.LayoutTransform>
+                            <ScaleTransform ScaleX="1.2" ScaleY="1.2" />
+                        </CheckBox.LayoutTransform>
+                    </CheckBox>
+                    <CheckBox Content="Category" Margin="5, 0, 5, 5" Name="ckb_category" Click="ckb_GroupingAltered"
+                              FontSize="12px" Foreground="#3C6255" Background="#eae7b1">
+                        <CheckBox.LayoutTransform>
+                            <ScaleTransform ScaleX="1.2" ScaleY="1.2" />
+                        </CheckBox.LayoutTransform>
+                    </CheckBox>
                 </StackPanel>
             </Label>
             
@@ -116,7 +149,9 @@
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="5" Margin="10">
-            <DataGrid Name="dg_displayExpenses">
+            <DataGrid Name="dg_displayExpenses" Background="#eae7b1" HorizontalGridLinesBrush="#3c6255"
+                      BorderBrush="#3c6255" BorderThickness="2" CanUserReorderColumns="False" FontSize="14px">
+
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Name="mi_Modify" Click="mi_Modify_Click" Header="Modify"/>
