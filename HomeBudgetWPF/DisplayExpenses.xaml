@@ -36,28 +36,48 @@
 
         <!-- Filter options -->
         <StackPanel Grid.Column="0" Grid.Row="1" Grid.RowSpan="4" Margin="10">
-            <!-- Start date picker -->
-            <Label>
+
+            <Grid Margin="0, 0, 0, 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Start date picker -->
+                <Label>
+                    <StackPanel HorizontalAlignment="Stretch">
+                        <TextBlock Margin="0, 5" x:Name="txb_start" Text="Start Date:" FontSize="14px"/>
+                        <DatePicker Name="dp_startDate" HorizontalAlignment="Stretch"></DatePicker>
+                    </StackPanel>
+                </Label>
+
+                <!-- End date picker -->
+                <Label Grid.Column="1">
+                    <StackPanel HorizontalAlignment="Stretch">
+                        <TextBlock Margin="0, 5" Name="txb_end" Text="End Date:" FontSize="14px"/>
+                        <DatePicker Name="dp_endDate" HorizontalAlignment="Stretch"></DatePicker>
+                    </StackPanel>
+                </Label>
+            </Grid>
+
+            <!-- Filter by a category -->
+            <TextBlock Margin="0, 5" FontSize="14px" TextWrapping="Wrap"
+                x:Name="txb_filter" Text="Choose a category to filter by: (optional)"/>
+            <ComboBox Name="cmb_categories" Margin="0, 5, 0, 10" FontSize="14px"/>
+
+            <!-- Grouping by Month and/or Category -->
+            <Label Margin="0, 5">
                 <StackPanel HorizontalAlignment="Stretch">
-                    <TextBlock Margin="0, 5" x:Name="txb_start" Text="Start Date"/>
-                    <DatePicker Name="dp_startDate" HorizontalAlignment="Stretch"></DatePicker>
+                    <TextBlock Margin="0, 5" Name="txb_grouping" Text="Group by Month/Category" FontSize="14px"/>
+                    <CheckBox Content="Month" Margin="5" Name="ckb_month" Click="ckb_GroupingAltered" FontSize="14px"/>
+                    <CheckBox Content="Category" Margin="5, 0, 5, 5" Name="ckb_category" Click="ckb_GroupingAltered" FontSize="14px"/>
                 </StackPanel>
             </Label>
             
-
-            <!-- End date picker -->
-            <Label Content="End Date" Margin="0, 5, 0, 0"></Label>
-            <DatePicker Name="dp_endDate" ></DatePicker>
-            
-            <!-- Filter by a category -->
-            <TextBlock Margin="0, 5"
-                x:Name="txb_filter" Text="Choose a category to filter by: (optional)"/>
-            <ComboBox Name="cmb_categories" Margin="0, 5"/>
-
         </StackPanel>
 
         <!-- Buttons to add an expense or a category -->
-        <Grid VerticalAlignment="Stretch" Grid.Row="5" Margin="0,0,5,0">
+        <Grid VerticalAlignment="Stretch" Grid.Row="5" Margin="5,0,5,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -70,8 +90,8 @@
                     BorderBrush="#3c6255" BorderThickness="2"
                     Background="#61876E" Foreground="#eae7b1"
                     Grid.Column="0" Click="btn_AddCategory_Click"
-                    HorizontalContentAlignment="Center">
-                Add Category
+                    HorizontalContentAlignment="Center" >
+                <TextBlock Text="Add Category" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
 
             <!-- Add Expense Button -->
@@ -81,7 +101,7 @@
                     Background="#61876E" Foreground="#eae7b1"
                     Grid.Column="1" Click="btn_AddExpense_Click"
                     HorizontalContentAlignment="Center">
-                Add Expense
+                <TextBlock Text="Add Expense" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
 
             <!-- Return to Home Page Button -->
@@ -91,13 +111,19 @@
                     Background="#61876E" Foreground="#eae7b1"
                     Grid.Column="2" Click="btn_HomePage_Click"
                     HorizontalContentAlignment="Center">
-                Home Page
+                <TextBlock Text="Home Page" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="5" Margin="10">
             <DataGrid Name="dg_displayExpenses">
-                
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Name="mi_Modify" Click="mi_Modify_Click" Header="Modify"/>
+                        <MenuItem Name="mi_Delete" Click="mi_Delete_Click" Header="Delete"/>
+                        <MenuItem Name="mi_Cancel" Click="mi_Cancel_Click" Header="Cancel"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
             </DataGrid>
         </Grid>
         

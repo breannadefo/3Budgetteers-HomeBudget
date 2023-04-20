@@ -38,5 +38,25 @@ namespace HomeBudgetWPF
         {
 
         }
+
+        private void ckb_GroupingAltered(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void mi_Modify_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void mi_Delete_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void mi_Cancel_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
