@@ -131,7 +131,10 @@ namespace HomeBudgetWPF
             else
             {
                 if (!DateTime.TryParse(date, out verifiedDate))
+                {
                     _view.ShowErrorMessage("Invalid Date");
+                    errorFound = true;
+                }
             }
 
             //Validates the description
@@ -195,6 +198,125 @@ namespace HomeBudgetWPF
                 _view.ShowSuccessMessage("Expense " + verifiedDescription + " has been added succesfully!");
                 _view.ResetValues();
             }
+        }
+
+        /// <summary>
+        /// Updates an expense. The first expense found with a matching id will have it's existing properties
+        /// updated to match the new ones provided. An error message is shown if any of the parameters are not valid.
+        /// </summary>
+        /// <param name="id"> Id of the expense that will be updated </param>
+        /// <param name="date"> New date of the expense </param>
+        /// <param name="amount"> New amount of the expense. This will be made negative </param>
+        /// <param name="description"> New description of the expense </param>
+        /// <param name="category"> New category of the expense </param>
+        public void UpdateExpense(int id, string date, string amount, string description, string category)
+        {
+            bool errorFound = false;
+
+            //Validates the category
+            Category verifiedCategory = null;
+            if (category == null || category == string.Empty)
+            {
+                _view.ShowErrorMessage("Please select a category type from the drop down menu");
+                errorFound = true;
+            }
+            else
+            {
+                List<Category> categories = this.GetCategories();
+                foreach (Category categoryFromList in categories)
+                {
+                    if (categoryFromList.ToString() == category)
+                    {
+                        verifiedCategory = categoryFromList;
+                        break;
+                    }
+                }
+
+                if (verifiedCategory == null)
+                {
+                    _view.ShowErrorMessage("Category " + category + " does not exist");
+                }
+            }
+
+            //Validates the date
+            DateTime verifiedDate = DateTime.Now;
+            if (date == null || date == string.Empty)
+            {
+                _view.ShowErrorMessage("The date " + date + " is not valid");
+                errorFound = true;
+            }
+            else
+            {
+                if (!DateTime.TryParse(date, out verifiedDate))
+                {
+                    _view.ShowErrorMessage("Invalid Date");
+                    errorFound = true;
+                }
+            }
+
+            //Validates the description
+            string verifiedDescription = string.Empty;
+            if (description == null || description == string.Empty)
+            {
+                _view.ShowErrorMessage("The description cannot be empty");
+                errorFound = true;
+            }
+            else
+            {
+                verifiedDescription = description;
+            }
+
+            //Validates amount
+            double verifiedAmount = 0;
+            if (amount == null || amount == string.Empty)
+            {
+                _view.ShowErrorMessage("Amount cannot be none. Please input an amount for the expense");
+                errorFound = true;
+            }
+            else
+            {
+                if (double.TryParse(amount, out double result))
+                {
+                    if (result < 0)
+                    {
+                        _view.ShowErrorMessage("Amount cannot be negative");
+                        errorFound = true;
+                    }
+                    else
+                    {
+                        verifiedAmount = result;
+                    }
+                }
+                else
+                {
+                    _view.ShowErrorMessage("Amount cannot be a word or contain letters. It must be a number representing the cost of the expense");
+                    errorFound = true;
+                }
+            }
+
+
+            //If no error has been encountered the values are added
+            if (!errorFound)
+            {
+                if (verifiedCategory.Type == Category.CategoryType.Expense || verifiedCategory.Type == Category.CategoryType.Savings)
+                {
+                    _homeBudget.expenses.UpdateProperties(id , verifiedDate, verifiedCategory.Id, verifiedAmount * -1, verifiedDescription);
+                }
+
+                _view.ShowSuccessMessage("Expense " + verifiedDescription + " has been added updated!");
+                _view.ResetValues();
+            }
+        }
+
+        /// <summary>
+        /// Deletes an expense. Deletes the first expense that has a matching id to the one provided. No error
+        /// messages will be shown as there is nothing to verify.
+        /// </summary>
+        /// <param name="id"> Id of the expense that will be deleted</param>
+        public void DeleteExpense(int id)
+        {
+            _homeBudget.expenses.Delete(id);
+            _view.ShowSuccessMessage("Expense with id " + id + " succesfully deleted");
         }
 
         /// <summary>
@@ -302,6 +424,24 @@ namespace HomeBudgetWPF
                 _view.ShowErrorMessage("There was no previous budget in use.");
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Modifies an already existing expense that has the id passed into the function. The paramaters of the old expense are
+        /// replaced by the new values provided to the function. If any of the data is invalid or the id does not correspond to 
+        /// and existing expense an error message is shown to the user and the expense is not updated.
+        /// </summary>
+        /// <param name="oldExpenseId"></param>
+        /// <param name="description"> New description of the expense </param>
+        /// <param name="date">New date of the expense </param>
+        /// <param name="amount"> New amount of the expense </param>
+        /// <param name="categpory"> New caegory of the expense </param>
+        /// <param name="credit"> if true, the expense becomes credit, when false it is no longer credit </param>
+        public void UpdateExpense(int oldExpenseId, string description, string date, string amount, string categpory, bool credit)
+        {
+            
+
+
         }
     }
 }
