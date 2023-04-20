@@ -68,7 +68,7 @@ namespace HomeBudgetWPF
 
         private void UpdateExpenseButton_Click(object sender, RoutedEventArgs e)
         {
-            _presenter.UpdateExpense(_expense.Id, DescriptionTextBox.Text, DateTextBox.Text, AmountTextBox.Text, categoryComboBox.Text, false);
+            _presenter.UpdateExpense(_expense.Id, DescriptionTextBox.Text, DateTextBox.Text, AmountTextBox.Text, categoryComboBox.Text);
         }
 
         private void DeleteExpenseButton_Click(object sender, RoutedEventArgs e)

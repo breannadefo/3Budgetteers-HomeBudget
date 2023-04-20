@@ -36,6 +36,13 @@ namespace TestHomeBudget
             get { return _calledShowSuccessMessages; }
         }
 
+        public void MakeAllValuesFalse()
+        {
+            _calledResetValues = false;
+            _calledShowErrorMessages = false;
+            _calledShowSuccessMessages = false;
+        }
+
         public void ResetValues()
         {
             _calledResetValues = true;
