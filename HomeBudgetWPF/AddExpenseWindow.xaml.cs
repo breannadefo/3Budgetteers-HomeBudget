@@ -102,6 +102,7 @@ namespace HomeBudgetWPF
                     return;
                 }
             }
+            _presenter.SetView(displayWindow);
             displayWindow.Visibility = Visibility.Visible;
         }
 
@@ -120,6 +121,7 @@ namespace HomeBudgetWPF
         {
             AddCategory addCategoryPage = new AddCategory(_presenter, displayWindow, this);
             Visibility = Visibility.Hidden;
+            _presenter.SetView(addCategoryPage);
             addCategoryPage.Show();
         }
 
