@@ -119,6 +119,7 @@ namespace HomeBudgetWPF
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _displayExpensesWindow.Visibility = Visibility.Visible;
+            _presenter.SetView(_displayExpensesWindow);
         }
     }
 

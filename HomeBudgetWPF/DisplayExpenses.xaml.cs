@@ -18,7 +18,7 @@ namespace HomeBudgetWPF
     /// <summary>
     /// Interaction logic for DisplayExpenses.xaml
     /// </summary>
-    public partial class DisplayExpenses : Window
+    public partial class DisplayExpenses : Window, ViewInterface
     {
         MainWindow mainWindow;
         PresenterInterface presenterInterface;
@@ -42,6 +42,7 @@ namespace HomeBudgetWPF
         {
             AddExpenseWindow addExpenseWindow = new AddExpenseWindow(presenterInterface, this);
             Visibility = Visibility.Hidden;
+            presenterInterface.SetView(addExpenseWindow);
             addExpenseWindow.Show();
         }
 
@@ -49,6 +50,7 @@ namespace HomeBudgetWPF
         {
             AddCategory addCategoryWindow = new AddCategory(presenterInterface, this);
             Visibility = Visibility.Hidden;
+            presenterInterface.SetView(addCategoryWindow);
             addCategoryWindow.Show();
         }
 
@@ -56,6 +58,7 @@ namespace HomeBudgetWPF
         {
             mainWindow.Visibility = Visibility.Visible;
             closeFromHomePageButton = true;
+            presenterInterface.SetView(mainWindow);
             this.Close();
         }
 
@@ -85,6 +88,21 @@ namespace HomeBudgetWPF
             //close the app as a whole
             if(!closeFromHomePageButton)
             mainWindow.Close();
+        }
+
+        public void ShowErrorMessage(string message)
+        {
+            MessageBox.Show(message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public void ShowSuccessMessage(string message)
+        {
+            MessageBox.Show(message, "Success!", MessageBoxButton.OK, MessageBoxImage.None);
+        }
+
+        public void ResetValues()
+        {
+            throw new NotImplementedException();
         }
     }
 }
