@@ -103,7 +103,15 @@ namespace HomeBudgetWPF
 
         public void ResetValues()
         {
-            throw new NotImplementedException();
+            ckb_month.IsChecked = false;
+            ckb_category.IsChecked = false;
+            dp_startDate.SelectedDate= DateTime.Now;
+            dp_endDate.SelectedDate= DateTime.Now;
+        }
+
+        private void ckb_month_Checked(object sender, RoutedEventArgs e)
+        {
+           
         }
 
         public void DisplayExpensesInGrid()
