@@ -425,10 +425,5 @@ namespace HomeBudgetWPF
                 return false;
             }
         }
-
-        public List<BudgetItem> GetBudgetItems(DateTime? start, DateTime? end, bool filterFlag, int catId)
-        {
-            return _homeBudget.GetBudgetItems(start, end, filterFlag, catId);
-        }
     }
 }
