@@ -160,7 +160,7 @@ namespace HomeBudgetWPF
                     //if it was opened by the view expense page
                     else
                     {
-                        _presenter.SetView(_displayExpensesWindow)l
+                        _presenter.SetView(_displayExpensesWindow);
                         _displayExpensesWindow.Visibility = Visibility.Visible;
                     }
                 }
