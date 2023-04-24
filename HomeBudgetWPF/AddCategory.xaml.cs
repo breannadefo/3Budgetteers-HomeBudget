@@ -173,21 +173,6 @@ namespace HomeBudgetWPF
                 e.Cancel = true;
             }
         }
-
-        private void btn_homeScreen_Click(object sender, RoutedEventArgs e)
-        {
-            if (CheckForWantToLeaveWithUnsavedChanges("There are unsaved changes. Do you still want to leave?"))
-            {
-                this.Visibility = Visibility.Hidden;
-                _addExpensePage.Visibility = Visibility.Hidden;
-                //_homePage.Visibility = Visibility.Visible;
-                ResetValues();
-                //_presenter.SetView(_homePage);
-
-                FromAddExpense = false;
-            }
-        }
-
         private void btn_AddExpense_Click(object sender, RoutedEventArgs e)
         {
             if (CheckForWantToLeaveWithUnsavedChanges("There are unsaved changes. Do you still want to leave?"))
