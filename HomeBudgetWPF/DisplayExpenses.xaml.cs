@@ -30,6 +30,7 @@ namespace HomeBudgetWPF
             this.presenterInterface = p;
             InitializeComponent();
             //InitializeComboBox();
+            DisplayExpensesInGrid();
         }
 
         private void InitializeComboBox()
@@ -85,6 +86,37 @@ namespace HomeBudgetWPF
             //close the app as a whole
             if(!closeFromHomePageButton)
             mainWindow.Close();
+        }
+
+        public void DisplayExpensesInGrid()
+        {
+            List<BudgetItem> expenses = presenterInterface.GetBudgetItems(null, null, false, 1);
+
+            dg_displayExpenses.ItemsSource = expenses;
+            dg_displayExpenses.Columns.Clear();
+
+            DataGridTextColumn date = new DataGridTextColumn();
+            date.Header = "Date";
+            date.Binding = new Binding("Date");
+            DataGridTextColumn category = new DataGridTextColumn();
+            category.Header = "Category";
+            category.Binding = new Binding("Category");
+            DataGridTextColumn descriptoin = new DataGridTextColumn();
+            descriptoin.Header = "Description";
+            descriptoin.Binding = new Binding("ShortDescription");
+            DataGridTextColumn amount = new DataGridTextColumn();
+            amount.Header = "Amount";
+            amount.Binding = new Binding("Amount");
+            DataGridTextColumn balance = new DataGridTextColumn();
+            balance.Header = "Balance";
+            balance.Binding = new Binding("Balance");
+
+            dg_displayExpenses.Columns.Add(date);
+            dg_displayExpenses.Columns.Add(category);
+            dg_displayExpenses.Columns.Add(descriptoin);
+            dg_displayExpenses.Columns.Add(amount);
+            dg_displayExpenses.Columns.Add(balance);
+
         }
     }
 }
