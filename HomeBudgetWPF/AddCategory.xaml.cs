@@ -36,6 +36,7 @@ namespace HomeBudgetWPF
         /// <summary>
         /// Creates a new window that allows the user to add a new category to the database.
         /// The expense and update windows stored in this page are set to null.
+        /// Is called when opened from the display epenses window.
         /// </summary>
         /// <param name="presenter">The presenter to be used.</param>
         /// <param name="display">The display expense window.</param>
@@ -52,6 +53,7 @@ namespace HomeBudgetWPF
         /// <summary>
         /// Creates a new window that allows the user to add a new category to their database.
         /// The update expense window is set to null.
+        /// Is called from the add expense window.
         /// </summary>
         /// <param name="presenter">The presenter object that contains logic methods.</param>
         /// <param name="homePage">The main window.</param>
@@ -67,7 +69,8 @@ namespace HomeBudgetWPF
         }
 
         /// <summary>
-        /// Creates a new add category window. Is opened by the update expense window.
+        /// Creates a new add category window. 
+        /// Is opened by the update expense window.
         /// The add expense window is set to null.
         /// </summary>
         /// <param name="presenter">The presenter that contains logic methods.</param>
@@ -177,9 +180,9 @@ namespace HomeBudgetWPF
             {
                 this.Visibility = Visibility.Hidden;
                 _addExpensePage.Visibility = Visibility.Hidden;
-                _homePage.Visibility = Visibility.Visible;
+                //_homePage.Visibility = Visibility.Visible;
                 ResetValues();
-                _presenter.SetView(_homePage);
+                //_presenter.SetView(_homePage);
 
                 FromAddExpense = false;
             }
@@ -191,7 +194,7 @@ namespace HomeBudgetWPF
             {
                 _addExpensePage.Visibility = Visibility.Visible;
                 this.Visibility = Visibility.Hidden;
-                _homePage.Visibility = Visibility.Hidden;
+                //_homePage.Visibility = Visibility.Hidden;
                 ResetValues();
                 _presenter.SetView(_addExpensePage);
 
