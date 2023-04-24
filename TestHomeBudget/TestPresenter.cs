@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HomeBudgetWPF;
+using Budget;
 using Microsoft.Win32;
 
 namespace TestHomeBudget
@@ -49,7 +50,7 @@ namespace TestHomeBudget
         #region Test Add Expense
         //Testing Success
         [Fact]
-        public void AddValidExpense()
+        public void TestAddExpense_AddValidExpense()
         {
             TestView view = new TestView();
             Presenter presenter = new Presenter(view);
@@ -65,7 +66,7 @@ namespace TestHomeBudget
 
         //Testing Description
         [Fact]
-        public void InvalidExpenseEmptyStringDescription()
+        public void TestAddExpense_InvalidExpenseEmptyStringDescription()
         {
             TestView view = new TestView();
             Presenter presenter = new Presenter(view);
@@ -80,7 +81,7 @@ namespace TestHomeBudget
         }
 
         [Fact]
-        public void InvalidExpenseNullDescription()
+        public void TestAddExpense_InvalidExpenseNullDescription()
         {
             TestView view = new TestView();
             Presenter presenter = new Presenter(view);
@@ -96,7 +97,7 @@ namespace TestHomeBudget
 
         //Testing DateTime
         [Fact]
-        public void InvalidExpenseNullDateTime()
+        public void TestAddExpense_InvalidExpenseNullDateTime()
         {
             TestView view = new TestView();
             Presenter presenter = new Presenter(view);
@@ -111,7 +112,7 @@ namespace TestHomeBudget
         }
 
         [Fact]
-        public void InvalidExpenseEmptyStringDateTime()
+        public void TestAddExpense_InvalidExpenseEmptyStringDateTime()
         {
             TestView view = new TestView();
             Presenter presenter = new Presenter(view);
@@ -127,7 +128,7 @@ namespace TestHomeBudget
 
         //Testing Amount
         [Fact]
-        public void InvalidExpenseEmptyAmount()
+        public void TestAddExpense_InvalidExpenseEmptyAmount()
         {
             TestView view = new TestView();
             Presenter presenter = new Presenter(view);
@@ -142,7 +143,7 @@ namespace TestHomeBudget
         }
 
         [Fact]
-        public void InvalidExpenseNullAmount()
+        public void TestAddExpense_InvalidExpenseNullAmount()
         {
             TestView view = new TestView();
             Presenter presenter = new Presenter(view);
@@ -157,7 +158,7 @@ namespace TestHomeBudget
         }
 
         [Fact]
-        public void InvalidExpenseStringAmount()
+        public void TestAddExpense_InvalidExpenseStringAmount()
         {
             TestView view = new TestView();
             Presenter presenter = new Presenter(view);
@@ -172,7 +173,7 @@ namespace TestHomeBudget
         }
 
         [Fact]
-        public void InvalidExpenseNegativeAmount()
+        public void TestAddExpense_InvalidExpenseNegativeAmount()
         {
             TestView view = new TestView();
             Presenter presenter = new Presenter(view);
@@ -185,6 +186,184 @@ namespace TestHomeBudget
             Assert.False(view.CalledResetValues);
             Assert.False(view.CalledSuccessMessage);
         }
+        #endregion
+
+        #region Test Update Expense
+        //Testing Success Case
+        [Fact]
+        public void TestUpdateExpense_ValidUpdateExpense()
+        {
+            TestView view = new TestView();
+            Presenter presenter = new Presenter(view);
+            presenter.EnterHomeBudget("databases/testDatabase", "No folder specified", true);
+
+            presenter.AddExpense("test Expense", "12/01/2023", "20.01", "Utilities", false);
+            view.MakeAllValuesFalse();
+            presenter.UpdateExpense(1, "01/01/2022", "20.00", "Uber", "Vacation");
+
+            presenter.CloseBudgetConnection();
+            Assert.False(view.CalledShowErrorMessages);
+            Assert.True(view.CalledResetValues);
+            Assert.True(view.CalledSuccessMessage);
+        }
+
+        //Testing Datetime
+        [Fact]
+        public void TestUpdateExpense_InvalidDateUpdateExpense()
+        {
+            TestView view = new TestView();
+            Presenter presenter = new Presenter(view);
+            presenter.EnterHomeBudget("databases/testDatabase", "No folder specified", true);
+
+            presenter.AddExpense("test Expense", "12/01/2023", "20.01", "Utilities", false);
+            view.MakeAllValuesFalse();
+            presenter.UpdateExpense(1, "01/01/01/901/01/2143", "20.00", "Uber", "Vacation");
+
+            presenter.CloseBudgetConnection();
+            Assert.True(view.CalledShowErrorMessages);
+            Assert.False(view.CalledResetValues);
+            Assert.False(view.CalledSuccessMessage);
+        }
+
+        //Testing Amount
+        [Fact]
+        public void TestUpdateExpense_InvalidAmountEmptyStringUpdateExpense()
+        {
+            TestView view = new TestView();
+            Presenter presenter = new Presenter(view);
+            presenter.EnterHomeBudget("databases/testDatabase", "No folder specified", true);
+
+            presenter.AddExpense("test Expense", "12/01/2023", "20.01", "Utilities", false);
+            view.MakeAllValuesFalse();
+            presenter.UpdateExpense(1, "01/01/01/901/01/2143", string.Empty, "Uber", "Vacation");
+
+            presenter.CloseBudgetConnection();
+            Assert.True(view.CalledShowErrorMessages);
+            Assert.False(view.CalledResetValues);
+            Assert.False(view.CalledSuccessMessage);
+        }
+
+        [Fact]
+        public void TestUpdateExpense_InvalidAmountNullUpdateExpense()
+        {
+            TestView view = new TestView();
+            Presenter presenter = new Presenter(view);
+            presenter.EnterHomeBudget("databases/testDatabase", "No folder specified", true);
+
+            presenter.AddExpense("test Expense", "12/01/2023", "20.01", "Utilities", false);
+            view.MakeAllValuesFalse();
+            presenter.UpdateExpense(1, "01/01/01/901/01/2143", null, "Uber", "Vacation");
+
+            presenter.CloseBudgetConnection();
+            Assert.True(view.CalledShowErrorMessages);
+            Assert.False(view.CalledResetValues);
+            Assert.False(view.CalledSuccessMessage);
+        }
+
+        [Fact]
+        public void TestUpdateExpense_InvalidAmountStringUpdateExpense()
+        {
+            TestView view = new TestView();
+            Presenter presenter = new Presenter(view);
+            presenter.EnterHomeBudget("databases/testDatabase", "No folder specified", true);
+
+            presenter.AddExpense("test Expense", "12/01/2023", "20.01", "Utilities", false);
+            view.MakeAllValuesFalse();
+            presenter.UpdateExpense(1, "01/01/01/901/01/2143", "amount", "Uber", "Vacation");
+
+            presenter.CloseBudgetConnection();
+            Assert.True(view.CalledShowErrorMessages);
+            Assert.False(view.CalledResetValues);
+            Assert.False(view.CalledSuccessMessage);
+        }
+
+        //Testing Description
+        [Fact]
+        public void TestUpdateExpense_InvalidDescriptionNullUpdateExpense()
+        {
+            TestView view = new TestView();
+            Presenter presenter = new Presenter(view);
+            presenter.EnterHomeBudget("databases/testDatabase", "No folder specified", true);
+
+            presenter.AddExpense("test Expense", "12/01/2023", "20.01", "Utilities", false);
+            view.MakeAllValuesFalse();
+            presenter.UpdateExpense(1, "01/01/01/901/01/2143", "20.00", null, "Vacation");
+
+            presenter.CloseBudgetConnection();
+            Assert.True(view.CalledShowErrorMessages);
+            Assert.False(view.CalledResetValues);
+            Assert.False(view.CalledSuccessMessage);
+        }
+
+        [Fact]
+        public void TestUpdateExpense_InvalidDescriptionStringEmptyUpdateExpense()
+        {
+            TestView view = new TestView();
+            Presenter presenter = new Presenter(view);
+            presenter.EnterHomeBudget("databases/testDatabase", "No folder specified", true);
+
+            presenter.AddExpense("test Expense", "12/01/2023", "20.01", "Utilities", false);
+            view.MakeAllValuesFalse();
+            presenter.UpdateExpense(1, "01/01/01/901/01/2143", "20.00", string.Empty, "Vacation");
+
+            presenter.CloseBudgetConnection();
+            Assert.True(view.CalledShowErrorMessages);
+            Assert.False(view.CalledResetValues);
+            Assert.False(view.CalledSuccessMessage);
+        }
+
+        //Testing category
+        [Fact]
+        public void TestUpdateExpense_InvalidCategoryUpdateExpense()
+        {
+            TestView view = new TestView();
+            Presenter presenter = new Presenter(view);
+            presenter.EnterHomeBudget("databases/testDatabase", "No folder specified", true);
+
+            presenter.AddExpense("test Expense", "12/01/2023", "20.01", "Utilities", false);
+            view.MakeAllValuesFalse();
+            presenter.UpdateExpense(1, "01/01/01/901/01/2143", "20.00", "Uber", "I really hope this isn't a caegory and if it is I will be really unhappy and may even go so far as to cry about it.");
+
+            presenter.CloseBudgetConnection();
+            Assert.True(view.CalledShowErrorMessages);
+            Assert.False(view.CalledResetValues);
+            Assert.False(view.CalledSuccessMessage);
+        }
+
+        [Fact]
+        public void TestUpdateExpense_InvalidCategoryNullUpdateExpense()
+        {
+            TestView view = new TestView();
+            Presenter presenter = new Presenter(view);
+            presenter.EnterHomeBudget("databases/testDatabase", "No folder specified", true);
+
+            presenter.AddExpense("test Expense", "12/01/2023", "20.01", "Utilities", false);
+            view.MakeAllValuesFalse();
+            presenter.UpdateExpense(1, "01/01/01/901/01/2143", "20.00", "Uber", null);
+
+            presenter.CloseBudgetConnection();
+            Assert.True(view.CalledShowErrorMessages);
+            Assert.False(view.CalledResetValues);
+            Assert.False(view.CalledSuccessMessage);
+        }
+
+        [Fact]
+        public void TestUpdateExpense_InvalidCategoryEmptyStringUpdateExpense()
+        {
+            TestView view = new TestView();
+            Presenter presenter = new Presenter(view);
+            presenter.EnterHomeBudget("databases/testDatabase", "No folder specified", true);
+
+            presenter.AddExpense("test Expense", "12/01/2023", "20.01", "Utilities", false);
+            view.MakeAllValuesFalse();
+            presenter.UpdateExpense(1, "01/01/01/901/01/2143", "20.00", "Uber", string.Empty);
+
+            presenter.CloseBudgetConnection();
+            Assert.True(view.CalledShowErrorMessages);
+            Assert.False(view.CalledResetValues);
+            Assert.False(view.CalledSuccessMessage);
+        }
+
         #endregion
 
         #region Test Home Page

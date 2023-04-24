@@ -13,7 +13,7 @@ namespace HomeBudgetWPF
 
         public void AddExpense(string description, string date, string amount, string categpory, bool credit);
 
-        public void UpdateExpense(int oldExpenseId, string description, string date, string amount, string categpory, bool credit);
+        public void UpdateExpense(int id, string date, string amount, string description, string category);
 
         public void DeleteExpense(int expenseId);
 
