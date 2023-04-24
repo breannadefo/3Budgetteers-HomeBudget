@@ -21,34 +21,22 @@ namespace HomeBudgetWPF
     public partial class AddExpenseWindow : Window, ViewInterface
     {
         PresenterInterface _presenter;
-        MainWindow _homePage;
-        AddCategory _addCategoryPage;
+        DisplayExpenses displayWindow;
 
         /// <summary>
         /// Creates a new window where the user can add expenses to their budget.
+        /// Called from the display expenses window.
         /// </summary>
         /// <param name="presenter">The presenter object that contains logic methods.</param>
-        /// <param name="homePage">The home page window.</param>
-        /// <param name="addCategoryPage">The window where the user can add categories. It is set to null if no value is provided.</param>
-        public AddExpenseWindow(PresenterInterface presenter, MainWindow homePage, AddCategory addCategoryPage = null)
+        /// <param name="display">The display expenses window.</param>
+        public AddExpenseWindow(PresenterInterface presenter, DisplayExpenses display)
         {
             InitializeComponent();
             _presenter = presenter;
-            _homePage = homePage;
-            _addCategoryPage = addCategoryPage;
+            displayWindow = display;
             InitializeComboBox();
             setDatePickerToToday();
         }
-
-        #region Properties
-
-        public AddCategory AddCategoryPage
-        {
-            get { return _addCategoryPage; }
-            set { _addCategoryPage = value; }
-        }
-
-        #endregion
 
         #region Public Methods
 
@@ -110,21 +98,11 @@ namespace HomeBudgetWPF
                 if (result == MessageBoxResult.No)
                 {
                     e.Cancel = true;
+                    //stops if the user does not wish to close the window
                     return;
                 }
             }
-
-            CloseOtherPages();
-        }
-
-        private void CloseOtherPages()
-        {
-            if (_addCategoryPage.Visibility != Visibility.Visible
-                && _homePage.Visibility != Visibility.Visible)
-            {
-                _addCategoryPage.Close();
-                _homePage.Close();
-            }
+            displayWindow.Visibility = Visibility.Visible;
         }
 
         private void searchBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -138,20 +116,11 @@ namespace HomeBudgetWPF
                 categoryComboBox.SelectedIndex = index;
         }
 
-        private void CurrentDatabaseButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Visibility = Visibility.Hidden;
-            _addCategoryPage.Visibility = Visibility.Hidden;
-            _homePage.Visibility = Visibility.Visible;
-            _presenter.SetView(_homePage);
-        }
-
         private void ModifyCategoryButton_Click(object sender, RoutedEventArgs e)
         {
-            _homePage.Visibility = Visibility.Hidden;
-            _addCategoryPage.Visibility = Visibility.Visible;
-            _addCategoryPage.FromAddExpense = true;
-            _presenter.SetView(_addCategoryPage);
+            AddCategory addCategoryPage = new AddCategory(_presenter, displayWindow, this);
+            Visibility = Visibility.Hidden;
+            addCategoryPage.Show();
         }
 
         private void InitializeComboBox()
@@ -177,5 +146,9 @@ namespace HomeBudgetWPF
 
         #endregion
 
+        private void btn_viewDisplayExpenses_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

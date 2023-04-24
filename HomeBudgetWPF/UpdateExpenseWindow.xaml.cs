@@ -22,12 +22,21 @@ namespace HomeBudgetWPF
     {
         PresenterInterface _presenter;
         Expense _expense;
+        DisplayExpenses _displayExpensesWindow;
 
-        public UpdateExpenseWindow(PresenterInterface Presenter, Expense Expense)
+        /// <summary>
+        /// Opens a new update expense window. 
+        /// Can only be opened by the display expenses window.
+        /// </summary>
+        /// <param name="Presenter">The presenter to be used to handle the backend logic.</param>
+        /// <param name="Expense">The expense to modify.</param>
+        /// <param name="display">The display expenses window the update window was called from.</param>
+        public UpdateExpenseWindow(PresenterInterface Presenter, Expense Expense, DisplayExpenses display)
         {
             InitializeComponent();
             _presenter = Presenter;
             _expense = Expense;
+            _displayExpensesWindow = display;
             IntializWithOldValues();
         }
 
@@ -56,9 +65,12 @@ namespace HomeBudgetWPF
         }
         #endregion
 
+        //button to open add category window
         private void ModifyCategoryButton_Click(object sender, RoutedEventArgs e)
         {
-
+            AddCategory cat = new AddCategory(_presenter, _displayExpensesWindow, this);
+            this.Visibility = Visibility.Hidden;
+            cat.Show();
         }
 
         private void CancelExpenseButton_Click(object sender, RoutedEventArgs e)
@@ -68,7 +80,7 @@ namespace HomeBudgetWPF
 
         private void UpdateExpenseButton_Click(object sender, RoutedEventArgs e)
         {
-            _presenter.UpdateExpense(_expense.Id, DescriptionTextBox.Text, DateTextBox.Text, AmountTextBox.Text, categoryComboBox.Text, false);
+            _presenter.UpdateExpense(_expense.Id, DescriptionTextBox.Text, DateTextBox.Text, AmountTextBox.Text, categoryComboBox.Text);
         }
 
         private void DeleteExpenseButton_Click(object sender, RoutedEventArgs e)
@@ -102,6 +114,11 @@ namespace HomeBudgetWPF
         {
             DescriptionTextBox.Text = string.Empty;
             AmountTextBox.Text = string.Empty;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _displayExpensesWindow.Visibility = Visibility.Visible;
         }
     }
 

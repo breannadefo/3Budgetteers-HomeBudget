@@ -9,7 +9,8 @@
         Height="450" 
         Width="800"
         Background="#a6bb8d"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
