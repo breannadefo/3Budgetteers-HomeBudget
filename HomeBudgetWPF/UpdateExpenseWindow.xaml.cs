@@ -20,10 +20,13 @@ namespace HomeBudgetWPF
     /// </summary>
     public partial class UpdateExpenseWindow : Window, ViewInterface
     {
+        #region Backing Fields
         PresenterInterface _presenter;
         Expense _expense;
         DisplayExpenses _displayExpensesWindow;
+        #endregion
 
+        #region Constructor
         /// <summary>
         /// Opens a new update expense window. 
         /// Can only be opened by the display expenses window.
@@ -39,6 +42,36 @@ namespace HomeBudgetWPF
             _displayExpensesWindow = display;
             IntializWithOldValues();
         }
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        /// Shows an error message to the user with an error icon. Prompts them to say 'ok'
+        /// </summary>
+        /// <param name="message"> The Message that will be shown to the user </param>
+        public void ShowErrorMessage(string message)
+        {
+            MessageBox.Show(message, "Error", 0, MessageBoxImage.Error);
+        }
+
+        /// <summary>
+        /// Shows a scuccess message to the user with an information icon. Prompts them to say 'ok'
+        /// </summary>
+        /// <param name="message"> The Message that will be shown to the user </param>
+        public void ShowSuccessMessage(string message)
+        {
+            MessageBox.Show(message, "Success", 0, MessageBoxImage.Information);
+        }
+
+        /// <summary>
+        /// Resets the values in the description text box and in the amount text box
+        /// </summary>
+        public void ResetValues()
+        {
+            DescriptionTextBox.Text = string.Empty;
+            AmountTextBox.Text = string.Empty;
+        }
+        #endregion
 
         #region Startup Methods
         private void IntializWithOldValues()
@@ -65,6 +98,7 @@ namespace HomeBudgetWPF
         }
         #endregion
 
+        #region Other Methods
         //button to open add category window
         private void ModifyCategoryButton_Click(object sender, RoutedEventArgs e)
         {
@@ -98,30 +132,12 @@ namespace HomeBudgetWPF
             if (index != -1)
                 categoryComboBox.SelectedIndex = index;
         }
-
-
-        public void ShowErrorMessage(string message)
-        {
-            MessageBox.Show(message, "Error", 0, MessageBoxImage.Error);
-        }
-
-        public void ShowSuccessMessage(string message)
-        {
-            MessageBox.Show(message, "Success", 0, MessageBoxImage.Information);
-        }
-
-        public void ResetValues()
-        {
-            DescriptionTextBox.Text = string.Empty;
-            AmountTextBox.Text = string.Empty;
-        }
-
+        
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _displayExpensesWindow.Visibility = Visibility.Visible;
             _presenter.SetView(_displayExpensesWindow);
         }
+        #endregion
     }
-
-
 }
