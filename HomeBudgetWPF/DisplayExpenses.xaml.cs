@@ -70,10 +70,7 @@ namespace HomeBudgetWPF
 
         private void mi_Modify_Click(object sender, RoutedEventArgs e)
         {
-            UpdateExpenseWindow updateWindow = new UpdateExpenseWindow(presenterInterface, dg_displayExpenses.SelectedItem, this);
-            Visibility = Visibility.Hidden;
-            presenterInterface.SetView(updateWindow);
-            updateWindow.Show();
+            OpenUpdateExpenseWindow();
         }
 
         private void mi_Delete_Click(object sender, RoutedEventArgs e)
@@ -146,6 +143,19 @@ namespace HomeBudgetWPF
             dg_displayExpenses.Columns.Add(amount);
             dg_displayExpenses.Columns.Add(balance);
 
+        }
+
+        public void OpenUpdateExpenseWindow()
+        {
+            UpdateExpenseWindow updateWindow = new UpdateExpenseWindow(presenterInterface,(BudgetItem) dg_displayExpenses.SelectedItem, this);
+            Visibility = Visibility.Hidden;
+            presenterInterface.SetView(updateWindow);
+            updateWindow.Show();
+        }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            OpenUpdateExpenseWindow();
         }
     }
 }

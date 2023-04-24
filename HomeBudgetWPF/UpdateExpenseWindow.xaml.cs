@@ -35,7 +35,7 @@ namespace HomeBudgetWPF
         {
             InitializeComponent();
             _presenter = Presenter;
-            _expense = new Expense(budgetItem.ExpenseID, budgetItem.Date, budgetItem.CategoryID, budgetItem.Amount, budgetItem.ShortDescription);
+            //_expense = new Expense(budgetItem.ExpenseID, budgetItem.Date, budgetItem.CategoryID, budgetItem.Amount, budgetItem.ShortDescription);
             _displayExpensesWindow = display;
             IntializWithOldValues();
         }
