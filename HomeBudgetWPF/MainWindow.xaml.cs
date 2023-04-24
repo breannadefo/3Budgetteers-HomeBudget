@@ -106,6 +106,7 @@ namespace HomeBudgetWPF
         {
             DisplayExpenses display = new DisplayExpenses(this, p);
             Visibility= Visibility.Hidden;
+            p.SetView(display);
             display.Show();
         }
     }
