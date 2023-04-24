@@ -28,6 +28,7 @@ namespace HomeBudgetWPF
         AddExpenseWindow _addExpensePage;
         UpdateExpenseWindow _updateExpensePage;
         DisplayExpenses _displayExpensesWindow;
+        bool closeFromAddExpenseButton = false;
 
         #endregion
 
@@ -88,16 +89,6 @@ namespace HomeBudgetWPF
 
         #endregion
 
-        #region properties
-
-        public bool FromAddExpense
-        {
-            get { return _cameFromAddExpensePage; }
-            set { _cameFromAddExpensePage = value; }
-        }
-
-        #endregion
-
         #region public methods
 
         /// <summary>
@@ -147,43 +138,53 @@ namespace HomeBudgetWPF
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            string description = tbx_description.Text;
-            string message = "A description was entered but no category was added for it. Are you sure you wish to exit the screen?";
-
-            if (CheckForWantToLeaveWithUnsavedChanges(message))
+            if (!closeFromAddExpenseButton)
             {
-                //if it was opened by the update expense page
-                if(_updateExpensePage != null)
-                {
+                string description = tbx_description.Text;
+                string message = "A description was entered but no category was added for it. Are you sure you wish to exit the screen?";
 
-                }
-                //if it was opened by the add expense page
-                else if(_addExpensePage != null)
+                if (CheckForWantToLeaveWithUnsavedChanges(message))
                 {
-
+                    //if it was opened by the update expense page
+                    if (_updateExpensePage != null)
+                    {
+                        _updateExpensePage.Visibility = Visibility.Visible;
+                    }
+                    //if it was opened by the add expense page
+                    else if (_addExpensePage != null)
+                    {
+                        _addExpensePage.Visibility = Visibility.Visible;
+                    }
+                    //if it was opened by the view expense page
+                    else
+                    {
+                        _displayExpensesWindow.Visibility = Visibility.Visible;
+                    }
                 }
-                //if it was opened by the view expense page
                 else
                 {
-
+                    e.Cancel = true;
                 }
-            }
-            else
-            {
-                e.Cancel = true;
             }
         }
         private void btn_AddExpense_Click(object sender, RoutedEventArgs e)
         {
+            //true if the user wants to close the window
             if (CheckForWantToLeaveWithUnsavedChanges("There are unsaved changes. Do you still want to leave?"))
             {
-                _addExpensePage.Visibility = Visibility.Visible;
-                this.Visibility = Visibility.Hidden;
-                //_homePage.Visibility = Visibility.Hidden;
-                ResetValues();
-                _presenter.SetView(_addExpensePage);
-
-                FromAddExpense = false;
+                //if this window was opened from the add expense window
+                if(_addExpensePage == null)
+                {
+                    AddExpenseWindow expenseWindow = new AddExpenseWindow(_presenter, _displayExpensesWindow);
+                    expenseWindow.Show();
+                    
+                }
+                else
+                {
+                    _addExpensePage.Visibility = Visibility.Visible;
+                }
+                closeFromAddExpenseButton = true;
+                this.Close();
             }
         }
 
@@ -209,5 +210,11 @@ namespace HomeBudgetWPF
 
         #endregion
 
+        private void btn_viewDisplayExpenses_Click(object sender, RoutedEventArgs e)
+        {
+            _addExpensePage = null;
+            _updateExpensePage = null;
+            this.Close();
+        }
     }
 }

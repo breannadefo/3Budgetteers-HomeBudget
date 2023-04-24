@@ -25,16 +25,14 @@ namespace HomeBudgetWPF
         PresenterInterface p;
         DisplayExpenses displayWindow;
 
+        /// <summary>
+        /// Is called only once, on app startup.
+        /// Creates a main window and shows it.
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
             p = new Presenter(this);
-        }
-
-        public MainWindow(Presenter p)
-        {
-            InitializeComponent();
-            this.p = p;
         }
 
         private void btn_browseBudgetFolder_Click(object sender, RoutedEventArgs e)

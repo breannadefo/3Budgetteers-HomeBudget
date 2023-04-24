@@ -25,10 +25,10 @@ namespace HomeBudgetWPF
 
         /// <summary>
         /// Creates a new window where the user can add expenses to their budget.
+        /// Called from the display expenses window.
         /// </summary>
         /// <param name="presenter">The presenter object that contains logic methods.</param>
-        /// <param name="homePage">The home page window.</param>
-        /// <param name="addCategoryPage">The window where the user can add categories. It is set to null if no value is provided.</param>
+        /// <param name="display">The display expenses window.</param>
         public AddExpenseWindow(PresenterInterface presenter, DisplayExpenses display)
         {
             InitializeComponent();
@@ -37,16 +37,6 @@ namespace HomeBudgetWPF
             InitializeComboBox();
             setDatePickerToToday();
         }
-
-        #region Properties
-
-        public AddCategory AddCategoryPage
-        {
-            get { return _addCategoryPage; }
-            set { _addCategoryPage = value; }
-        }
-
-        #endregion
 
         #region Public Methods
 
@@ -108,6 +98,7 @@ namespace HomeBudgetWPF
                 if (result == MessageBoxResult.No)
                 {
                     e.Cancel = true;
+                    //stops if the user does not wish to close the window
                     return;
                 }
             }
@@ -127,8 +118,8 @@ namespace HomeBudgetWPF
 
         private void ModifyCategoryButton_Click(object sender, RoutedEventArgs e)
         {
-            AddCategory addCategoryPage = new AddCategory(presenter, displayWindow);
-            this.Close();
+            AddCategory addCategoryPage = new AddCategory(_presenter, displayWindow, this);
+            Visibility = Visibility.Hidden;
             addCategoryPage.Show();
         }
 
@@ -155,5 +146,9 @@ namespace HomeBudgetWPF
 
         #endregion
 
+        private void btn_viewDisplayExpenses_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

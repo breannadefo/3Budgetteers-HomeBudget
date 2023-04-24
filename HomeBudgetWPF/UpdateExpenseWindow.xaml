@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:HomeBudgetWPF"
         mc:Ignorable="d"
         Background="#a6bb8d"
-        Title="UpdateExpenseWindow" Height="700" Width="500">
+        Title="UpdateExpenseWindow" Height="700" Width="500"
+        Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
 

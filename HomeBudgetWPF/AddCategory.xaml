@@ -21,6 +21,12 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
+                <Button 
+                    Margin="5, 20, 10, 20" Height="40" FontSize="20" 
+                    Name="btn_viewDisplayExpenses" Click="btn_viewDisplayExpenses_Click"
+                    BorderBrush="#3c6255" BorderThickness="2"
+                        Background="#61876E" Foreground="#eae7b1"
+                    HorizontalContentAlignment="Center">Display Expenses</Button>
                 <!-- Button to get back to the main page -->
                 <Button Margin="5, 20, 10, 20" Height="40" FontSize="20" 
                         x:Name="btn_AddExpense"
