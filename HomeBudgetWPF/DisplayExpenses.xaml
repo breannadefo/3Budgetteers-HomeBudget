@@ -74,7 +74,7 @@
                 <StackPanel Width="237">
                     <TextBlock Margin="0, 5" FontSize="14px" TextWrapping="Wrap" Foreground="#3C6255"
                                 x:Name="txb_filter" Text="Choose a category to filter by: (optional)"/>
-                    <ComboBox Name="cmb_categories" Margin="0, 5, 0, 10" FontSize="14px"
+                    <ComboBox Name="cmb_categories" Margin="0, 5" FontSize="14px"
                               Background="#eae7b1" HorizontalAlignment="Stretch">
                         <!-- Got how to do this from this website: -->
                         <!-- https://social.technet.microsoft.com/wiki/contents/articles/24240.changing-the-background-color-of-a-combobox-in-wpf-on-windows-8.aspx -->
