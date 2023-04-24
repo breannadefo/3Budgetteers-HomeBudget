@@ -102,7 +102,14 @@ namespace HomeBudgetWPF
 
         public void ResetValues()
         {
-            throw new NotImplementedException();
+            ckb_month.Checked = false;
+            ckb_catgeory.Checked = false;
+            //dp_startDate.Da
+        }
+
+        private void ckb_month_Checked(object sender, RoutedEventArgs e)
+        {
+           
         }
     }
 }
