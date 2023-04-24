@@ -75,7 +75,12 @@ namespace HomeBudgetWPF
 
         private void mi_Delete_Click(object sender, RoutedEventArgs e)
         {
-
+            if(!(dg_displayExpenses.SelectedItem == null || dg_displayExpenses.SelectedItem == string.Empty))
+            {
+                BudgetItem item = (BudgetItem)dg_displayExpenses.SelectedItem;
+                presenterInterface.DeleteExpense(item.ExpenseID);
+                this.DisplayExpensesInGrid();
+            }
         }
 
         private void mi_Cancel_Click(object sender, RoutedEventArgs e)
