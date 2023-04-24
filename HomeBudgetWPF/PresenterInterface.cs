@@ -31,6 +31,6 @@ namespace HomeBudgetWPF
 
         public bool UsePreviousBudget();
 
-        public List<BudgetItem> GetBudgetItems(DateTime? start, DateTime? end, bool filterFlag, int catId);
+        public List<BudgetItem> GetBudgetItems(DateTime? start, DateTime? end, bool filterFlag, int catId, bool month, bool category);
     }
 }

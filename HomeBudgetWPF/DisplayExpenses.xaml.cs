@@ -108,7 +108,7 @@ namespace HomeBudgetWPF
 
         public void DisplayExpensesInGrid()
         {
-            List<BudgetItem> expenses = presenterInterface.GetBudgetItems(null, null, false, 1);
+            List<BudgetItem> expenses = null;// presenterInterface.GetBudgetItems(null, null, false, 1, month, cat);
 
             dg_displayExpenses.ItemsSource = expenses;
             dg_displayExpenses.Columns.Clear();
@@ -135,6 +135,30 @@ namespace HomeBudgetWPF
             dg_displayExpenses.Columns.Add(amount);
             dg_displayExpenses.Columns.Add(balance);
 
+        }
+
+        public void DisplayExpensesInGridDictionary(List<Dictionary<string, object>> items)
+        {
+            dg_displayExpenses.ItemsSource = items;
+            dg_displayExpenses.Columns.Clear();
+
+            //aually add the columns based on the dictionary
+        }
+
+        private void ShowExpenses()
+        {
+            bool month = false, cat = false;
+
+            if (ckb_month.IsChecked == true)
+            {
+                month = true;
+            }
+            if (ckb_category.IsChecked == true)
+            {
+                cat = true;
+            }
+
+            presenterInterface.GetBudgetItems(null, null, false, 1, month, cat);
         }
     }
 }

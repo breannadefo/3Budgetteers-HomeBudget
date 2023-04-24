@@ -426,9 +426,28 @@ namespace HomeBudgetWPF
             }
         }
 
-        public List<BudgetItem> GetBudgetItems(DateTime? start, DateTime? end, bool filterFlag, int catId)
+        public void GetBudgetItems(DateTime? start, DateTime? end, bool filterFlag, int catId, bool month, bool category)
         {
-            return _homeBudget.GetBudgetItems(start, end, filterFlag, catId);
+            if(month == true && category == true)
+            {
+                List<Dictionary<string, object>> items = _homeBudget.GetBudgetDictionaryByCategoryAndMonth(start, end, filterFlag, catId);
+                //call the view interface method to call a method to display the items
+            }
+            else if(month == true && category == false)
+            {
+                List<BudgetItemsByMonth> items = _homeBudget.GetBudgetItemsByMonth(start, end, filterFlag, catId);
+                //call a method to display them by month 
+            }
+            else if(month == false && category == true)
+            {
+                List<BudgetItemsByCategory> items = _homeBudget.GetBudgetItemsByCategory(start, end, filterFlag, catId);
+                //call a method to display them by category
+            }
+            else
+            {
+                _homeBudget.GetBudgetItems(start, end, filterFlag, catId);
+                //call the orignial method to display them regularly
+            }
         }
     }
 }
