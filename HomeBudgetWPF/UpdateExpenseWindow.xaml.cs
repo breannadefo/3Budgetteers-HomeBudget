@@ -31,11 +31,11 @@ namespace HomeBudgetWPF
         /// <param name="Presenter">The presenter to be used to handle the backend logic.</param>
         /// <param name="Expense">The expense to modify.</param>
         /// <param name="display">The display expenses window the update window was called from.</param>
-        public UpdateExpenseWindow(PresenterInterface Presenter, Expense Expense, DisplayExpenses display)
+        public UpdateExpenseWindow(PresenterInterface Presenter, BudgetItem budgetItem, DisplayExpenses display)
         {
             InitializeComponent();
             _presenter = Presenter;
-            _expense = Expense;
+            _expense = new Expense(budgetItem.ExpenseID, budgetItem.Date, budgetItem.CategoryID, budgetItem.Amount, budgetItem.ShortDescription);
             _displayExpensesWindow = display;
             IntializWithOldValues();
         }

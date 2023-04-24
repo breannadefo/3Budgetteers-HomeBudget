@@ -70,7 +70,10 @@ namespace HomeBudgetWPF
 
         private void mi_Modify_Click(object sender, RoutedEventArgs e)
         {
-
+            UpdateExpenseWindow updateWindow = new UpdateExpenseWindow(presenterInterface, dg_displayExpenses.SelectedItem, this);
+            Visibility = Visibility.Hidden;
+            presenterInterface.SetView(updateWindow);
+            updateWindow.Show();
         }
 
         private void mi_Delete_Click(object sender, RoutedEventArgs e)
