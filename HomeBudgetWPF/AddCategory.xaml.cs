@@ -148,16 +148,19 @@ namespace HomeBudgetWPF
                     //if it was opened by the update expense page
                     if (_updateExpensePage != null)
                     {
+                        _presenter.SetView(_updateExpensePage);
                         _updateExpensePage.Visibility = Visibility.Visible;
                     }
                     //if it was opened by the add expense page
                     else if (_addExpensePage != null)
                     {
+                        _presenter.SetView(_addExpensePage);
                         _addExpensePage.Visibility = Visibility.Visible;
                     }
                     //if it was opened by the view expense page
                     else
                     {
+                        _presenter.SetView(_displayExpensesWindow)l
                         _displayExpensesWindow.Visibility = Visibility.Visible;
                     }
                 }
@@ -176,14 +179,17 @@ namespace HomeBudgetWPF
                 if(_addExpensePage == null)
                 {
                     AddExpenseWindow expenseWindow = new AddExpenseWindow(_presenter, _displayExpensesWindow);
+                    _presenter.SetView(expenseWindow);
                     expenseWindow.Show();
                     
                 }
                 else
                 {
                     _addExpensePage.Visibility = Visibility.Visible;
+                    _presenter.SetView(_addExpensePage);
                 }
                 closeFromAddExpenseButton = true;
+                
                 this.Close();
             }
         }
