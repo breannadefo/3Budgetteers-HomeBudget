@@ -20,8 +20,14 @@ namespace HomeBudgetWPF
     /// </summary>
     public partial class DisplayExpenses : Window
     {
-        public DisplayExpenses()
+        MainWindow mainWindow;
+        PresenterInterface presenterInterface;
+        bool closeFromHomePageButton = false;
+
+        public DisplayExpenses(MainWindow window, PresenterInterface p)
         {
+            this.mainWindow = window;
+            this.presenterInterface = p;
             InitializeComponent();
             InitializeComboBox();
         }
@@ -34,17 +40,23 @@ namespace HomeBudgetWPF
 
         private void btn_AddExpense_Click(object sender, RoutedEventArgs e)
         {
-
+            AddExpenseWindow addExpenseWindow = new AddExpenseWindow(presenterInterface, this);
+            Visibility = Visibility.Hidden;
+            addExpenseWindow.Show();
         }
 
         private void btn_AddCategory_Click(object sender, RoutedEventArgs e)
         {
-
+            AddCategory addCategoryWindow = new AddCategory(presenterInterface, this);
+            Visibility = Visibility.Hidden;
+            addCategoryWindow.Show();
         }
 
         private void btn_HomePage_Click(object sender, RoutedEventArgs e)
         {
-
+            mainWindow.Visibility = Visibility.Visible;
+            closeFromHomePageButton = true;
+            this.Close();
         }
 
         private void ckb_GroupingAltered(object sender, RoutedEventArgs e)
@@ -65,6 +77,14 @@ namespace HomeBudgetWPF
         private void mi_Cancel_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //check if there are any unadded fields left
+            //close the app as a whole
+            if(!closeFromHomePageButton)
+            mainWindow.Close();
         }
     }
 }

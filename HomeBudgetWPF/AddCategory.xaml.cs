@@ -25,37 +25,66 @@ namespace HomeBudgetWPF
         #region backing fields
 
         PresenterInterface _presenter;
-        MainWindow _homePage;
-        AddExpenseWindow _expensePage;
-        bool _cameFromAddExpensePage = false;
+        AddExpenseWindow _addExpensePage;
+        UpdateExpenseWindow _updateExpensePage;
+        DisplayExpenses _displayExpensesWindow;
+        bool closeFromAddExpenseButton = false;
 
         #endregion
 
         #region constructor
 
         /// <summary>
-        /// Creates a new window that allows the user to add a new category to their database.
+        /// Creates a new window that allows the user to add a new category to the database.
+        /// The expense and update windows stored in this page are set to null.
+        /// Is called when opened from the display epenses window.
         /// </summary>
-        /// <param name="presenter">The presenter object that contains logic methods.</param>
-        /// <param name="homePage">The main window.</param>
-        /// <param name="expensePage">The window where the user can add expenses. It is set as null if no value is provided.</param>
-        public AddCategory(PresenterInterface presenter, MainWindow homePage, AddExpenseWindow expensePage = null)
+        /// <param name="presenter">The presenter to be used.</param>
+        /// <param name="display">The display expense window.</param>
+        public AddCategory(PresenterInterface presenter, DisplayExpenses display)
         {
             InitializeComponent();
             InitializeComboBox();
             _presenter = presenter;
-            _homePage = homePage;
-            _expensePage = expensePage;
+            _displayExpensesWindow = display;
+            _addExpensePage = null;
+            _updateExpensePage = null;
         }
 
-        #endregion
-
-        #region properties
-
-        public bool FromAddExpense
+        /// <summary>
+        /// Creates a new window that allows the user to add a new category to their database.
+        /// The update expense window is set to null.
+        /// Is called from the add expense window.
+        /// </summary>
+        /// <param name="presenter">The presenter object that contains logic methods.</param>
+        /// <param name="homePage">The main window.</param>
+        /// <param name="expensePage">The window where the user can add expenses. It is set as null if no value is provided.</param>
+        public AddCategory(PresenterInterface presenter, DisplayExpenses displayWindow, AddExpenseWindow expensePage)
         {
-            get { return _cameFromAddExpensePage; }
-            set { _cameFromAddExpensePage = value; }
+            InitializeComponent();
+            InitializeComboBox();
+            _presenter = presenter;
+            _displayExpensesWindow = displayWindow;
+            _addExpensePage = expensePage;
+            _updateExpensePage = null;
+        }
+
+        /// <summary>
+        /// Creates a new add category window. 
+        /// Is opened by the update expense window.
+        /// The add expense window is set to null.
+        /// </summary>
+        /// <param name="presenter">The presenter that contains logic methods.</param>
+        /// <param name="displayWindow">The display window.</param>
+        /// <param name="updateWindow">The update window.</param>
+        public AddCategory(PresenterInterface presenter, DisplayExpenses displayWindow, UpdateExpenseWindow updateWindow)
+        {
+            InitializeComponent();
+            InitializeComboBox();
+            _presenter = presenter;
+            _displayExpensesWindow = displayWindow;
+            _updateExpensePage = updateWindow;
+            _addExpensePage = null;
         }
 
         #endregion
@@ -109,67 +138,61 @@ namespace HomeBudgetWPF
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            string description = tbx_description.Text;
-            string message = "A description was entered but no category was added for it. Are you sure you wish to exit the screen?";
-            
-            if (CheckForWantToLeaveWithUnsavedChanges(message))
+            if (!closeFromAddExpenseButton)
             {
-                if (FromAddExpense == false)
+                string description = tbx_description.Text;
+                string message = "A description was entered but no category was added for it. Are you sure you wish to exit the screen?";
+
+                if (CheckForWantToLeaveWithUnsavedChanges(message))
                 {
-                    CloseOtherPages();
+                    //if it was opened by the update expense page
+                    if (_updateExpensePage != null)
+                    {
+                        _updateExpensePage.Visibility = Visibility.Visible;
+                    }
+                    //if it was opened by the add expense page
+                    else if (_addExpensePage != null)
+                    {
+                        _addExpensePage.Visibility = Visibility.Visible;
+                    }
+                    //if it was opened by the view expense page
+                    else
+                    {
+                        _displayExpensesWindow.Visibility = Visibility.Visible;
+                    }
                 }
                 else
                 {
                     e.Cancel = true;
-                    this.Visibility = Visibility.Hidden;
-                    ResetValues();
-                    FromAddExpense = false;
                 }
             }
-            else
-            {
-                e.Cancel = true;
-            }
         }
-
-        private void CloseOtherPages()
-        {
-            if (_expensePage.Visibility != Visibility.Visible
-                && _homePage.Visibility != Visibility.Visible)
-            {
-                _expensePage.Close();
-                _homePage.Close();
-            }
-        }
-
-        private void btn_homeScreen_Click(object sender, RoutedEventArgs e)
-        {
-            if (CheckForWantToLeaveWithUnsavedChanges("There are unsaved changes. Do you still want to leave?"))
-            {
-                this.Visibility = Visibility.Hidden;
-                _expensePage.Visibility = Visibility.Hidden;
-                _homePage.Visibility = Visibility.Visible;
-                ResetValues();
-                _presenter.SetView(_homePage);
-
-                FromAddExpense = false;
-            }
-        }
-
         private void btn_AddExpense_Click(object sender, RoutedEventArgs e)
         {
+            //true if the user wants to close the window
             if (CheckForWantToLeaveWithUnsavedChanges("There are unsaved changes. Do you still want to leave?"))
             {
-                _expensePage.Visibility = Visibility.Visible;
-                this.Visibility = Visibility.Hidden;
-                _homePage.Visibility = Visibility.Hidden;
-                ResetValues();
-                _presenter.SetView(_expensePage);
-
-                FromAddExpense = false;
+                //if this window was opened from the add expense window
+                if(_addExpensePage == null)
+                {
+                    AddExpenseWindow expenseWindow = new AddExpenseWindow(_presenter, _displayExpensesWindow);
+                    expenseWindow.Show();
+                    
+                }
+                else
+                {
+                    _addExpensePage.Visibility = Visibility.Visible;
+                }
+                closeFromAddExpenseButton = true;
+                this.Close();
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns>True if the window can close, false otherwise.</returns>
         private bool CheckForWantToLeaveWithUnsavedChanges(string message)
         {
             if (!String.IsNullOrEmpty(tbx_description.Text))
@@ -187,5 +210,11 @@ namespace HomeBudgetWPF
 
         #endregion
 
+        private void btn_viewDisplayExpenses_Click(object sender, RoutedEventArgs e)
+        {
+            _addExpensePage = null;
+            _updateExpensePage = null;
+            this.Close();
+        }
     }
 }

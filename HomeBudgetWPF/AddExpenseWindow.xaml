@@ -14,7 +14,7 @@
             
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.6*"> </RowDefinition>
+            <RowDefinition Height="0.6*"></RowDefinition>
             <RowDefinition Height="1.4*"></RowDefinition>
             <RowDefinition Height="0.3*"></RowDefinition>
             <RowDefinition Height="0.7*"></RowDefinition>
@@ -25,16 +25,14 @@
             <RowDefinition Height="0.5*"></RowDefinition>
             <RowDefinition Height="0.5*"></RowDefinition>
         </Grid.RowDefinitions>
-        
-        <!-- Modify DB button -->
-        <Border Grid.Row="0" Margin="10,10,255,10" BorderThickness="2" BorderBrush="#3C6255">
-            <Button x:Name="CurrentDatabaseButton" FontSize="15" Click="CurrentDatabaseButton_Click"
-                    BorderBrush="#3C6255" BorderThickness="3" Background="#61876E" Foreground="#EAE7B1">
-                Change Database
-            </Button>
-        </Border>
 
+        <Border Grid.Row="0" Margin="10,10, 255,10" BorderThickness="2" BorderBrush="#3C6255">
+            <Button Name="btn_viewDisplayExpenses" Click="btn_viewDisplayExpenses_Click"
+                    FontSize="15"
+                    BorderBrush="#3C6255" BorderThickness="3" Background="#61876E" Foreground="#EAE7B1">View Expenses</Button>
+        </Border>
         <!-- Create Category button -->
+        
         <Border Grid.Row="0" Margin="255,10, 10,10" BorderThickness="2" BorderBrush="#3C6255">
             <Button x:Name="ModifyCategoryButton" FontSize="15" Click="ModifyCategoryButton_Click"
                     BorderBrush="#3C6255" BorderThickness="3" Background="#61876E" Foreground="#EAE7B1">

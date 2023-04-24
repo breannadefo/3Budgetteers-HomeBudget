@@ -53,12 +53,7 @@
         <Button Name="btn_previousBudget" BorderBrush="#3c6255" BorderThickness="2" Background="#61876E" Foreground="#eae7b1"
                 Click="btn_previousBudget_Click" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Top" Height="25" Margin="50,0,50,0">Previous budget</Button>
         
-        <!-- Button to go to the add expense page -->
-        <Button Name="btn_addNewExpense" BorderBrush="#3c6255" BorderThickness="2" Background="#61876E" Foreground="#eae7b1"
-                Click="btn_addNewExpense_Click" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Width="100" Height="25">New Expense</Button>
-        
-        <!-- Button to go to the add category page -->
-        <Button Name="btn_addNewCategory" BorderBrush="#3c6255" BorderThickness="2" Background="#61876E" Foreground="#eae7b1"
-                Click="btn_addNewCategory_Click" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="2" Width="100" Height="25">New Category</Button>
+        <Button Name="btn_viewExpenses" Click="btn_viewExpenses_Click" Grid.Row="3" Grid.ColumnSpan="4" Width="100" Height="25" VerticalAlignment="Center" 
+                HorizontalAlignment="Center" BorderBrush="#3c6255" BorderThickness="2" Background="#61876E" Foreground="#eae7b1" >View Expenses</Button>
     </Grid>
 </Window>

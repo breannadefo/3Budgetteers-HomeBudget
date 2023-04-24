@@ -23,19 +23,16 @@ namespace HomeBudgetWPF
     public partial class MainWindow : Window, ViewInterface
     {
         PresenterInterface p;
-        AddExpenseWindow _newExpenseWindow;
-        AddCategory _newCategoryWindow;
+        DisplayExpenses displayWindow;
 
+        /// <summary>
+        /// Is called only once, on app startup.
+        /// Creates a main window and shows it.
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
             p = new Presenter(this);
-        }
-
-        public MainWindow(Presenter p)
-        {
-            InitializeComponent();
-            this.p = p;
         }
 
         private void btn_browseBudgetFolder_Click(object sender, RoutedEventArgs e)
@@ -54,48 +51,9 @@ namespace HomeBudgetWPF
             if (p.EnterHomeBudget(txb_budgetFileName.Text, txb_budgetFolderPath.Text, (bool)chk_newBudget.IsChecked))
             {
                 txblock_budgetInUse.Text = "There is a budget currently in use";
-
-                _newExpenseWindow = new AddExpenseWindow(p, this);
-                _newExpenseWindow.Visibility = Visibility.Hidden;
-                _newCategoryWindow = new AddCategory(p, this, _newExpenseWindow);
-                _newCategoryWindow.Visibility = Visibility.Hidden;
-                _newExpenseWindow.AddCategoryPage = _newCategoryWindow;
             }
 
         }
-
-        private void btn_addNewExpense_Click(object sender, RoutedEventArgs e)
-        {
-            if (p.VerifyHomeBudgetConnected())
-            {
-                Visibility = Visibility.Hidden;
-                _newCategoryWindow.Visibility= Visibility.Hidden;
-                _newExpenseWindow.Visibility = Visibility.Visible;
-                p.SetView(_newExpenseWindow);
-            }
-            else
-            {
-                MessageBox.Show("You need to enter a budget to work with!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-        }
-
-        private void btn_addNewCategory_Click(object sender, RoutedEventArgs e)
-        {
-            if (p.VerifyHomeBudgetConnected())
-            {
-                Visibility = Visibility.Hidden;
-                _newExpenseWindow.Visibility = Visibility.Hidden;
-                _newCategoryWindow.Visibility = Visibility.Visible;
-                p.SetView(_newCategoryWindow);
-            }
-            else
-            {
-                MessageBox.Show("You need to enter a budget to work with!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-        }
-
         public void ShowErrorMessage(string message)
         {
             MessageBox.Show(message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -124,11 +82,9 @@ namespace HomeBudgetWPF
         {
             if (p.VerifyHomeBudgetConnected())
             {
-                if (_newExpenseWindow.Visibility != Visibility.Visible 
-                    && _newCategoryWindow.Visibility != Visibility.Visible)
+                if (displayWindow != null)
                 {
-                    _newExpenseWindow.Close();
-                    _newCategoryWindow.Close();
+                    displayWindow.Close();
                 }
             }
         }
@@ -142,13 +98,15 @@ namespace HomeBudgetWPF
         {
             if (p.UsePreviousBudget())
             {
-                _newExpenseWindow = new AddExpenseWindow(p, this);
-                _newExpenseWindow.Visibility = Visibility.Hidden;
-                _newCategoryWindow = new AddCategory(p, this, _newExpenseWindow);
-                _newCategoryWindow.Visibility = Visibility.Hidden;
-                _newExpenseWindow.AddCategoryPage = _newCategoryWindow;
                 txblock_budgetInUse.Text = "There is a budget currently in use";
             }
+        }
+
+        private void btn_viewExpenses_Click(object sender, RoutedEventArgs e)
+        {
+            DisplayExpenses display = new DisplayExpenses(this, p);
+            Visibility= Visibility.Hidden;
+            display.Show();
         }
     }
 }
