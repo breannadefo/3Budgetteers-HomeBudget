@@ -30,5 +30,7 @@ namespace HomeBudgetWPF
         public void SetView(ViewInterface view);
 
         public bool UsePreviousBudget();
+
+        public List<BudgetItem> GetBudgetItems(DateTime? start, DateTime? end, bool filterFlag, int catId);
     }
 }
