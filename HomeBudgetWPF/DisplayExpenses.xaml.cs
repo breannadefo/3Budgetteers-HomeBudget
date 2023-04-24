@@ -29,7 +29,7 @@ namespace HomeBudgetWPF
             this.mainWindow = window;
             this.presenterInterface = p;
             InitializeComponent();
-            InitializeComboBox();
+            //InitializeComboBox();
         }
 
         private void InitializeComboBox()
