@@ -38,9 +38,6 @@ namespace HomeBudgetWPF
         private void InitializeComboBox()
         {
             cmb_categories.ItemsSource = presenterInterface.GetCategories();
-
-            //cmb_categories.ItemsSource = Enum.GetValues(typeof(Category.CategoryType));
-            //cmb_categories.SelectedItem = Category.CategoryType.Expense;
         }
 
         private void btn_AddExpense_Click(object sender, RoutedEventArgs e)
@@ -110,6 +107,10 @@ namespace HomeBudgetWPF
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Displays the date, category, description, amount, and balance of all the provided budget items.
+        /// </summary>
+        /// <param name="items">A list of all the budget items that should be displayed.</param>
         public void DisplayExpensesInGrid(List<BudgetItem> items)
         {
             dg_displayExpenses.ItemsSource = items;
@@ -143,6 +144,10 @@ namespace HomeBudgetWPF
 
         }
 
+        /// <summary>
+        /// Displays the month and the total amount for each month in which at least one expense occurred.
+        /// </summary>
+        /// <param name="items">A list of all the months and their totals.</param>
         public void DisplayExpensesByMonthInGrid(List<BudgetItemsByMonth> items)
         {
             dg_displayExpenses.ItemsSource = items;
@@ -160,6 +165,10 @@ namespace HomeBudgetWPF
             dg_displayExpenses.Columns.Add(total);
         }
 
+        /// <summary>
+        /// Displays the category and the total amount of each category from which at least one expense belongs to.
+        /// </summary>
+        /// <param name="items">A list of all the categories and their totals.</param>
         public void DisplayExpensesByCategoryInGrid(List<BudgetItemsByCategory> items)
         {
             dg_displayExpenses.ItemsSource = items;
