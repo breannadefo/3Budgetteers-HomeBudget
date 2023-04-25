@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Budget;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,12 @@ namespace HomeBudgetWPF
 
         public void ResetValues();
 
+        public void DisplayExpensesInGrid(List<BudgetItem> items);
+
+        public void DisplayExpensesByMonthInGrid(List<BudgetItemsByMonth> items);
+
+        public void DisplayExpensesByCategoryInGrid(List<BudgetItemsByCategory> items);
+
+        public void DisplayExpensesInGridDictionary(List<Dictionary<string, object>> items);
     }
 }
