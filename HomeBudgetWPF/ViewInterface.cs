@@ -15,6 +15,12 @@ namespace HomeBudgetWPF
 
         public void ResetValues();
 
+        public void DisplayExpensesInGrid(List<BudgetItem> items);
+
         public void DisplayExpensesByMonthInGrid(List<BudgetItemsByMonth> items);
+
+        public void DisplayExpensesByCategoryInGrid(List<BudgetItemsByCategory> items);
+
+        public void DisplayExpensesInGridDictionary(List<Dictionary<string, object>> items);
     }
 }

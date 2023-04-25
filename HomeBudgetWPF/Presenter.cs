@@ -437,7 +437,6 @@ namespace HomeBudgetWPF
             else if(month == true && category == false)
             {
                 List<BudgetItemsByMonth> items = _homeBudget.GetBudgetItemsByMonth(start, end, filterFlag, catId);
-                //call a method to display them by month 
                 _view.DisplayExpensesByMonthInGrid(items);
             }
             else if(month == false && category == true)
@@ -447,8 +446,8 @@ namespace HomeBudgetWPF
             }
             else
             {
-                _homeBudget.GetBudgetItems(start, end, filterFlag, catId);
-                //call the orignial method to display them regularly
+                List<BudgetItem> items = _homeBudget.GetBudgetItems(start, end, filterFlag, catId);
+                _view.DisplayExpensesInGrid(items);
             }
         }
 

@@ -28,6 +28,7 @@ namespace HomeBudgetWPF
         {
             this.mainWindow = window;
             this.presenterInterface = p;
+            presenterInterface.SetView(this);
             InitializeComponent();
             //InitializeComboBox();
             //DisplayExpensesInGrid();
@@ -107,10 +108,8 @@ namespace HomeBudgetWPF
             throw new NotImplementedException();
         }
 
-        public void DisplayExpensesInGrid()
+        public void DisplayExpensesInGrid(List<BudgetItem> items)
         {
-            List<BudgetItem> items = null;// presenterInterface.GetBudgetItems(null, null, false, 1, month, cat);
-
             dg_displayExpenses.ItemsSource = items;
             dg_displayExpenses.Columns.Clear();
 
@@ -142,14 +141,6 @@ namespace HomeBudgetWPF
 
         }
 
-        public void DisplayExpensesInGridDictionary(List<Dictionary<string, object>> items)
-        {
-            dg_displayExpenses.ItemsSource = items;
-            dg_displayExpenses.Columns.Clear();
-
-            //aually add the columns based on the dictionary
-        }
-
         public void DisplayExpensesByMonthInGrid(List<BudgetItemsByMonth> items)
         {
             dg_displayExpenses.ItemsSource = items;
@@ -165,6 +156,22 @@ namespace HomeBudgetWPF
 
             dg_displayExpenses.Columns.Add(month);
             dg_displayExpenses.Columns.Add(total);
+        }
+
+        public void DisplayExpensesByCategoryInGrid(List<BudgetItemsByCategory> items)
+        {
+            dg_displayExpenses.ItemsSource = items;
+            dg_displayExpenses.Columns.Clear();
+
+
+        }
+
+        public void DisplayExpensesInGridDictionary(List<Dictionary<string, object>> items)
+        {
+            dg_displayExpenses.ItemsSource = items;
+            dg_displayExpenses.Columns.Clear();
+
+            //aually add the columns based on the dictionary
         }
 
         private void ShowExpenses()
