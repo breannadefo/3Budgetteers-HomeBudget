@@ -34,7 +34,7 @@ namespace HomeBudgetWPF
             ShowExpenses();
         }
 
-        private void InitializeComboBox()
+        public void InitializeComboBox()
         {
             cmb_categories.ItemsSource = presenterInterface.GetCategories();
         }
@@ -206,7 +206,7 @@ namespace HomeBudgetWPF
             //aually add the columns based on the dictionary
         }
 
-        private void ShowExpenses()
+        public void ShowExpenses()
         {
             bool month = false, cat = false;
 
@@ -232,7 +232,6 @@ namespace HomeBudgetWPF
 
         private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            int i = 0;
             OpenUpdateExpenseWindow();
         }
     }

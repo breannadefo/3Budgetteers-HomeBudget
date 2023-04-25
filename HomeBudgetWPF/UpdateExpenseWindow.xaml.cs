@@ -52,7 +52,6 @@ namespace HomeBudgetWPF
 
             IntializWithOldValues();
         }
-    
 
         #region Public Methods
         /// <summary>
@@ -134,6 +133,7 @@ namespace HomeBudgetWPF
         private void DeleteExpenseButton_Click(object sender, RoutedEventArgs e)
         {
             _presenter.DeleteExpense(_expenseID);
+            this.Close();
         }
 
         private void searchBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -151,6 +151,7 @@ namespace HomeBudgetWPF
         {
             _displayExpensesWindow.Visibility = Visibility.Visible;
             _presenter.SetView(_displayExpensesWindow);
+            _displayExpensesWindow.ShowExpenses();
         }
 
         public void DisplayExpensesByMonthInGrid(List<BudgetItemsByMonth> items)
