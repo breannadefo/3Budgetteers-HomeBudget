@@ -76,7 +76,12 @@ namespace HomeBudgetWPF
 
         private void mi_Delete_Click(object sender, RoutedEventArgs e)
         {
-
+            if(!(dg_displayExpenses.SelectedItem == null || dg_displayExpenses.SelectedItem == string.Empty))
+            {
+                BudgetItem item = (BudgetItem)dg_displayExpenses.SelectedItem;
+                presenterInterface.DeleteExpense(item.ExpenseID);
+                this.DisplayExpensesInGrid();
+            }
         }
 
         private void mi_Cancel_Click(object sender, RoutedEventArgs e)
@@ -104,7 +109,15 @@ namespace HomeBudgetWPF
 
         public void ResetValues()
         {
-            throw new NotImplementedException();
+            ckb_month.IsChecked = false;
+            ckb_category.IsChecked = false;
+            dp_startDate.SelectedDate= DateTime.Now;
+            dp_endDate.SelectedDate= DateTime.Now;
+        }
+
+        private void ckb_month_Checked(object sender, RoutedEventArgs e)
+        {
+           
         }
 
         /// <summary>

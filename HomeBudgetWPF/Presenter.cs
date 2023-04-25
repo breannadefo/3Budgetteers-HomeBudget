@@ -14,7 +14,7 @@ using Microsoft.Win32;
 namespace HomeBudgetWPF
 {
     public class Presenter : PresenterInterface
-    {
+    { 
         ViewInterface _view;
         HomeBudget _homeBudget;
 
@@ -188,8 +188,6 @@ namespace HomeBudgetWPF
                 {
                     _homeBudget.expenses.Add(verifiedDate, verifiedCategory.Id, verifiedAmount, verifiedDescription);
                 }
-
-
                 if (credit == true)
                 {
                     _homeBudget.expenses.Add(verifiedDate, 8, verifiedAmount, "Credit");
@@ -293,7 +291,6 @@ namespace HomeBudgetWPF
                     errorFound = true;
                 }
             }
-
 
             //If no error has been encountered the values are added
             if (!errorFound)
