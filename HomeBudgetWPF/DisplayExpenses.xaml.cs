@@ -30,15 +30,17 @@ namespace HomeBudgetWPF
             this.presenterInterface = p;
             presenterInterface.SetView(this);
             InitializeComponent();
-            //InitializeComboBox();
+            InitializeComboBox();
             //DisplayExpensesInGrid();
             ShowExpenses();
         }
 
         private void InitializeComboBox()
         {
-            cmb_categories.ItemsSource = Enum.GetValues(typeof(Category.CategoryType));
-            cmb_categories.SelectedItem = Category.CategoryType.Expense;
+            cmb_categories.ItemsSource = presenterInterface.GetCategories();
+
+            //cmb_categories.ItemsSource = Enum.GetValues(typeof(Category.CategoryType));
+            //cmb_categories.SelectedItem = Category.CategoryType.Expense;
         }
 
         private void btn_AddExpense_Click(object sender, RoutedEventArgs e)
