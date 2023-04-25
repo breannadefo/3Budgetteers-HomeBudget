@@ -148,6 +148,7 @@ namespace HomeBudgetWPF
         {
             _displayExpensesWindow.Visibility = Visibility.Visible;
             _presenter.SetView(_displayExpensesWindow);
+            _displayExpensesWindow.ShowExpenses();
         }
 
         public void DisplayExpensesByMonthInGrid(List<BudgetItemsByMonth> items)
