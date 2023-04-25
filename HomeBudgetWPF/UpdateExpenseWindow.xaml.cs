@@ -85,7 +85,7 @@ namespace HomeBudgetWPF
         #region Startup Methods
         private void IntializWithOldValues()
         {
-            categoryComboBox.Text = _category;
+            categoryComboBox.Text = _category.ToString();
             DateTextBox.Text = _date.ToString();
             DescriptionTextBox.Text = _description;
             AmountTextBox.Text = _amount.ToString();
