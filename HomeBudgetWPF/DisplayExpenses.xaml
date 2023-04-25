@@ -94,7 +94,7 @@
                     <TextBlock Margin="0, 5" Name="txb_grouping" Text="Group by Month/Category"
                                FontSize="14px" Foreground="#3C6255"/>
                     <CheckBox Content="Month" Margin="5" Name="ckb_month" Click="ckb_GroupingAltered"
-                              FontSize="12px" Foreground="#3C6255" Background="#eae7b1">
+                              FontSize="12px" Foreground="#3C6255" Background="#eae7b1" Checked="ckb_month_Checked">
                         <CheckBox.LayoutTransform>
                             <ScaleTransform ScaleX="1.2" ScaleY="1.2" />
                         </CheckBox.LayoutTransform>
@@ -154,6 +154,11 @@
                       BorderBrush="#3c6255" BorderThickness="2" CanUserReorderColumns="False" FontSize="14px" 
                       AutoGenerateColumns="False" IsReadOnly="true">
 
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridRow">
+                        <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                    </Style>
+                </DataGrid.Resources>
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Name="mi_Modify" Click="mi_Modify_Click" Header="Modify"/>
