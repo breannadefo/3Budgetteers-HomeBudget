@@ -442,7 +442,7 @@ namespace HomeBudgetWPF
             else if(month == false && category == true)
             {
                 List<BudgetItemsByCategory> items = _homeBudget.GetBudgetItemsByCategory(start, end, filterFlag, catId);
-                //call a method to display them by category
+                _view.DisplayExpensesByCategoryInGrid(items);
             }
             else
             {

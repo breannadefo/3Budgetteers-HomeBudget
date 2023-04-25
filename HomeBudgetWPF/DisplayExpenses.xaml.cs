@@ -163,7 +163,16 @@ namespace HomeBudgetWPF
             dg_displayExpenses.ItemsSource = items;
             dg_displayExpenses.Columns.Clear();
 
+            DataGridTextColumn category = new DataGridTextColumn();
+            category.Header = "Category";
+            category.Binding = new Binding("Category");
 
+            DataGridTextColumn total = new DataGridTextColumn();
+            total.Header = "Total";
+            total.Binding = new Binding("Total");
+
+            dg_displayExpenses.Columns.Add(category);
+            dg_displayExpenses.Columns.Add(total);
         }
 
         public void DisplayExpensesInGridDictionary(List<Dictionary<string, object>> items)
