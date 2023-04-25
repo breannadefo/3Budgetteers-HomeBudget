@@ -70,7 +70,7 @@ namespace HomeBudgetWPF
 
         private void mi_Modify_Click(object sender, RoutedEventArgs e)
         {
-
+            OpenUpdateExpenseWindow();
         }
 
         private void mi_Delete_Click(object sender, RoutedEventArgs e)
@@ -220,6 +220,20 @@ namespace HomeBudgetWPF
             }
 
             presenterInterface.GetBudgetItems(null, null, false, 1, month, cat);
+        }
+
+        public void OpenUpdateExpenseWindow()
+        {
+            UpdateExpenseWindow updateWindow = new UpdateExpenseWindow(presenterInterface,(BudgetItem) dg_displayExpenses.SelectedItem, this);
+            Visibility = Visibility.Hidden;
+            presenterInterface.SetView(updateWindow);
+            updateWindow.Show();
+        }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            int i = 0;
+            OpenUpdateExpenseWindow();
         }
     }
 }
