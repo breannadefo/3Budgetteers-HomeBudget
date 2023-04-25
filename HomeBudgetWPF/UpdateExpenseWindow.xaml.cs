@@ -35,9 +35,9 @@ namespace HomeBudgetWPF
         /// Opens a new update expense window. 
         /// Can only be opened by the display expenses window.
         /// </summary>
-        /// <param name="Presenter">The presenter to be used to handle the backend logic.</param>
+        /// <param name="Presenter">The presenter to be used to handle the backend logic. </param>
         /// <param name="Expense">The expense to modify.</param>
-        /// <param name="display">The display expenses window the update window was called from.</param>
+        /// <param name="display">The display expenses window the update window was called from. </param>
         public UpdateExpenseWindow(PresenterInterface Presenter, BudgetItem budgetItem, DisplayExpenses display)
         {
             InitializeComponent();
@@ -86,10 +86,14 @@ namespace HomeBudgetWPF
         #region Startup Methods
         private void IntializWithOldValues()
         {
-            categoryComboBox.Text = _category.ToString();
+            List<Category> categories = _presenter.GetCategories();
+            int index = categories.FindIndex((category) => category.Description.ToLower().StartsWith(_category.ToLower()));
+            if (index != -1)
+                categoryComboBox.SelectedIndex = index;
+
             DateTextBox.Text = _date.ToString();
             DescriptionTextBox.Text = _description;
-            AmountTextBox.Text = _amount.ToString();
+            AmountTextBox.Text = (_amount * -1).ToString();
         }
 
         private void InitializeComboBox()
@@ -124,7 +128,7 @@ namespace HomeBudgetWPF
 
         private void UpdateExpenseButton_Click(object sender, RoutedEventArgs e)
         {
-            _presenter.UpdateExpense(_expenseID, DescriptionTextBox.Text, DateTextBox.Text, AmountTextBox.Text, categoryComboBox.Text);
+            _presenter.UpdateExpense(_expenseID, DateTextBox.Text, AmountTextBox.Text, DescriptionTextBox.Text, categoryComboBox.Text);
         }
 
         private void DeleteExpenseButton_Click(object sender, RoutedEventArgs e)
