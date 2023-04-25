@@ -121,6 +121,11 @@ namespace HomeBudgetWPF
             _displayExpensesWindow.Visibility = Visibility.Visible;
             _presenter.SetView(_displayExpensesWindow);
         }
+
+        public void DisplayExpensesByMonthInGrid(List<BudgetItemsByMonth> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

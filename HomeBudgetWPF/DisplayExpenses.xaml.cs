@@ -30,7 +30,8 @@ namespace HomeBudgetWPF
             this.presenterInterface = p;
             InitializeComponent();
             //InitializeComboBox();
-            DisplayExpensesInGrid();
+            //DisplayExpensesInGrid();
+            ShowExpenses();
         }
 
         private void InitializeComboBox()
@@ -65,7 +66,7 @@ namespace HomeBudgetWPF
 
         private void ckb_GroupingAltered(object sender, RoutedEventArgs e)
         {
-
+            ShowExpenses();
         }
 
         private void mi_Modify_Click(object sender, RoutedEventArgs e)
@@ -108,30 +109,34 @@ namespace HomeBudgetWPF
 
         public void DisplayExpensesInGrid()
         {
-            List<BudgetItem> expenses = null;// presenterInterface.GetBudgetItems(null, null, false, 1, month, cat);
+            List<BudgetItem> items = null;// presenterInterface.GetBudgetItems(null, null, false, 1, month, cat);
 
-            dg_displayExpenses.ItemsSource = expenses;
+            dg_displayExpenses.ItemsSource = items;
             dg_displayExpenses.Columns.Clear();
 
             DataGridTextColumn date = new DataGridTextColumn();
             date.Header = "Date";
             date.Binding = new Binding("Date");
+
             DataGridTextColumn category = new DataGridTextColumn();
             category.Header = "Category";
             category.Binding = new Binding("Category");
-            DataGridTextColumn descriptoin = new DataGridTextColumn();
-            descriptoin.Header = "Description";
-            descriptoin.Binding = new Binding("ShortDescription");
+
+            DataGridTextColumn description = new DataGridTextColumn();
+            description.Header = "Description";
+            description.Binding = new Binding("ShortDescription");
+
             DataGridTextColumn amount = new DataGridTextColumn();
             amount.Header = "Amount";
             amount.Binding = new Binding("Amount");
+
             DataGridTextColumn balance = new DataGridTextColumn();
             balance.Header = "Balance";
             balance.Binding = new Binding("Balance");
 
             dg_displayExpenses.Columns.Add(date);
             dg_displayExpenses.Columns.Add(category);
-            dg_displayExpenses.Columns.Add(descriptoin);
+            dg_displayExpenses.Columns.Add(description);
             dg_displayExpenses.Columns.Add(amount);
             dg_displayExpenses.Columns.Add(balance);
 
@@ -143,6 +148,23 @@ namespace HomeBudgetWPF
             dg_displayExpenses.Columns.Clear();
 
             //aually add the columns based on the dictionary
+        }
+
+        public void DisplayExpensesByMonthInGrid(List<BudgetItemsByMonth> items)
+        {
+            dg_displayExpenses.ItemsSource = items;
+            dg_displayExpenses.Columns.Clear();
+
+            DataGridTextColumn month = new DataGridTextColumn();
+            month.Header = "Month";
+            month.Binding = new Binding("Month");
+
+            DataGridTextColumn total = new DataGridTextColumn();
+            total.Header = "Total";
+            total.Binding = new Binding("Total");
+
+            dg_displayExpenses.Columns.Add(month);
+            dg_displayExpenses.Columns.Add(total);
         }
 
         private void ShowExpenses()

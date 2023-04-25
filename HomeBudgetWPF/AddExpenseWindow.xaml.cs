@@ -152,5 +152,10 @@ namespace HomeBudgetWPF
         {
             this.Close();
         }
+
+        public void DisplayExpensesByMonthInGrid(List<BudgetItemsByMonth> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

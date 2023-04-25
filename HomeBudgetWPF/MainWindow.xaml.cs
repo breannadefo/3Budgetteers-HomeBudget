@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Budget;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
@@ -108,6 +109,11 @@ namespace HomeBudgetWPF
             Visibility= Visibility.Hidden;
             p.SetView(display);
             display.Show();
+        }
+
+        public void DisplayExpensesByMonthInGrid(List<BudgetItemsByMonth> items)
+        {
+            throw new NotImplementedException();
         }
     }
 }
