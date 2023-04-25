@@ -428,7 +428,7 @@ namespace HomeBudgetWPF
             if(month == true && category == true)
             {
                 List<Dictionary<string, object>> items = _homeBudget.GetBudgetDictionaryByCategoryAndMonth(start, end, filterFlag, catId);
-                //call the view interface method to call a method to display the items
+                _view.DisplayExpensesInGridDictionary(items);
                 
             }
             else if(month == true && category == false)

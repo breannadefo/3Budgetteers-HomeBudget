@@ -203,7 +203,54 @@ namespace HomeBudgetWPF
             dg_displayExpenses.ItemsSource = items;
             dg_displayExpenses.Columns.Clear();
 
-            //aually add the columns based on the dictionary
+            
+            List<Category> categories = presenterInterface.GetCategories();
+            /*
+            foreach (Category category in categories)
+            {
+                DataGridTextColumn column = new DataGridTextColumn();
+                column.Header = category.Description;
+                column.Binding = new Binding(category.Description);
+                dg_displayExpenses.Columns.Add(column);
+            }
+            */
+
+            List<string> columns = new List<string>();
+
+            foreach (KeyValuePair<string, object> pair in items[0])
+            {/*
+                double val;
+                if(double.TryParse(pair.Value, out val))
+                {
+
+                }
+
+                if (!key.Contains("details:"))
+                {
+                    columns.Add(key);
+                }*/
+
+                if (pair.Value is List<BudgetItem>)
+                {
+                    //don't create a columns
+                }
+                else
+                {
+                    DataGridTextColumn column = new DataGridTextColumn();
+                    column.Header = pair.Key;
+                    column.Binding = new Binding($"[{pair.Key}]");
+                    dg_displayExpenses.Columns.Add(column);
+                }
+            }
+            /*
+            foreach (string key in items[0].Keys)
+            {
+                DataGridTextColumn column = new DataGridTextColumn();
+                column.Header = key;
+                column.Binding = new Binding($"[{key}]");
+                dg_displayExpenses.Columns.Add(column);
+            }
+            */
         }
 
         private void ShowExpenses()
