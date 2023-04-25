@@ -21,8 +21,13 @@ namespace HomeBudgetWPF
     public partial class UpdateExpenseWindow : Window, ViewInterface
     {
         PresenterInterface _presenter;
-        Expense _expense;
         DisplayExpenses _displayExpensesWindow;
+
+        string _category;
+        DateTime _date;
+        string _description;
+        double _amount;
+        int _expenseID;
 
         /// <summary>
         /// Opens a new update expense window. 
@@ -35,18 +40,24 @@ namespace HomeBudgetWPF
         {
             InitializeComponent();
             _presenter = Presenter;
-            //_expense = new Expense(budgetItem.ExpenseID, budgetItem.Date, budgetItem.CategoryID, budgetItem.Amount, budgetItem.ShortDescription);
             _displayExpensesWindow = display;
+
+            _category = budgetItem.Category;
+            _date = budgetItem.Date;
+            _description = budgetItem.ShortDescription;
+            _amount = budgetItem.Amount;
+            _expenseID = budgetItem.ExpenseID;
+
             IntializWithOldValues();
         }
 
         #region Startup Methods
         private void IntializWithOldValues()
         {
-            categoryComboBox.Text = this._expense.Category.ToString();
-            DateTextBox.Text = this._expense.Date.ToString();
-            DescriptionTextBox.Text = this._expense.Description;
-            AmountTextBox.Text = this._expense.Amount.ToString();
+            categoryComboBox.Text = _category;
+            DateTextBox.Text = _date.ToString();
+            DescriptionTextBox.Text = _description;
+            AmountTextBox.Text = _amount.ToString();
         }
 
         private void InitializeComboBox()
@@ -80,12 +91,12 @@ namespace HomeBudgetWPF
 
         private void UpdateExpenseButton_Click(object sender, RoutedEventArgs e)
         {
-            _presenter.UpdateExpense(_expense.Id, DescriptionTextBox.Text, DateTextBox.Text, AmountTextBox.Text, categoryComboBox.Text);
+            _presenter.UpdateExpense(_expenseID, DescriptionTextBox.Text, DateTextBox.Text, AmountTextBox.Text, categoryComboBox.Text);
         }
 
         private void DeleteExpenseButton_Click(object sender, RoutedEventArgs e)
         {
-            _presenter.DeleteExpense(this._expense.Id);
+            _presenter.DeleteExpense(_expenseID);
         }
 
         private void searchBox_TextChanged(object sender, TextChangedEventArgs e)

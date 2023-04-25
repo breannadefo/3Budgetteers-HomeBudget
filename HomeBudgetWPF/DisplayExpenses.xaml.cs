@@ -155,6 +155,7 @@ namespace HomeBudgetWPF
 
         private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            int i = 0;
             OpenUpdateExpenseWindow();
         }
     }
