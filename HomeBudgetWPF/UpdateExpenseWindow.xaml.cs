@@ -52,7 +52,6 @@ namespace HomeBudgetWPF
 
             IntializWithOldValues();
         }
-        #endregion
 
         #region Public Methods
         /// <summary>
@@ -125,11 +124,13 @@ namespace HomeBudgetWPF
         private void UpdateExpenseButton_Click(object sender, RoutedEventArgs e)
         {
             _presenter.UpdateExpense(_expenseID, DescriptionTextBox.Text, DateTextBox.Text, AmountTextBox.Text, categoryComboBox.Text);
+            this.Close();
         }
 
         private void DeleteExpenseButton_Click(object sender, RoutedEventArgs e)
         {
             _presenter.DeleteExpense(_expenseID);
+            this.Close();
         }
 
         private void searchBox_TextChanged(object sender, TextChangedEventArgs e)
