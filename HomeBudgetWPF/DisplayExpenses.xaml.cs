@@ -31,7 +31,6 @@ namespace HomeBudgetWPF
             presenterInterface.SetView(this);
             InitializeComponent();
             InitializeComboBox();
-            //DisplayExpensesInGrid();
             ShowExpenses();
         }
 
@@ -80,7 +79,7 @@ namespace HomeBudgetWPF
             {
                 BudgetItem item = (BudgetItem)dg_displayExpenses.SelectedItem;
                 presenterInterface.DeleteExpense(item.ExpenseID);
-                this.DisplayExpensesInGrid();
+                ShowExpenses();
             }
         }
 
