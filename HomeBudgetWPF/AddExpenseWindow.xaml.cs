@@ -104,6 +104,7 @@ namespace HomeBudgetWPF
             }
             _presenter.SetView(displayWindow);
             displayWindow.Visibility = Visibility.Visible;
+            displayWindow.ShowExpenses();
         }
 
         private void searchBox_TextChanged(object sender, TextChangedEventArgs e)

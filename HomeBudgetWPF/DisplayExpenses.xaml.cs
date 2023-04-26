@@ -34,7 +34,7 @@ namespace HomeBudgetWPF
             ShowExpenses();
         }
 
-        private void InitializeComboBox()
+        public void InitializeComboBox()
         {
             cmb_categories.ItemsSource = presenterInterface.GetCategories();
         }
@@ -70,7 +70,7 @@ namespace HomeBudgetWPF
 
         private void mi_Modify_Click(object sender, RoutedEventArgs e)
         {
-
+            OpenUpdateExpenseWindow();
         }
 
         private void mi_Delete_Click(object sender, RoutedEventArgs e)
@@ -247,7 +247,7 @@ namespace HomeBudgetWPF
             }
         }
 
-        private void ShowExpenses()
+        public void ShowExpenses()
         {
             bool month = false, cat = false;
 
@@ -261,6 +261,19 @@ namespace HomeBudgetWPF
             }
 
             presenterInterface.GetBudgetItems(null, null, false, 1, month, cat);
+        }
+
+        public void OpenUpdateExpenseWindow()
+        {
+            UpdateExpenseWindow updateWindow = new UpdateExpenseWindow(presenterInterface,(BudgetItem) dg_displayExpenses.SelectedItem, this);
+            Visibility = Visibility.Hidden;
+            presenterInterface.SetView(updateWindow);
+            updateWindow.Show();
+        }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            OpenUpdateExpenseWindow();
         }
     }
 }
