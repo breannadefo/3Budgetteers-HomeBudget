@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:HomeBudgetWPF"
         mc:Ignorable="d"
         Title="DisplayExpenses" 
-        Height="450" 
+        Height="550" 
         Width="800"
         Background="#a6bb8d"
         ResizeMode="NoResize"
@@ -54,7 +54,8 @@
                         <StackPanel HorizontalAlignment="Stretch">
                             <TextBlock Margin="0, 5" x:Name="txb_start" Text="Start Date:" 
                                        FontSize="14px" Foreground="#3C6255"/>
-                            <DatePicker Name="dp_startDate" HorizontalAlignment="Stretch" Background="White"></DatePicker>
+                            <DatePicker Name="dp_startDate" HorizontalAlignment="Stretch" Background="White"
+                                        SelectedDateChanged="dp_startDate_SelectedDateChanged"></DatePicker>
                         </StackPanel>
                     </Label>
 
@@ -63,7 +64,8 @@
                         <StackPanel HorizontalAlignment="Stretch">
                             <TextBlock Margin="0, 5" Name="txb_end" Text="End Date:" 
                                        FontSize="14px" Foreground="#3C6255"/>
-                            <DatePicker Name="dp_endDate" HorizontalAlignment="Stretch" Background="White"></DatePicker>
+                            <DatePicker Name="dp_endDate" HorizontalAlignment="Stretch" Background="White"
+                                        SelectedDateChanged="dp_endDate_SelectedDateChanged"></DatePicker>
                         </StackPanel>
                     </Label>
                 </Grid>
@@ -75,12 +77,16 @@
                 <StackPanel Width="237">
                     <TextBlock Margin="0, 5" FontSize="14px" TextWrapping="Wrap" Foreground="#3C6255"
                                 x:Name="txb_filter" Text="Choose a category to filter by: (optional)"/>
-                    <ComboBox Name="cmb_categories" Margin="0, 5" FontSize="14px"
-                              Background="#eae7b1" HorizontalAlignment="Stretch">
+                    <Button Width="100" Name="btn_resetCatFilter" Click="btn_resetCatFilter_Click"
+                            BorderBrush="#3c6255" BorderThickness="2"
+                    Background="#61876E" Foreground="#eae7b1">Reset filter</Button>
+                    <ComboBox x:Name="cmb_categories" FontSize="14px"
+                              Background="#eae7b1"
+                              SelectionChanged="cmb_categories_SelectionChanged">
                         <!-- Got how to do this from this website: -->
                         <!-- https://social.technet.microsoft.com/wiki/contents/articles/24240.changing-the-background-color-of-a-combobox-in-wpf-on-windows-8.aspx -->
                         <ComboBox.ItemContainerStyle>
-                            <Style TargetType="ComboBoxItem">
+                            <Style TargetType="{x:Type ComboBoxItem}">
                                 <Setter Property="Background" Value="#eae7b1"/>
                             </Style>
                         </ComboBox.ItemContainerStyle>
