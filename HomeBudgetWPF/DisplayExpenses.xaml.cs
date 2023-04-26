@@ -198,6 +198,11 @@ namespace HomeBudgetWPF
             dg_displayExpenses.Columns.Add(total);
         }
 
+        /// <summary>
+        /// Displays all the categories and the total amount spent for that category for each month an expense took place. It also
+        /// displays the total for each category, as well as the total for each month.
+        /// </summary>
+        /// <param name="items">A list of dictionaries that contains the data about the totals spent for each month and category.</param>
         public void DisplayExpensesInGridDictionary(List<Dictionary<string, object>> items)
         {
             dg_displayExpenses.ItemsSource = items;
