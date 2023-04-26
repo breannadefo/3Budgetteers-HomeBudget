@@ -268,7 +268,7 @@ namespace HomeBudgetWPF
                 cat = true;
             }
 
-            if(cmb_categories.SelectedItem == null)
+            if (cmb_categories.SelectedItem == null)
             {
                 filterCat= false;
             }
@@ -298,6 +298,11 @@ namespace HomeBudgetWPF
         private void cmb_categories_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ShowExpenses();
+        }
+
+        private void btn_resetCatFilter_Click(object sender, RoutedEventArgs e)
+        {
+            cmb_categories.SelectedItem= null;
         }
     }
 }
