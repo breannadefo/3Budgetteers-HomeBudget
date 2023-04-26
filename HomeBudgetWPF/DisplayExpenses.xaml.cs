@@ -247,6 +247,10 @@ namespace HomeBudgetWPF
             }
         }
 
+        /// <summary>
+        /// Gets the values from the grouping checkboxes and calls a presenter method to decide what values
+        /// should be displayed in the data grid.
+        /// </summary>
         public void ShowExpenses()
         {
             bool month = false, cat = false;

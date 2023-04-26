@@ -164,6 +164,7 @@ namespace HomeBudgetWPF
                         _displayExpensesWindow.Visibility = Visibility.Visible;
                     }
                     _displayExpensesWindow.InitializeComboBox();
+                    _displayExpensesWindow.ShowExpenses();
                 }
                 else
                 {
