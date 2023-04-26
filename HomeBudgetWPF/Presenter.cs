@@ -423,12 +423,23 @@ namespace HomeBudgetWPF
             }
         }
 
+        /// <summary>
+        /// Gets all the values that should be displayed on the screen depending on which groupings are selected. It calls a specific 
+        /// method in the view for each combination of grouping so that the proper information is displayed.
+        /// </summary>
+        /// <param name="start">The earliest date the expense could have happened on. This is nullable.</param>
+        /// <param name="end">The latest date the expense could have happened on. It is nullable.</param>
+        /// <param name="filterFlag">True if the retrieved values should only belong to the passed category, false otherwise.</param>
+        /// <param name="catId">The id of the only category that the expenses should belong to. This is only used if the filterFlag
+        ///                     value is true.</param>
+        /// <param name="month">True if the values should be grouped by their month, false otherwise.</param>
+        /// <param name="category">True if the values should be grouped by their category, false otherwise.</param>
         public void GetBudgetItems(DateTime? start, DateTime? end, bool filterFlag, int catId, bool month, bool category)
         {
             if(month == true && category == true)
             {
                 List<Dictionary<string, object>> items = _homeBudget.GetBudgetDictionaryByCategoryAndMonth(start, end, filterFlag, catId);
-                //call the view interface method to call a method to display the items
+                _view.DisplayExpensesInGridDictionary(items);
                 
             }
             else if(month == true && category == false)
