@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Budget;
+using System.Threading;
 
 namespace HomeBudgetWPF
 {
@@ -68,6 +69,12 @@ namespace HomeBudgetWPF
             closeFromHomePageButton = true;
             presenterInterface.SetView(mainWindow);
             this.Close();
+        }
+
+        private void ckb_GroupingAltered(object sender, RoutedEventArgs e)
+        {
+            DisableRightClick();
+            ShowExpenses();
         }
 
         private void mi_Modify_Click(object sender, RoutedEventArgs e)
@@ -349,8 +356,29 @@ namespace HomeBudgetWPF
             startDate = dp_startDate.SelectedDate;
             endDate = dp_endDate.SelectedDate;
 
-
             presenterInterface.GetBudgetItems(startDate, endDate, filterCat, filterCatId, month, cat);
+        }
+        
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (!((bool)ckb_month.IsChecked || (bool)ckb_category.IsChecked))
+            {
+                OpenUpdateExpenseWindow();
+            }
+        }
+
+        private void DisableRightClick()
+        {
+            if((bool)ckb_month.IsChecked || (bool)ckb_category.IsChecked)
+            {
+                dg_displayExpenses.ContextMenu.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                DataGridContextMenu.IsOpen = false;
+                dg_displayExpenses.ContextMenu.Visibility = Visibility.Visible;
+                Thread.Sleep(100);
+            }
         }
 
         #endregion
