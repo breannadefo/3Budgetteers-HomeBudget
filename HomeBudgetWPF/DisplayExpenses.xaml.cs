@@ -201,14 +201,59 @@ namespace HomeBudgetWPF
             dg_displayExpenses.Columns.Add(total);
         }
 
+        /// <summary>
+        /// Displays all the categories and the total amount spent for that category for each month an expense took place. It also
+        /// displays the total for each category, as well as the total for each month.
+        /// </summary>
+        /// <param name="items">A list of dictionaries that contains the data about the totals spent for each month and category.</param>
         public void DisplayExpensesInGridDictionary(List<Dictionary<string, object>> items)
         {
             dg_displayExpenses.ItemsSource = items;
             dg_displayExpenses.Columns.Clear();
 
-            //aually add the columns based on the dictionary
+            List<Category> categories = presenterInterface.GetCategories();
+            
+            //seeting up all the columns to make sure that all the categories show up even if there are no expenses for it
+            List<string> columns = new List<string>();
+            columns.Add("Month");
+            foreach (Category cat in categories)
+            {
+                columns.Add(cat.Description);
+            }
+            columns.Add("Total");
+
+            //creating and binding each column
+            foreach(string header in columns)
+            {
+                DataGridTextColumn column = new DataGridTextColumn();
+                column.Header = header;
+
+                //going through each "month" dictionary so that all categories that have any expenses in them get bound to the data grid
+                foreach(Dictionary<string, object> item in items)
+                {
+                    if (item.Keys.Contains(header))
+                    {
+                        //going through each key in the dictionary until it finds the match to the header so that the proper binding can happen
+                        foreach(string key in item.Keys)
+                        {
+                            if (header == key)
+                            {
+                                column.Binding = new Binding($"[{key}]");
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                dg_displayExpenses.Columns.Add(column);
+            }
         }
 
+        /// <summary>
+        /// Gets the values from the grouping checkboxes and calls a presenter method to decide what values
+        /// should be displayed in the data grid.
+        /// </summary>
         public void ShowExpenses()
         {
             bool month = false, cat = false;

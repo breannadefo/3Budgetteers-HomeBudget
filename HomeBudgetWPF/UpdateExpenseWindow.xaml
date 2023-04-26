@@ -89,7 +89,7 @@
             Amount
         </TextBlock>
         <Border Grid.Row="8" Margin="10" BorderBrush="#3C6255" BorderThickness="2" >
-            <TextBox Text="{Binding Path=Txt, StringFormat=C}" x:Name="AmountTextBox" Background="#EAE7B1">
+            <TextBox x:Name="AmountTextBox" Background="#EAE7B1">
 
             </TextBox>
         </Border>
