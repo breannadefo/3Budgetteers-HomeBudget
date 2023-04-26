@@ -267,6 +267,8 @@ namespace HomeBudgetWPF
                 cat = true;
             }
 
+
+
             presenterInterface.GetBudgetItems(null, null, false, 1, month, cat);
         }
 
