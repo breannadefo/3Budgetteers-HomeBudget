@@ -24,6 +24,7 @@ namespace HomeBudgetWPF
         PresenterInterface presenterInterface;
         bool closeFromHomePageButton = false;
 
+        #region Initialization
         public DisplayExpenses(MainWindow window, PresenterInterface p)
         {
             this.mainWindow = window;
@@ -34,11 +35,17 @@ namespace HomeBudgetWPF
             ShowExpenses();
         }
 
+        /// <summary>
+        /// Sets the values of the combobox with the categories from the database
+        /// </summary>
         public void InitializeComboBox()
         {
             cmb_categories.ItemsSource = presenterInterface.GetCategories();
         }
 
+        #endregion
+
+        #region Button Clicks
         private void btn_AddExpense_Click(object sender, RoutedEventArgs e)
         {
             AddExpenseWindow addExpenseWindow = new AddExpenseWindow(presenterInterface, this);
@@ -63,11 +70,6 @@ namespace HomeBudgetWPF
             this.Close();
         }
 
-        private void ckb_GroupingAltered(object sender, RoutedEventArgs e)
-        {
-            ShowExpenses();
-        }
-
         private void mi_Modify_Click(object sender, RoutedEventArgs e)
         {
             OpenUpdateExpenseWindow();
@@ -75,7 +77,7 @@ namespace HomeBudgetWPF
 
         private void mi_Delete_Click(object sender, RoutedEventArgs e)
         {
-            if(!(dg_displayExpenses.SelectedItem == null || dg_displayExpenses.SelectedItem == string.Empty))
+            if (!(dg_displayExpenses.SelectedItem == null || dg_displayExpenses.SelectedItem == string.Empty))
             {
                 BudgetItem item = (BudgetItem)dg_displayExpenses.SelectedItem;
                 presenterInterface.DeleteExpense(item.ExpenseID);
@@ -88,6 +90,44 @@ namespace HomeBudgetWPF
 
         }
 
+        private void btn_resetCatFilter_Click(object sender, RoutedEventArgs e)
+        {
+            cmb_categories.SelectedItem = null;
+        }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            OpenUpdateExpenseWindow();
+        }
+
+        #endregion
+
+        #region Event listeners
+        private void ckb_GroupingAltered(object sender, RoutedEventArgs e)
+        {
+            ShowExpenses();
+        }
+
+        private void ckb_month_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void cmb_categories_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ShowExpenses();
+        }
+
+        private void dp_startDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ShowExpenses();
+        }
+
+        private void dp_endDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ShowExpenses();
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             //check if there are any unadded fields left
@@ -96,32 +136,57 @@ namespace HomeBudgetWPF
             {
                 mainWindow.Close();
             }
-            
+
         }
 
+        #endregion
+
+        #region Helper methods and view interface methods
+
+        /// <summary>
+        /// Displays a message box in order to indicate an error.
+        /// </summary>
+        /// <param name="message">The error message to be displayed</param>
         public void ShowErrorMessage(string message)
         {
             MessageBox.Show(message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
+        /// <summary>
+        /// Displays a message box to indicate a success.
+        /// </summary>
+        /// <param name="message">The succcess message to be displayed</param>
         public void ShowSuccessMessage(string message)
         {
             MessageBox.Show(message, "Success!", MessageBoxButton.OK, MessageBoxImage.None);
         }
 
+        /// <summary>
+        /// Resets all the expense filtering option to default.
+        /// </summary>
         public void ResetValues()
         {
             ckb_month.IsChecked = false;
             ckb_category.IsChecked = false;
-            dp_startDate.SelectedDate= DateTime.Now;
-            dp_endDate.SelectedDate= DateTime.Now;
+            dp_startDate.SelectedDate = null;
+            dp_endDate.SelectedDate = null;
+            cmb_categories.SelectedItem= null;
         }
 
-        private void ckb_month_Checked(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Maks the current window invisble and displays the update expense window.
+        /// </summary>
+        public void OpenUpdateExpenseWindow()
         {
-           
+            UpdateExpenseWindow updateWindow = new UpdateExpenseWindow(presenterInterface, (BudgetItem)dg_displayExpenses.SelectedItem, this);
+            Visibility = Visibility.Hidden;
+            presenterInterface.SetView(updateWindow);
+            updateWindow.Show();
         }
 
+        #endregion
+
+        #region Display expenses
         /// <summary>
         /// Displays the date, category, description, amount, and balance of all the provided budget items.
         /// </summary>
@@ -212,7 +277,7 @@ namespace HomeBudgetWPF
             dg_displayExpenses.Columns.Clear();
 
             List<Category> categories = presenterInterface.GetCategories();
-            
+
             //seeting up all the columns to make sure that all the categories show up even if there are no expenses for it
             List<string> columns = new List<string>();
             columns.Add("Month");
@@ -223,18 +288,18 @@ namespace HomeBudgetWPF
             columns.Add("Total");
 
             //creating and binding each column
-            foreach(string header in columns)
+            foreach (string header in columns)
             {
                 DataGridTextColumn column = new DataGridTextColumn();
                 column.Header = header;
 
                 //going through each "month" dictionary so that all categories that have any expenses in them get bound to the data grid
-                foreach(Dictionary<string, object> item in items)
+                foreach (Dictionary<string, object> item in items)
                 {
                     if (item.Keys.Contains(header))
                     {
                         //going through each key in the dictionary until it finds the match to the header so that the proper binding can happen
-                        foreach(string key in item.Keys)
+                        foreach (string key in item.Keys)
                         {
                             if (header == key)
                             {
@@ -256,8 +321,10 @@ namespace HomeBudgetWPF
         /// </summary>
         public void ShowExpenses()
         {
-            bool month = false, cat = false, filterCat = false ;
+            bool month = false, cat = false, filterCat = false;
             int filterCatId = 1;
+
+            DateTime? startDate, endDate;
 
             if (ckb_month.IsChecked == true)
             {
@@ -270,39 +337,23 @@ namespace HomeBudgetWPF
 
             if (cmb_categories.SelectedItem == null)
             {
-                filterCat= false;
+                filterCat = false;
             }
             else
             {
-                filterCat= true;
+                filterCat = true;
                 Category filterCategory = cmb_categories.SelectedItem as Category;
                 filterCatId = filterCategory.Id;
             }
 
-            presenterInterface.GetBudgetItems(null, null, filterCat, filterCatId, month, cat);
+            startDate = dp_startDate.SelectedDate;
+            endDate = dp_endDate.SelectedDate;
+
+
+            presenterInterface.GetBudgetItems(startDate, endDate, filterCat, filterCatId, month, cat);
         }
 
-        public void OpenUpdateExpenseWindow()
-        {
-            UpdateExpenseWindow updateWindow = new UpdateExpenseWindow(presenterInterface,(BudgetItem) dg_displayExpenses.SelectedItem, this);
-            Visibility = Visibility.Hidden;
-            presenterInterface.SetView(updateWindow);
-            updateWindow.Show();
-        }
-
-        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            OpenUpdateExpenseWindow();
-        }
-
-        private void cmb_categories_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ShowExpenses();
-        }
-
-        private void btn_resetCatFilter_Click(object sender, RoutedEventArgs e)
-        {
-            cmb_categories.SelectedItem= null;
-        }
+        #endregion
+        
     }
 }
