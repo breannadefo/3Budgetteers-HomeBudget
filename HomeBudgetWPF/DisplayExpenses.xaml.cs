@@ -203,54 +203,43 @@ namespace HomeBudgetWPF
             dg_displayExpenses.ItemsSource = items;
             dg_displayExpenses.Columns.Clear();
 
-            
             List<Category> categories = presenterInterface.GetCategories();
-            /*
-            foreach (Category category in categories)
-            {
-                DataGridTextColumn column = new DataGridTextColumn();
-                column.Header = category.Description;
-                column.Binding = new Binding(category.Description);
-                dg_displayExpenses.Columns.Add(column);
-            }
-            */
-
+            
+            //seeting up all the columns to make sure that all the categories show up even if there are no expenses for it
             List<string> columns = new List<string>();
-
-            foreach (KeyValuePair<string, object> pair in items[0])
-            {/*
-                double val;
-                if(double.TryParse(pair.Value, out val))
-                {
-
-                }
-
-                if (!key.Contains("details:"))
-                {
-                    columns.Add(key);
-                }*/
-
-                if (pair.Value is List<BudgetItem>)
-                {
-                    //don't create a columns
-                }
-                else
-                {
-                    DataGridTextColumn column = new DataGridTextColumn();
-                    column.Header = pair.Key;
-                    column.Binding = new Binding($"[{pair.Key}]");
-                    dg_displayExpenses.Columns.Add(column);
-                }
+            columns.Add("Month");
+            foreach (Category cat in categories)
+            {
+                columns.Add(cat.Description);
             }
-            /*
-            foreach (string key in items[0].Keys)
+            columns.Add("Total");
+
+            //creating and binding each column
+            foreach(string header in columns)
             {
                 DataGridTextColumn column = new DataGridTextColumn();
-                column.Header = key;
-                column.Binding = new Binding($"[{key}]");
+                column.Header = header;
+
+                //going through each "month" dictionary so that all categories that have any expenses in them get bound to the data grid
+                foreach(Dictionary<string, object> item in items)
+                {
+                    if (item.Keys.Contains(header))
+                    {
+                        //going through each key in the dictionary until it finds the match to the header so that the proper binding can happen
+                        foreach(string key in item.Keys)
+                        {
+                            if (header == key)
+                            {
+                                column.Binding = new Binding($"[{key}]");
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+
                 dg_displayExpenses.Columns.Add(column);
             }
-            */
         }
 
         private void ShowExpenses()
