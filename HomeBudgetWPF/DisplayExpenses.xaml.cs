@@ -256,7 +256,8 @@ namespace HomeBudgetWPF
         /// </summary>
         public void ShowExpenses()
         {
-            bool month = false, cat = false;
+            bool month = false, cat = false, filterCat = false ;
+            int filterCatId = 1;
 
             if (ckb_month.IsChecked == true)
             {
@@ -267,9 +268,18 @@ namespace HomeBudgetWPF
                 cat = true;
             }
 
+            if(cmb_categories.SelectedItem == null)
+            {
+                filterCat= false;
+            }
+            else
+            {
+                filterCat= true;
+                Category filterCategory = cmb_categories.SelectedItem as Category;
+                filterCatId = filterCategory.Id;
+            }
 
-
-            presenterInterface.GetBudgetItems(null, null, false, 1, month, cat);
+            presenterInterface.GetBudgetItems(null, null, filterCat, filterCatId, month, cat);
         }
 
         public void OpenUpdateExpenseWindow()
@@ -283,6 +293,11 @@ namespace HomeBudgetWPF
         private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             OpenUpdateExpenseWindow();
+        }
+
+        private void cmb_categories_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ShowExpenses();
         }
     }
 }
