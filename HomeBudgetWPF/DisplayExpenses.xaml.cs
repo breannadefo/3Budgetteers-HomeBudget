@@ -92,8 +92,11 @@ namespace HomeBudgetWPF
         {
             //check if there are any unadded fields left
             //close the app as a whole
-            if(!closeFromHomePageButton)
-            mainWindow.Close();
+            if (!closeFromHomePageButton)
+            {
+                mainWindow.Close();
+            }
+            
         }
 
         public void ShowErrorMessage(string message)
