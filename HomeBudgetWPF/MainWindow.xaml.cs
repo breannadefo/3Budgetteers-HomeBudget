@@ -67,16 +67,9 @@ namespace HomeBudgetWPF
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Do you wish to close the app?", "App closing", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            if (result == MessageBoxResult.No)
-            {
-                e.Cancel = true;
-            }
-            else
-            {
-                CloseOtherPages();
-                p.CloseBudgetConnection();
-            }
+            CloseOtherPages();
+            p.CloseBudgetConnection();
+
         }
 
         private void CloseOtherPages()
@@ -106,7 +99,7 @@ namespace HomeBudgetWPF
         private void btn_viewExpenses_Click(object sender, RoutedEventArgs e)
         {
             DisplayExpenses display = new DisplayExpenses(this, p);
-            Visibility= Visibility.Hidden;
+            Visibility = Visibility.Hidden;
             p.SetView(display);
             display.Show();
         }
