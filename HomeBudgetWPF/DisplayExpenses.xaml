@@ -152,7 +152,7 @@
         <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="5" Margin="10">
             <DataGrid Name="dg_displayExpenses" Background="#eae7b1" HorizontalGridLinesBrush="#3c6255"
                       BorderBrush="#3c6255" BorderThickness="2" CanUserReorderColumns="False" FontSize="14px" 
-                      AutoGenerateColumns="False" IsReadOnly="true">
+                      AutoGenerateColumns="False" IsReadOnly="true" >
 
                 <DataGrid.Resources>
                     <Style TargetType="DataGridRow">
@@ -160,7 +160,7 @@
                     </Style>
                 </DataGrid.Resources>
                 <DataGrid.ContextMenu>
-                    <ContextMenu>
+                    <ContextMenu x:Name="DataGridContextMenu">
                         <MenuItem Name="mi_Modify" Click="mi_Modify_Click" Header="Modify"/>
                         <MenuItem Name="mi_Delete" Click="mi_Delete_Click" Header="Delete"/>
                         <MenuItem Name="mi_Cancel" Click="mi_Cancel_Click" Header="Cancel"/>

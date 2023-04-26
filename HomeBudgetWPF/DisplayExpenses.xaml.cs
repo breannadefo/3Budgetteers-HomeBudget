@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Budget;
+using System.Threading;
 
 namespace HomeBudgetWPF
 {
@@ -65,6 +66,7 @@ namespace HomeBudgetWPF
 
         private void ckb_GroupingAltered(object sender, RoutedEventArgs e)
         {
+            DisableRightClick();
             ShowExpenses();
         }
 
@@ -277,7 +279,25 @@ namespace HomeBudgetWPF
 
         private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            OpenUpdateExpenseWindow();
+            if (!((bool)ckb_month.IsChecked || (bool)ckb_category.IsChecked))
+            {
+                OpenUpdateExpenseWindow();
+            }
+        }
+
+        private void DisableRightClick()
+        {
+            if((bool)ckb_month.IsChecked || (bool)ckb_category.IsChecked)
+            {
+                dg_displayExpenses.ContextMenu.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                DataGridContextMenu.IsOpen = false;
+                dg_displayExpenses.ContextMenu.Visibility = Visibility.Visible;
+                Thread.Sleep(100);
+            }
+            
         }
     }
 }
