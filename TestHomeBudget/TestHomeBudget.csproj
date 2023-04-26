@@ -23,8 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\3Budgetteers-HomeBudget\3Budgetteers-HomeBudget.csproj" />
     <ProjectReference Include="..\HomeBudgetWPF\HomeBudgetWPF.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="HomeBudget">
+      <HintPath>dlls\HomeBudgetModel\HomeBudget.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

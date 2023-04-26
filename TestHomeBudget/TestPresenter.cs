@@ -482,5 +482,117 @@ namespace TestHomeBudget
             p.CloseBudgetConnection();
         }
         #endregion
+
+        #region Test Display Expenses
+
+        [Fact]
+        public void TestDisplayExpenses_ShowAllExpenses_NoGrouping()
+        {
+            //Arrange
+            TestView view = new TestView();
+            Presenter presenter = new Presenter(view);
+            presenter.EnterHomeBudget("databases/testDatabase", "No folder specified", true);
+
+            bool month = false, category = false;
+
+            Assert.False(view.CalledDisplayExpenses);
+            Assert.False(view.CalledDisplayByMonth);
+            Assert.False(view.CalledDisplayByCategory);
+            Assert.False(view.CalledDisplayByMonthAndCategory);
+
+            //Act
+            presenter.GetBudgetItems(null, null, false, 1, month, category);
+
+            //Assert
+            Assert.True(view.CalledDisplayExpenses);
+            Assert.False(view.CalledDisplayByMonth);
+            Assert.False(view.CalledDisplayByCategory);
+            Assert.False(view.CalledDisplayByMonthAndCategory);
+
+            presenter.CloseBudgetConnection();
+        }
+
+        [Fact]
+        public void TestDisplayExpenses_ShowAllExpenses_GroupByMonth()
+        {
+            //Arrange
+            TestView view = new TestView();
+            Presenter presenter = new Presenter(view);
+            presenter.EnterHomeBudget("databases/testDatabase", "No folder specified", true);
+
+            bool month = true, category = false;
+
+            Assert.False(view.CalledDisplayExpenses);
+            Assert.False(view.CalledDisplayByMonth);
+            Assert.False(view.CalledDisplayByCategory);
+            Assert.False(view.CalledDisplayByMonthAndCategory);
+
+            //Act
+            presenter.GetBudgetItems(null, null, false, 1, month, category);
+
+            //Assert
+            Assert.False(view.CalledDisplayExpenses);
+            Assert.True(view.CalledDisplayByMonth);
+            Assert.False(view.CalledDisplayByCategory);
+            Assert.False(view.CalledDisplayByMonthAndCategory);
+
+            presenter.CloseBudgetConnection();
+        }
+
+        [Fact]
+        public void TestDisplayExpenses_ShowAllExpenses_GroupByCategory()
+        {
+            //Arrange
+            TestView view = new TestView();
+            Presenter presenter = new Presenter(view);
+            presenter.EnterHomeBudget("databases/testDatabase", "No folder specified", true);
+
+            bool month = false, category = true;
+
+            Assert.False(view.CalledDisplayExpenses);
+            Assert.False(view.CalledDisplayByMonth);
+            Assert.False(view.CalledDisplayByCategory);
+            Assert.False(view.CalledDisplayByMonthAndCategory);
+
+            //Act
+            presenter.GetBudgetItems(null, null, false, 1, month, category);
+
+            //Assert
+            Assert.False(view.CalledDisplayExpenses);
+            Assert.False(view.CalledDisplayByMonth);
+            Assert.True(view.CalledDisplayByCategory);
+            Assert.False(view.CalledDisplayByMonthAndCategory);
+
+            presenter.CloseBudgetConnection();
+        }
+
+        [Fact]
+        public void TestDisplayExpenses_ShowAllExpenses_GroupByMonthAndCategory()
+        {
+            //Arrange
+            TestView view = new TestView();
+            Presenter presenter = new Presenter(view);
+            presenter.EnterHomeBudget("databases/testDatabase", "No folder specified", true);
+
+            bool month = true, category = true;
+
+            Assert.False(view.CalledDisplayExpenses);
+            Assert.False(view.CalledDisplayByMonth);
+            Assert.False(view.CalledDisplayByCategory);
+            Assert.False(view.CalledDisplayByMonthAndCategory);
+
+            //Act
+            presenter.GetBudgetItems(null, null, false, 1, month, category);
+
+            //Assert
+            Assert.False(view.CalledDisplayExpenses);
+            Assert.False(view.CalledDisplayByMonth);
+            Assert.False(view.CalledDisplayByCategory);
+            Assert.True(view.CalledDisplayByMonthAndCategory);
+
+            presenter.CloseBudgetConnection();
+        }
+
+        #endregion
     }
 }
