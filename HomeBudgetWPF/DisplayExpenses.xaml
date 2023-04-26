@@ -54,7 +54,8 @@
                         <StackPanel HorizontalAlignment="Stretch">
                             <TextBlock Margin="0, 5" x:Name="txb_start" Text="Start Date:" 
                                        FontSize="14px" Foreground="#3C6255"/>
-                            <DatePicker Name="dp_startDate" HorizontalAlignment="Stretch" Background="White"></DatePicker>
+                            <DatePicker Name="dp_startDate" HorizontalAlignment="Stretch" Background="White"
+                                        SelectedDateChanged="dp_startDate_SelectedDateChanged"></DatePicker>
                         </StackPanel>
                     </Label>
 
@@ -63,7 +64,8 @@
                         <StackPanel HorizontalAlignment="Stretch">
                             <TextBlock Margin="0, 5" Name="txb_end" Text="End Date:" 
                                        FontSize="14px" Foreground="#3C6255"/>
-                            <DatePicker Name="dp_endDate" HorizontalAlignment="Stretch" Background="White"></DatePicker>
+                            <DatePicker Name="dp_endDate" HorizontalAlignment="Stretch" Background="White"
+                                        SelectedDateChanged="dp_endDate_SelectedDateChanged"></DatePicker>
                         </StackPanel>
                     </Label>
                 </Grid>

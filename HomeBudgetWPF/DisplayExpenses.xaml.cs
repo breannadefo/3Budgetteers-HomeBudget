@@ -75,7 +75,7 @@ namespace HomeBudgetWPF
 
         private void mi_Delete_Click(object sender, RoutedEventArgs e)
         {
-            if(!(dg_displayExpenses.SelectedItem == null || dg_displayExpenses.SelectedItem == string.Empty))
+            if (!(dg_displayExpenses.SelectedItem == null || dg_displayExpenses.SelectedItem == string.Empty))
             {
                 BudgetItem item = (BudgetItem)dg_displayExpenses.SelectedItem;
                 presenterInterface.DeleteExpense(item.ExpenseID);
@@ -96,7 +96,7 @@ namespace HomeBudgetWPF
             {
                 mainWindow.Close();
             }
-            
+
         }
 
         public void ShowErrorMessage(string message)
@@ -113,13 +113,13 @@ namespace HomeBudgetWPF
         {
             ckb_month.IsChecked = false;
             ckb_category.IsChecked = false;
-            dp_startDate.SelectedDate= DateTime.Now;
-            dp_endDate.SelectedDate= DateTime.Now;
+            dp_startDate.SelectedDate = DateTime.Now;
+            dp_endDate.SelectedDate = DateTime.Now;
         }
 
         private void ckb_month_Checked(object sender, RoutedEventArgs e)
         {
-           
+
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace HomeBudgetWPF
             dg_displayExpenses.Columns.Clear();
 
             List<Category> categories = presenterInterface.GetCategories();
-            
+
             //seeting up all the columns to make sure that all the categories show up even if there are no expenses for it
             List<string> columns = new List<string>();
             columns.Add("Month");
@@ -223,18 +223,18 @@ namespace HomeBudgetWPF
             columns.Add("Total");
 
             //creating and binding each column
-            foreach(string header in columns)
+            foreach (string header in columns)
             {
                 DataGridTextColumn column = new DataGridTextColumn();
                 column.Header = header;
 
                 //going through each "month" dictionary so that all categories that have any expenses in them get bound to the data grid
-                foreach(Dictionary<string, object> item in items)
+                foreach (Dictionary<string, object> item in items)
                 {
                     if (item.Keys.Contains(header))
                     {
                         //going through each key in the dictionary until it finds the match to the header so that the proper binding can happen
-                        foreach(string key in item.Keys)
+                        foreach (string key in item.Keys)
                         {
                             if (header == key)
                             {
@@ -256,8 +256,10 @@ namespace HomeBudgetWPF
         /// </summary>
         public void ShowExpenses()
         {
-            bool month = false, cat = false, filterCat = false ;
+            bool month = false, cat = false, filterCat = false;
             int filterCatId = 1;
+
+            DateTime? startDate, endDate;
 
             if (ckb_month.IsChecked == true)
             {
@@ -270,21 +272,25 @@ namespace HomeBudgetWPF
 
             if (cmb_categories.SelectedItem == null)
             {
-                filterCat= false;
+                filterCat = false;
             }
             else
             {
-                filterCat= true;
+                filterCat = true;
                 Category filterCategory = cmb_categories.SelectedItem as Category;
                 filterCatId = filterCategory.Id;
             }
 
-            presenterInterface.GetBudgetItems(null, null, filterCat, filterCatId, month, cat);
+            startDate = dp_startDate.SelectedDate;
+            endDate = dp_endDate.SelectedDate;
+
+
+            presenterInterface.GetBudgetItems(startDate, endDate, filterCat, filterCatId, month, cat);
         }
 
         public void OpenUpdateExpenseWindow()
         {
-            UpdateExpenseWindow updateWindow = new UpdateExpenseWindow(presenterInterface,(BudgetItem) dg_displayExpenses.SelectedItem, this);
+            UpdateExpenseWindow updateWindow = new UpdateExpenseWindow(presenterInterface, (BudgetItem)dg_displayExpenses.SelectedItem, this);
             Visibility = Visibility.Hidden;
             presenterInterface.SetView(updateWindow);
             updateWindow.Show();
@@ -302,7 +308,17 @@ namespace HomeBudgetWPF
 
         private void btn_resetCatFilter_Click(object sender, RoutedEventArgs e)
         {
-            cmb_categories.SelectedItem= null;
+            cmb_categories.SelectedItem = null;
+        }
+
+        private void dp_startDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ShowExpenses();
+        }
+
+        private void dp_endDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ShowExpenses();
         }
     }
 }
