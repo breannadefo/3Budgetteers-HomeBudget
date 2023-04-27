@@ -102,19 +102,11 @@ namespace HomeBudgetWPF
             cmb_categories.SelectedItem = null;
         }
 
-        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            OpenUpdateExpenseWindow();
-        }
+
 
         #endregion
 
         #region Event listeners
-        private void ckb_GroupingAltered(object sender, RoutedEventArgs e)
-        {
-            ShowExpenses();
-        }
-
         private void ckb_month_Checked(object sender, RoutedEventArgs e)
         {
 
