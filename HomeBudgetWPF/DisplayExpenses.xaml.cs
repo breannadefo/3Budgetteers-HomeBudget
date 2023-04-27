@@ -297,15 +297,7 @@ namespace HomeBudgetWPF
                 {
                     if (item.Keys.Contains(header))
                     {
-                        //going through each key in the dictionary until it finds the match to the header so that the proper binding can happen
-                        foreach (string key in item.Keys)
-                        {
-                            if (header == key)
-                            {
-                                column.Binding = new Binding($"[{key}]");
-                                break;
-                            }
-                        }
+                        column.Binding = new Binding($"[{header}]");
                         break;
                     }
                 }
