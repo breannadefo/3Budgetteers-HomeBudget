@@ -21,7 +21,6 @@ namespace HomeBudgetWPF
     /// </summary>
     public partial class DisplayExpenses : Window, ViewInterface
     {
-        int test = 0;
         MainWindow mainWindow;
         PresenterInterface presenterInterface;
         bool closeFromHomePageButton = false;
