@@ -366,6 +366,15 @@ namespace HomeBudgetWPF
         }
 
         #endregion
-        
+
+        private void btn_searchExpense_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void txb_searchExpense_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
