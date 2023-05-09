@@ -81,13 +81,13 @@
 
         
         <!-- Date Picker -->
-        <StackPanel Grid.Row="3">
+        <StackPanel Grid.Row="3" VerticalAlignment="Center">
             <TextBlock Margin="10,5" VerticalAlignment="Bottom" Foreground="#3C6255"
                     FontSize="20">
                 Please Select the Date the Expense was Incurred
             </TextBlock>
 
-            <Border Margin="10,5" BorderBrush="#3C6255" BorderThickness="2">
+            <Border Margin="5,0" BorderBrush="#3C6255" BorderThickness="2">
                 <DatePicker x:Name="DateTextBox" Background="White">
                 </DatePicker>
             </Border>
