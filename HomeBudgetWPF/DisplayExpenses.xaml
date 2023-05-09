@@ -162,15 +162,12 @@
         <DockPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="5">
             <!-- search bar -->
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                <TextBlock FontSize="14px" Foreground="#3C6255">Search expenses</TextBlock>
                 <TextBox Name="txb_searchExpense"  Grid.Column="1" Grid.Row="1" Height="20" 
                          HorizontalAlignment="Left" Margin="10,5,0,0" MinWidth="200" MinHeight="30"
                          TextChanged="txb_searchExpense_TextChanged"
                          BorderBrush="#3c6255" BorderThickness="2"
-                         Background="#eae7b1" Foreground="#3c6255">Search expense</TextBox>
-                <Button Name="btn_searchExpense" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Margin="0,5,10,0" MinWidth="100" MinHeight="30" 
-                        VerticalAlignment="Center" Click="btn_searchExpense_Click"
-                        BorderBrush="#3c6255" BorderThickness="2"
-                        Background="#61876E" Foreground="#eae7b1">Search</Button>
+                         Background="#eae7b1" Foreground="#3c6255"></TextBox>
             </StackPanel>
             
 
