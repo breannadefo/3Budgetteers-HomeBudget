@@ -13,6 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Budget;
 using System.Threading;
+using System.Windows.Controls.Primitives;
+using System.Diagnostics.Metrics;
+using System.Reflection;
 
 namespace HomeBudgetWPF
 {
@@ -24,6 +27,7 @@ namespace HomeBudgetWPF
         MainWindow mainWindow;
         PresenterInterface presenterInterface;
         bool closeFromHomePageButton = false;
+        private int selectedIndex = -1;
 
         #region Initialization
         public DisplayExpenses(MainWindow window, PresenterInterface p)
@@ -79,16 +83,46 @@ namespace HomeBudgetWPF
 
         private void mi_Modify_Click(object sender, RoutedEventArgs e)
         {
+            int counter = 0;
+            int index = 0;
+            foreach (BudgetItem budgetItem in dg_displayExpenses.Items)
+            {
+                if (budgetItem == dg_displayExpenses.SelectedItem)
+                    index = counter;
+
+                counter++;
+            }
             OpenUpdateExpenseWindow();
+            this.selectedIndex = index;
         }
 
         private void mi_Delete_Click(object sender, RoutedEventArgs e)
         {
             if (!(dg_displayExpenses.SelectedItem == null || dg_displayExpenses.SelectedItem == string.Empty))
             {
+                int counter = 0;
+                int index = 0;
+                foreach(BudgetItem budgetItem in dg_displayExpenses.Items)
+                {
+                    if(budgetItem == dg_displayExpenses.SelectedItem)
+                    {
+                        if(counter + 1 >= dg_displayExpenses.Items.Count)
+                            index = 0;
+                        else
+                            index = counter;
+                    }
+                    counter++;
+                }
+
                 BudgetItem item = (BudgetItem)dg_displayExpenses.SelectedItem;
                 presenterInterface.DeleteExpense(item.ExpenseID);
+                this.selectedIndex = -1;
                 ShowExpenses();
+                if(dg_displayExpenses.Items.Count > 0)
+                {
+                    dg_displayExpenses.SelectedItem = dg_displayExpenses.Items[index];
+                }
+
             }
         }
 
@@ -135,7 +169,6 @@ namespace HomeBudgetWPF
             {
                 mainWindow.Close();
             }
-
         }
 
         #endregion
@@ -341,6 +374,11 @@ namespace HomeBudgetWPF
             endDate = dp_endDate.SelectedDate;
 
             presenterInterface.GetBudgetItems(startDate, endDate, filterCat, filterCatId, month, cat);
+
+            if(this.selectedIndex >= 0)
+            {
+                dg_displayExpenses.SelectedItem = dg_displayExpenses.Items[this.selectedIndex];
+            }
         }
         
         private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
