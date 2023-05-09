@@ -5,10 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HomeBudgetWPF"
         mc:Ignorable="d"
-        ResizeMode="NoResize"
         Background="#a6bb8d"
         Closing="AddExpenseWindow_Closing"
-        Title="AddExpenseWindow" Height="700" Width="500">
+        Title="AddExpenseWindow" 
+        Height="700" 
+        Width="500"
+        MinWidth="480"
+        MinHeight="615">
     <Grid>
         <Grid.ColumnDefinitions>
             
@@ -16,33 +19,41 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="0.6*"></RowDefinition>
             <RowDefinition Height="1.4*"></RowDefinition>
-            <RowDefinition Height="0.3*"></RowDefinition>
-            <RowDefinition Height="0.7*"></RowDefinition>
-            <RowDefinition Height="0.3*"></RowDefinition>
-            <RowDefinition Height="0.5*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="0.8*"></RowDefinition>
             <RowDefinition Height="1.5*"></RowDefinition>
-            <RowDefinition Height="0.4*"></RowDefinition>
+            <RowDefinition Height="0.3*"></RowDefinition>
             <RowDefinition Height="0.5*"></RowDefinition>
             <RowDefinition Height="0.5*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Margin="10,10, 255,10" BorderThickness="2" BorderBrush="#3C6255">
-            <Button Name="btn_viewDisplayExpenses" Click="btn_viewDisplayExpenses_Click"
-                    FontSize="15"
-                    BorderBrush="#3C6255" BorderThickness="3" Background="#61876E" Foreground="#EAE7B1">View Expenses</Button>
-        </Border>
-        <!-- Create Category button -->
         
-        <Border Grid.Row="0" Margin="255,10, 10,10" BorderThickness="2" BorderBrush="#3C6255">
-            <Button x:Name="ModifyCategoryButton" FontSize="15" Click="ModifyCategoryButton_Click"
-                    BorderBrush="#3C6255" BorderThickness="3" Background="#61876E" Foreground="#EAE7B1">
-                Create New Category
-            </Button>
-        </Border>
+        <!-- top buttons -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- View Expenses button -->
+            <Border Grid.Column="0" Margin="10" BorderThickness="2" BorderBrush="#3C6255">
+                <Button Name="btn_viewDisplayExpenses" Click="btn_viewDisplayExpenses_Click"
+                        FontSize="15"
+                        BorderBrush="#3C6255" BorderThickness="3" Background="#61876E" Foreground="#EAE7B1">View Expenses</Button>
+            </Border>
+            
+            <!-- Create Category button -->
+            <Border Grid.Column="1" Margin="10" BorderThickness="2" BorderBrush="#3C6255">
+                <Button x:Name="ModifyCategoryButton" FontSize="15" Click="ModifyCategoryButton_Click"
+                        BorderBrush="#3C6255" BorderThickness="3" Background="#61876E" Foreground="#EAE7B1">
+                    Create New Category
+                </Button>
+            </Border>
+        </Grid>
 
 
         <!-- Title -->
-        <Border Grid.Row="1" BorderBrush="#3C6255" BorderThickness="4" Margin="10" Background="#EAE7B1">
+        <Border Grid.Row="1" BorderBrush="#3C6255" BorderThickness="4" Margin="10, 5" Background="#EAE7B1">
             <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontSize="50"
                    TextDecorations="Underline"  Foreground="#61876E">
                 Enter Expense
@@ -51,80 +62,82 @@
 
         
         <!-- Chose Category Combo Box-->
-        <TextBlock Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Left"
-                   Margin="10,10,10,0" Foreground="#3C6255" FontSize="20">
-            Please Select A Category
-        </TextBlock>
-        <Border Grid.Row="3" Margin="10,5,10,35" BorderBrush="#3C6255" BorderThickness="2">
-            <TextBox x:Name="searchBox" TextChanged="searchBox_TextChanged" Background="#EAE7B1"/>
-        </Border>
+        <StackPanel Grid.Row="2" VerticalAlignment="Center">
+            <TextBlock Grid.Row="2" HorizontalAlignment="Left"
+                    Margin="10,5,10,0" Foreground="#3C6255" FontSize="20">
+                Please Select A Category
+            </TextBlock>
 
-        <Border Grid.Row="3" Margin="10,35,10,5" BorderBrush="#3C6255" BorderThickness="2">
-            <ComboBox x:Name="categoryComboBox" Loaded="InitializeComboBox" Background="#61876E"
-                      DropDownOpened="InitializeComboBox">
+            <Border Grid.Row="2" Margin="10,5,10,0" BorderBrush="#3C6255" BorderThickness="2">
+                <TextBox x:Name="searchBox" TextChanged="searchBox_TextChanged" Background="#EAE7B1"/>
+            </Border>
 
-            </ComboBox>
-        </Border>
+            <Border Grid.Row="2" Margin="10,0" BorderBrush="#3C6255" BorderThickness="2">
+                <ComboBox x:Name="categoryComboBox" Loaded="InitializeComboBox" Background="#61876E"
+                            DropDownOpened="InitializeComboBox">
+                </ComboBox>
+            </Border>
+        </StackPanel>
 
-
+        
         <!-- Date Picker -->
-        <TextBlock Grid.Row="4" Margin="10,5,10,0" VerticalAlignment="Bottom" Foreground="#3C6255"
-                   FontSize="20">
-            Please Select the Date the Expense was Incurred
-        </TextBlock>
-        <Border Grid.Row="5" Margin="10,10,5,10" BorderBrush="#3C6255" BorderThickness="2">
-            <DatePicker x:Name="DateTextBox" Background="White">
+        <StackPanel Grid.Row="3">
+            <TextBlock Margin="10,5" VerticalAlignment="Bottom" Foreground="#3C6255"
+                    FontSize="20">
+                Please Select the Date the Expense was Incurred
+            </TextBlock>
 
-            </DatePicker>
-        </Border>
+            <Border Margin="10,5" BorderBrush="#3C6255" BorderThickness="2">
+                <DatePicker x:Name="DateTextBox" Background="White">
+                </DatePicker>
+            </Border>
+        </StackPanel>
 
         
         <!-- Description Box -->
-        <TextBlock Grid.Row="6" Margin="10,05,10,100" Foreground="#3C6255" FontSize="20">
-            Description
-        </TextBlock>
-        <Border Grid.Row="6" Margin="10,35,10,10" BorderBrush="#3C6255" BorderThickness="2">
-            <TextBox  x:Name="DescriptionTextBox" Background="#EAE7B1">
+        
+            <TextBlock Grid.Row="4" Margin="10,05,10,0" Foreground="#3C6255" FontSize="20">
+                Description
+            </TextBlock>
 
-            </TextBox>
-        </Border>
+            <Border Grid.Row="4" Margin="10,35,10,10" BorderBrush="#3C6255" BorderThickness="2" VerticalAlignment="Stretch">
+                <TextBox  x:Name="DescriptionTextBox" Background="#EAE7B1" VerticalAlignment="Stretch" TextWrapping="Wrap" VerticalContentAlignment="Stretch"></TextBox>
+            </Border>
+        
+        
+        
 
         
         <!-- Amount box -->
-        <TextBlock Grid.Row="7" Margin="10,10,10,0" VerticalAlignment="Bottom" Foreground="#3C6255"
+        <TextBlock Grid.Row="5" Margin="10,0,10,0" VerticalAlignment="Bottom" Foreground="#3C6255"
                    FontSize="20">
             Amount
         </TextBlock>
-        <Border Grid.Row="8" Margin="10" BorderBrush="#3C6255" BorderThickness="2" >
+        <Border Grid.Row="6" Margin="10" BorderBrush="#3C6255" BorderThickness="2" >
             <TextBox Text="{Binding Path=Txt, StringFormat=C}" x:Name="AmountTextBox" Background="#EAE7B1">
 
             </TextBox>
         </Border>
 
         <!-- Credit option  + Submit -->
-        <Grid Grid.Row="9">
+        <Grid Grid.Row="7">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.15*"></ColumnDefinition>
-                <ColumnDefinition Width="0.2*"></ColumnDefinition>
-                <ColumnDefinition Width="0.5*"></ColumnDefinition>
-                <ColumnDefinition Width="0.5*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
 
             </Grid.RowDefinitions>
             
             <!-- Credit Box -->
-            <CheckBox Margin="10,0,10,10" Grid.Column="0" x:Name="CreditCheckbox" BorderBrush="#3C6255" 
-                      BorderThickness="1" Background="#EAE7B1">
+            <CheckBox Margin="10,0,10,10" Grid.Column="0" x:Name="CreditCheckbox" BorderBrush="#3C6255" VerticalAlignment="Center"
+                      BorderThickness="1" Background="#EAE7B1" Content="Credit?" Foreground="#3C6255" FontSize="12">
                 <CheckBox.LayoutTransform>
                     <ScaleTransform ScaleX="2" ScaleY="2" />
                 </CheckBox.LayoutTransform>
             </CheckBox>
 
-            <TextBlock Grid.Column="1" Margin="0,0,10,10" Foreground="#3C6255" FontSize="20">
-                Credit?
-            </TextBlock>
-            
             <!-- Cancel Add -->
             <Button Margin="5" Grid.Column="2" x:Name="CancelExpenseButton" Click="CancelExpenseButton_Click"
                     BorderBrush="#3C6255" BorderThickness="3" Background="#61876E" Foreground="#EAE7B1"
@@ -133,7 +146,7 @@
             </Button>
 
             <!-- Add Expense -->
-            <Button Margin="5" Grid.Column="3" x:Name="AddExpenseButton" Click="AddExpenseButton_Click"
+            <Button Margin="5" Grid.Column="1" x:Name="AddExpenseButton" Click="AddExpenseButton_Click"
                     BorderBrush="#3C6255" BorderThickness="3" Background="#61876E" Foreground="#EAE7B1"
                     FontSize="20">
                 Add Expense

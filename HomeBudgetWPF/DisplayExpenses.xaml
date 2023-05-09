@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HomeBudgetWPF"
         mc:Ignorable="d"
-        Title="DisplayExpenses" 
+        Title="DisplayExpenses"
         Height="550" 
         Width="800"
         Background="#a6bb8d"
