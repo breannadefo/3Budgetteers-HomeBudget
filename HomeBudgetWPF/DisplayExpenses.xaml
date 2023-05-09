@@ -168,6 +168,7 @@
                          TextChanged="txb_searchExpense_TextChanged"
                          BorderBrush="#3c6255" BorderThickness="2"
                          Background="#eae7b1" Foreground="#3c6255"></TextBox>
+                <TextBlock Name="textBlock_searchNoMatchFound" Text="" Margin="10,0,0,0" FontSize="14px" Foreground="#3C6255"></TextBlock>
             </StackPanel>
             
 

@@ -79,7 +79,7 @@ namespace HomeBudgetWPF
         {
             DisableRightClick();
             ShowExpenses();
-            ToggleSearch();
+            SearchExpenses(txb_searchExpense.Text);
         }
 
         private void mi_Modify_Click(object sender, RoutedEventArgs e)
@@ -103,11 +103,11 @@ namespace HomeBudgetWPF
             {
                 int counter = 0;
                 int index = 0;
-                foreach(BudgetItem budgetItem in dg_displayExpenses.Items)
+                foreach (BudgetItem budgetItem in dg_displayExpenses.Items)
                 {
-                    if(budgetItem == dg_displayExpenses.SelectedItem)
+                    if (budgetItem == dg_displayExpenses.SelectedItem)
                     {
-                        if(counter + 1 >= dg_displayExpenses.Items.Count)
+                        if (counter + 1 >= dg_displayExpenses.Items.Count)
                             index = 0;
                         else
                             index = counter;
@@ -119,7 +119,7 @@ namespace HomeBudgetWPF
                 presenterInterface.DeleteExpense(item.ExpenseID);
                 this.selectedIndex = -1;
                 ShowExpenses();
-                if(dg_displayExpenses.Items.Count > 0)
+                if (dg_displayExpenses.Items.Count > 0)
                 {
                     dg_displayExpenses.SelectedItem = dg_displayExpenses.Items[index];
                 }
@@ -144,7 +144,7 @@ namespace HomeBudgetWPF
         #region Event listeners
         private void ckb_month_Checked(object sender, RoutedEventArgs e)
         {
-            ToggleSearch();
+            SearchExpenses(txb_searchExpense.Text);
         }
 
         private void cmb_categories_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -203,7 +203,7 @@ namespace HomeBudgetWPF
             ckb_category.IsChecked = false;
             dp_startDate.SelectedDate = null;
             dp_endDate.SelectedDate = null;
-            cmb_categories.SelectedItem= null;
+            cmb_categories.SelectedItem = null;
         }
 
         /// <summary>
@@ -376,12 +376,12 @@ namespace HomeBudgetWPF
 
             presenterInterface.GetBudgetItems(startDate, endDate, filterCat, filterCatId, month, cat);
 
-            if(this.selectedIndex >= 0)
+            if (this.selectedIndex >= 0)
             {
                 dg_displayExpenses.SelectedItem = dg_displayExpenses.Items[this.selectedIndex];
             }
         }
-        
+
         private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (!((bool)ckb_month.IsChecked || (bool)ckb_category.IsChecked))
@@ -392,7 +392,7 @@ namespace HomeBudgetWPF
 
         private void DisableRightClick()
         {
-            if((bool)ckb_month.IsChecked || (bool)ckb_category.IsChecked)
+            if ((bool)ckb_month.IsChecked || (bool)ckb_category.IsChecked)
             {
                 dg_displayExpenses.ContextMenu.Visibility = Visibility.Hidden;
             }
@@ -413,42 +413,41 @@ namespace HomeBudgetWPF
 
         private void SearchExpenses(string search)
         {
-            //if it is a number
-            if (int.TryParse(search, out int result))
+            if (!(((bool)ckb_month.IsChecked || (bool)ckb_category.IsChecked)))
             {
-                foreach (DataGridRow row in dg_displayExpenses.Items)
+                ShowExpenses();
+                List<BudgetItem> filteredItems = new List<BudgetItem>();
+                //if it is a number
+                if (int.TryParse(search, out int result))
                 {
-
-                }
-            }
-            else
-            {
-                for (int i = 0; i < dg_displayExpenses.Items.Count; i++)
-                {
-                    BudgetItem bi = dg_displayExpenses.Items[i] as BudgetItem;
-
-                    if (bi.ShortDescription.Contains(search))
+                    foreach (BudgetItem bi in dg_displayExpenses.Items)
                     {
-                        dg_displayExpenses.SelectedIndex = i;
-                        break;
-                        //dg_displayExpenses.ScrollIntoView(bi);
-                        //dg_displayExpenses.ItemsSource.;
-                        //dg_displayExpenses.SetDetailsVisibilityForItem(bi, Visibility.Collapsed);
-                        //dg_displayExpenses.UpdateLayout();
+                        if (bi.Amount.ToString().Contains(search))
+                        {
+                            filteredItems.Add(bi);
+                        }
                     }
                 }
-            }
-        }
+                else
+                {
+                    foreach (BudgetItem bi in dg_displayExpenses.Items)
+                    {
+                        if (bi.ShortDescription.ToLower().Contains(search.ToLower()))
+                        {
+                            filteredItems.Add(bi);
+                        }
+                    }
+                }
 
-        private void ToggleSearch()
-        {
-            if (!((bool)ckb_month.IsChecked || (bool)ckb_category.IsChecked))
-            {
-                txb_searchExpense.IsEnabled = true;
-            }
-            else
-            {
-                txb_searchExpense.IsEnabled = false; 
+                if(filteredItems.Count == 0)
+                {
+                    textBlock_searchNoMatchFound.Text = "No matches";
+                }
+                else
+                {
+                    textBlock_searchNoMatchFound.Text = "";
+                }
+                dg_displayExpenses.ItemsSource = filteredItems;
             }
         }
     }
