@@ -79,6 +79,7 @@ namespace HomeBudgetWPF
         {
             DisableRightClick();
             ShowExpenses();
+            ToggleSearch();
         }
 
         private void mi_Modify_Click(object sender, RoutedEventArgs e)
@@ -143,7 +144,7 @@ namespace HomeBudgetWPF
         #region Event listeners
         private void ckb_month_Checked(object sender, RoutedEventArgs e)
         {
-
+            ToggleSearch();
         }
 
         private void cmb_categories_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -405,14 +406,50 @@ namespace HomeBudgetWPF
 
         #endregion
 
-        private void btn_searchExpense_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void txb_searchExpense_TextChanged(object sender, TextChangedEventArgs e)
         {
+            SearchExpenses(txb_searchExpense.Text);
+        }
 
+        private void SearchExpenses(string search)
+        {
+            //if it is a number
+            if (int.TryParse(search, out int result))
+            {
+                foreach (DataGridRow row in dg_displayExpenses.Items)
+                {
+
+                }
+            }
+            else
+            {
+                for (int i = 0; i < dg_displayExpenses.Items.Count; i++)
+                {
+                    BudgetItem bi = dg_displayExpenses.Items[i] as BudgetItem;
+
+                    if (bi.ShortDescription.Contains(search))
+                    {
+                        dg_displayExpenses.SelectedIndex = i;
+                        break;
+                        //dg_displayExpenses.ScrollIntoView(bi);
+                        //dg_displayExpenses.ItemsSource.;
+                        //dg_displayExpenses.SetDetailsVisibilityForItem(bi, Visibility.Collapsed);
+                        //dg_displayExpenses.UpdateLayout();
+                    }
+                }
+            }
+        }
+
+        private void ToggleSearch()
+        {
+            if (!((bool)ckb_month.IsChecked || (bool)ckb_category.IsChecked))
+            {
+                txb_searchExpense.IsEnabled = true;
+            }
+            else
+            {
+                txb_searchExpense.IsEnabled = false; 
+            }
         }
     }
 }
