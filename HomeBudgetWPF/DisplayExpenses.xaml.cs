@@ -126,11 +126,6 @@ namespace HomeBudgetWPF
             }
         }
 
-        private void mi_Cancel_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void btn_resetCatFilter_Click(object sender, RoutedEventArgs e)
         {
             cmb_categories.SelectedItem = null;
@@ -141,10 +136,6 @@ namespace HomeBudgetWPF
         #endregion
 
         #region Event listeners
-        private void ckb_month_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void cmb_categories_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -228,6 +219,10 @@ namespace HomeBudgetWPF
             dg_displayExpenses.ItemsSource = items;
             dg_displayExpenses.Columns.Clear();
 
+            //style
+            Style style = new Style();
+            style.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
+            
             DataGridTextColumn date = new DataGridTextColumn();
             date.Header = "Date";
             date.Binding = new Binding("Date");
@@ -243,10 +238,14 @@ namespace HomeBudgetWPF
             DataGridTextColumn amount = new DataGridTextColumn();
             amount.Header = "Amount";
             amount.Binding = new Binding("Amount");
-
+            amount.Binding.StringFormat = "F2";
+            amount.CellStyle = style;
+            
             DataGridTextColumn balance = new DataGridTextColumn();
             balance.Header = "Balance";
             balance.Binding = new Binding("Balance");
+            balance.Binding.StringFormat = "F2";
+            balance.CellStyle = style;
 
             dg_displayExpenses.Columns.Add(date);
             dg_displayExpenses.Columns.Add(category);
@@ -265,6 +264,10 @@ namespace HomeBudgetWPF
             dg_displayExpenses.ItemsSource = items;
             dg_displayExpenses.Columns.Clear();
 
+            //style
+            Style style = new Style();
+            style.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
+
             DataGridTextColumn month = new DataGridTextColumn();
             month.Header = "Month";
             month.Binding = new Binding("Month");
@@ -272,6 +275,8 @@ namespace HomeBudgetWPF
             DataGridTextColumn total = new DataGridTextColumn();
             total.Header = "Total";
             total.Binding = new Binding("Total");
+            total.Binding.StringFormat = "F2";
+            total.CellStyle = style;
 
             dg_displayExpenses.Columns.Add(month);
             dg_displayExpenses.Columns.Add(total);
@@ -286,6 +291,10 @@ namespace HomeBudgetWPF
             dg_displayExpenses.ItemsSource = items;
             dg_displayExpenses.Columns.Clear();
 
+            //style
+            Style style = new Style();
+            style.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
+
             DataGridTextColumn category = new DataGridTextColumn();
             category.Header = "Category";
             category.Binding = new Binding("Category");
@@ -293,6 +302,8 @@ namespace HomeBudgetWPF
             DataGridTextColumn total = new DataGridTextColumn();
             total.Header = "Total";
             total.Binding = new Binding("Total");
+            total.Binding.StringFormat = "F2";
+            total.CellStyle = style;
 
             dg_displayExpenses.Columns.Add(category);
             dg_displayExpenses.Columns.Add(total);
@@ -307,6 +318,10 @@ namespace HomeBudgetWPF
         {
             dg_displayExpenses.ItemsSource = items;
             dg_displayExpenses.Columns.Clear();
+
+            //style
+            Style style = new Style();
+            style.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
 
             List<Category> categories = presenterInterface.GetCategories();
 
@@ -331,6 +346,12 @@ namespace HomeBudgetWPF
                     if (item.Keys.Contains(header))
                     {
                         column.Binding = new Binding($"[{header}]");
+                        
+                        if(header != "Month")
+                        {
+                            column.Binding.StringFormat = "F2";
+                            column.CellStyle = style;
+                        }
                         break;
                     }
                 }
