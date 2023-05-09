@@ -10,7 +10,7 @@
         Width="800"
         Background="#a6bb8d"
         MinHeight="550"
-        MinWidth="550"
+        MinWidth="602"
         Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -26,7 +26,7 @@
         </Grid.RowDefinitions>
         
         <!-- Page title: Display and Filter Expenses -->
-        <Border BorderBrush="#3c6255" Grid.Column="0"
+        <Border Margin="10" BorderBrush="#3c6255" Grid.Column="0"
                     BorderThickness="4" Background="#eae7b1">
             <TextBlock Padding="10" FontSize="25"  Text="Filter Expenses"
                        Foreground="#61876e" FontWeight="DemiBold"
@@ -48,24 +48,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-        <TextBox Name="txb_searchExpense"  Grid.Column="1" Grid.Row="1" Height="20" 
-                 HorizontalAlignment="Left" Margin="10,0,0,0" MinWidth="200" MinHeight="30"
-                 TextChanged="txb_searchExpense_TextChanged">Search expense</TextBox>
-        <Button Name="btn_searchExpense" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" Margin="10,0,10,0" MinWidth="100" MinHeight="30" 
-                VerticalAlignment="Center" Click="btn_searchExpense_Click"
-                BorderBrush="#3c6255" BorderThickness="2"
-                    Background="#61876E" Foreground="#eae7b1">Search</Button>
-
-        <!-- Filter options -->
-        <StackPanel Grid.Column="0" Grid.Row="1" Grid.RowSpan="4" Margin="10">
-
-            <Border Margin="0,0,0,3" BorderBrush="#3C6255" BorderThickness="1">
-                <Grid Margin="0, 0, 0, 10" >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
+                
                 <!-- Start date picker -->
                 <Label VerticalAlignment="Center">
                     <StackPanel HorizontalAlignment="Stretch" ScrollViewer.CanContentScroll="True" MinWidth="100" >
@@ -175,25 +158,44 @@
             
         </Grid>
 
-        <Grid Grid.Row="2" Grid.Column="1" Grid.RowSpan="4" Margin="10">
-            <DataGrid Name="dg_displayExpenses" Background="#eae7b1" HorizontalGridLinesBrush="#3c6255"
+        <!-- Search Bar and Data Grid -->
+        <DockPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="5">
+            <!-- search bar -->
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                <TextBox Name="txb_searchExpense"  Grid.Column="1" Grid.Row="1" Height="20" 
+                         HorizontalAlignment="Left" Margin="10,5,0,0" MinWidth="200" MinHeight="30"
+                         TextChanged="txb_searchExpense_TextChanged"
+                         BorderBrush="#3c6255" BorderThickness="2"
+                         Background="#eae7b1" Foreground="#3c6255">Search expense</TextBox>
+                <Button Name="btn_searchExpense" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Margin="0,5,10,0" MinWidth="100" MinHeight="30" 
+                        VerticalAlignment="Center" Click="btn_searchExpense_Click"
+                        BorderBrush="#3c6255" BorderThickness="2"
+                        Background="#61876E" Foreground="#eae7b1">Search</Button>
+            </StackPanel>
+            
+
+
+            <!-- data grid code -->
+            <Grid Grid.Row="2" Grid.Column="1" Grid.RowSpan="5" Margin="10">
+                <DataGrid Name="dg_displayExpenses" Background="#eae7b1" HorizontalGridLinesBrush="#3c6255"
                       BorderBrush="#3c6255" BorderThickness="2" CanUserReorderColumns="False" FontSize="14px" 
                       AutoGenerateColumns="False" IsReadOnly="true" >
 
-                <DataGrid.Resources>
-                    <Style TargetType="DataGridRow">
-                        <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
-                    </Style>
-                </DataGrid.Resources>
-                <DataGrid.ContextMenu>
-                    <ContextMenu x:Name="DataGridContextMenu">
-                        <MenuItem Name="mi_Modify" Click="mi_Modify_Click" Header="Modify"/>
-                        <MenuItem Name="mi_Delete" Click="mi_Delete_Click" Header="Delete"/>
-                        <MenuItem Name="mi_Cancel" Click="mi_Cancel_Click" Header="Cancel"/>
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
-            </DataGrid>
-        </Grid>
-        
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridRow">
+                            <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu x:Name="DataGridContextMenu">
+                            <MenuItem Name="mi_Modify" Click="mi_Modify_Click" Header="Modify"/>
+                            <MenuItem Name="mi_Delete" Click="mi_Delete_Click" Header="Delete"/>
+                            <MenuItem Name="mi_Cancel" Click="mi_Cancel_Click" Header="Cancel"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                </DataGrid>
+            </Grid>
+        </DockPanel>
+
     </Grid>
 </Window>
