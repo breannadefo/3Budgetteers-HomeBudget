@@ -5,28 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HomeBudgetWPF"
         mc:Ignorable="d"
-        Title="DisplayExpenses" 
+        Title="DisplayExpenses"
         Height="550" 
         Width="800"
         Background="#a6bb8d"
-        ResizeMode="NoResize"
+        MinHeight="550"
+        MinWidth="602"
         Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" MaxWidth="265" MinWidth="265"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="1.1*"/>
+            <RowDefinition Height="1.6*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="1.9*"/>
         </Grid.RowDefinitions>
         
         <!-- Page title: Display and Filter Expenses -->
-        <Border BorderBrush="#3c6255" Grid.Column="0"
+        <Border Margin="10" BorderBrush="#3c6255" Grid.Column="0"
                     BorderThickness="4" Background="#eae7b1">
             <TextBlock Padding="10" FontSize="25"  Text="Filter Expenses"
                        Foreground="#61876e" FontWeight="DemiBold"
@@ -40,105 +40,98 @@
                        TextAlignment="Center" VerticalAlignment="Center"/>
         </Border>
 
-        <TextBox Name="txb_searchExpense"  Grid.Column="1" Grid.Row="1" Height="20" 
-                 HorizontalAlignment="Left" Margin="10,0,0,0" MinWidth="200" MinHeight="30"
-                 TextChanged="txb_searchExpense_TextChanged">Search expense</TextBox>
-        <Button Name="btn_searchExpense" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" Margin="10,0,10,0" MinWidth="100" MinHeight="30" 
-                VerticalAlignment="Center" Click="btn_searchExpense_Click"
-                BorderBrush="#3c6255" BorderThickness="2"
-                    Background="#61876E" Foreground="#eae7b1">Search</Button>
-
-        <!-- Filter options -->
-        <StackPanel Grid.Column="0" Grid.Row="1" Grid.RowSpan="4" Margin="10">
-
-            <Border Margin="0,0,0,3" BorderBrush="#3C6255" BorderThickness="1">
-                <Grid Margin="0, 0, 0, 10" >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Start date picker -->
-                    <Label>
-                        <StackPanel HorizontalAlignment="Stretch">
-                            <TextBlock Margin="0, 5" x:Name="txb_start" Text="Start Date:" 
+        <!-- date picker selections -->
+        <Border Margin="5" BorderBrush="#3C6255" BorderThickness="1"
+                Grid.Column="0" Grid.Row="1">
+            <Grid Margin="0, 0, 0, 10" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Start date picker -->
+                <Label VerticalAlignment="Center">
+                    <StackPanel HorizontalAlignment="Stretch" ScrollViewer.CanContentScroll="True" MinWidth="100" >
+                        <TextBlock Margin="0, 5" x:Name="txb_start" Text="Start Date:" 
                                        FontSize="14px" Foreground="#3C6255"/>
-                            <DatePicker Name="dp_startDate" HorizontalAlignment="Stretch" Background="White"
+                        <DatePicker Name="dp_startDate" HorizontalAlignment="Stretch" Background="White"
                                         SelectedDateChanged="dp_startDate_SelectedDateChanged"></DatePicker>
-                        </StackPanel>
-                    </Label>
+                    </StackPanel>
+                </Label>
 
-                    <!-- End date picker -->
-                    <Label Grid.Column="1">
-                        <StackPanel HorizontalAlignment="Stretch">
-                            <TextBlock Margin="0, 5" Name="txb_end" Text="End Date:" 
+                <!-- End date picker -->
+                <Label Grid.Column="1" VerticalAlignment="Center">
+                    <StackPanel HorizontalAlignment="Stretch">
+                        <TextBlock Margin="0, 5" Name="txb_end" Text="End Date:" 
                                        FontSize="14px" Foreground="#3C6255"/>
-                            <DatePicker Name="dp_endDate" HorizontalAlignment="Stretch" Background="White"
+                        <DatePicker Name="dp_endDate" HorizontalAlignment="Stretch" Background="White"
                                         SelectedDateChanged="dp_endDate_SelectedDateChanged"></DatePicker>
-                        </StackPanel>
-                    </Label>
-                </Grid>
-            </Border>
-            
+                    </StackPanel>
+                </Label>
+            </Grid>
+        </Border>
 
-            <!-- Filter by a category -->
-            <Label BorderBrush="#3C6255" BorderThickness="1">
-                <StackPanel Width="237">
-                    <TextBlock Margin="0, 5" FontSize="14px" TextWrapping="Wrap" Foreground="#3C6255"
-                                x:Name="txb_filter" Text="Choose a category to filter by: (optional)"/>
-                    <Button Width="100" Name="btn_resetCatFilter" Click="btn_resetCatFilter_Click"
-                            BorderBrush="#3c6255" BorderThickness="2"
-                    Background="#61876E" Foreground="#eae7b1">Reset filter</Button>
-                    <ComboBox x:Name="cmb_categories" FontSize="14px"
-                              Background="#eae7b1"
-                              SelectionChanged="cmb_categories_SelectionChanged">
-                        <!-- Got how to do this from this website: -->
-                        <!-- https://social.technet.microsoft.com/wiki/contents/articles/24240.changing-the-background-color-of-a-combobox-in-wpf-on-windows-8.aspx -->
-                        <ComboBox.ItemContainerStyle>
-                            <Style TargetType="{x:Type ComboBoxItem}">
-                                <Setter Property="Background" Value="#eae7b1"/>
-                            </Style>
-                        </ComboBox.ItemContainerStyle>
-                    </ComboBox>
-                </StackPanel>
-            </Label>
+        <!-- Filter by a category -->
+        <Label BorderBrush="#3C6255" BorderThickness="1" Grid.Column="0" Grid.Row="2" Margin="5" VerticalAlignment="Stretch">
+            <StackPanel Width="237">
+                <TextBlock Margin="0, 5" FontSize="14px" TextWrapping="Wrap" Foreground="#3C6255"
+                           x:Name="txb_filter" VerticalAlignment="Stretch" 
+                           Text="Choose a category to filter by: (optional)"/>
+                <Button Padding="25,0" Name="btn_resetCatFilter" Click="btn_resetCatFilter_Click"
+                        BorderBrush="#3c6255" BorderThickness="2" Margin="0,5"
+                        VerticalAlignment="Center"
+                        Background="#61876E" Foreground="#eae7b1" HorizontalAlignment="Center">Reset filter</Button>
+                <ComboBox x:Name="cmb_categories" FontSize="14px" Margin="0,0,5,0"
+                          Background="#eae7b1" MaxWidth="240"
+                          VerticalAlignment="Bottom"
+                          SelectionChanged="cmb_categories_SelectionChanged">
+                    <!-- Got how to do this from this website: -->
+                    <!-- https://social.technet.microsoft.com/wiki/contents/articles/24240.changing-the-background-color-of-a-combobox-in-wpf-on-windows-8.aspx -->
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Setter Property="Background" Value="#eae7b1"/>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                </ComboBox>
+            </StackPanel>
+        </Label>
 
-            <!-- Grouping by Month and/or Category -->
-            <Label Margin="0, 5" BorderBrush="#3C6255" BorderThickness="1">
-                <StackPanel HorizontalAlignment="Stretch">
-                    <TextBlock Margin="0, 5" Name="txb_grouping" Text="Group by Month/Category"
-                               FontSize="14px" Foreground="#3C6255"/>
+        <!-- Grouping by Month and/or Category -->
+        <Label Margin="5" BorderBrush="#3C6255" BorderThickness="1" Grid.Column="0" Grid.Row="3" VerticalAlignment="Stretch">
+            <StackPanel >
+                <TextBlock Margin="0, 5" Name="txb_grouping" Text="Group by Month/Category"
+                               FontSize="16px" Foreground="#3C6255" VerticalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <CheckBox Content="Month" Margin="5" Name="ckb_month" Click="ckb_GroupingAltered"
                               FontSize="12px" Foreground="#3C6255" Background="#eae7b1" Checked="ckb_month_Checked">
                         <CheckBox.LayoutTransform>
                             <ScaleTransform ScaleX="1.2" ScaleY="1.2" />
                         </CheckBox.LayoutTransform>
                     </CheckBox>
-                    <CheckBox Content="Category" Margin="5, 0, 5, 5" Name="ckb_category" Click="ckb_GroupingAltered"
+                    <CheckBox Content="Category" Margin="5" Name="ckb_category" Click="ckb_GroupingAltered"
                               FontSize="12px" Foreground="#3C6255" Background="#eae7b1">
                         <CheckBox.LayoutTransform>
                             <ScaleTransform ScaleX="1.2" ScaleY="1.2" />
                         </CheckBox.LayoutTransform>
                     </CheckBox>
                 </StackPanel>
-            </Label>
-            
-        </StackPanel>
+            </StackPanel>
+        </Label>
 
         <!-- Buttons to add an expense or a category -->
-        <Grid VerticalAlignment="Stretch" Grid.Row="5" Margin="5,0,5,5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <Grid HorizontalAlignment="Stretch" Grid.Row="5" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
             <!-- Add Category Button -->
             <Button Margin="5"  FontSize="16" 
                     x:Name="btn_AddCategory" VerticalAlignment="Stretch"
                     BorderBrush="#3c6255" BorderThickness="2"
                     Background="#61876E" Foreground="#eae7b1"
-                    Grid.Column="0" Click="btn_AddCategory_Click"
+                    Grid.Column="0" Grid.Row="0" Click="btn_AddCategory_Click"
                     HorizontalContentAlignment="Center" >
                 <TextBlock Text="Add Category" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
@@ -148,7 +141,7 @@
                     x:Name="btn_AddExpense" VerticalAlignment="Stretch"
                     BorderBrush="#3c6255" BorderThickness="2"
                     Background="#61876E" Foreground="#eae7b1"
-                    Grid.Column="1" Click="btn_AddExpense_Click"
+                    Grid.Column="0" Grid.Row="1" Click="btn_AddExpense_Click"
                     HorizontalContentAlignment="Center">
                 <TextBlock Text="Add Expense" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
@@ -158,31 +151,51 @@
                     x:Name="btn_HomePage" VerticalAlignment="Stretch"
                     BorderBrush="#3c6255" BorderThickness="2"
                     Background="#61876E" Foreground="#eae7b1"
-                    Grid.Column="2" Click="btn_HomePage_Click"
+                    Grid.Column="0" Grid.Row="2" Click="btn_HomePage_Click"
                     HorizontalContentAlignment="Center">
                 <TextBlock Text="Home Page" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
+            
         </Grid>
 
-        <Grid Grid.Row="2" Grid.Column="1" Grid.RowSpan="4" Margin="10">
-            <DataGrid Name="dg_displayExpenses" Background="#eae7b1" HorizontalGridLinesBrush="#3c6255"
+        <!-- Search Bar and Data Grid -->
+        <DockPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="5">
+            <!-- search bar -->
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                <TextBox Name="txb_searchExpense"  Grid.Column="1" Grid.Row="1" Height="20" 
+                         HorizontalAlignment="Left" Margin="10,5,0,0" MinWidth="200" MinHeight="30"
+                         TextChanged="txb_searchExpense_TextChanged"
+                         BorderBrush="#3c6255" BorderThickness="2"
+                         Background="#eae7b1" Foreground="#3c6255">Search expense</TextBox>
+                <Button Name="btn_searchExpense" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Margin="0,5,10,0" MinWidth="100" MinHeight="30" 
+                        VerticalAlignment="Center" Click="btn_searchExpense_Click"
+                        BorderBrush="#3c6255" BorderThickness="2"
+                        Background="#61876E" Foreground="#eae7b1">Search</Button>
+            </StackPanel>
+            
+
+
+            <!-- data grid code -->
+            <Grid Grid.Row="2" Grid.Column="1" Grid.RowSpan="5" Margin="10">
+                <DataGrid Name="dg_displayExpenses" Background="#eae7b1" HorizontalGridLinesBrush="#3c6255"
                       BorderBrush="#3c6255" BorderThickness="2" CanUserReorderColumns="False" FontSize="14px" 
                       AutoGenerateColumns="False" IsReadOnly="true" >
 
-                <DataGrid.Resources>
-                    <Style TargetType="DataGridRow">
-                        <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
-                    </Style>
-                </DataGrid.Resources>
-                <DataGrid.ContextMenu>
-                    <ContextMenu x:Name="DataGridContextMenu">
-                        <MenuItem Name="mi_Modify" Click="mi_Modify_Click" Header="Modify"/>
-                        <MenuItem Name="mi_Delete" Click="mi_Delete_Click" Header="Delete"/>
-                        <MenuItem Name="mi_Cancel" Click="mi_Cancel_Click" Header="Cancel"/>
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
-            </DataGrid>
-        </Grid>
-        
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridRow">
+                            <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu x:Name="DataGridContextMenu">
+                            <MenuItem Name="mi_Modify" Click="mi_Modify_Click" Header="Modify"/>
+                            <MenuItem Name="mi_Delete" Click="mi_Delete_Click" Header="Delete"/>
+                            <MenuItem Name="mi_Cancel" Click="mi_Cancel_Click" Header="Cancel"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                </DataGrid>
+            </Grid>
+        </DockPanel>
+
     </Grid>
 </Window>

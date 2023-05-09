@@ -6,7 +6,11 @@
         xmlns:local="clr-namespace:HomeBudgetWPF"
         mc:Ignorable="d"
         Background="#a6bb8d"
-        Title="UpdateExpenseWindow" Height="700" Width="500"
+        Title="UpdateExpenseWindow" 
+        Height="700" 
+        Width="500"
+        MinWidth="500"
+        MinHeight="615"
         Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -15,12 +19,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="0.6*"></RowDefinition>
             <RowDefinition Height="1.4*"></RowDefinition>
-            <RowDefinition Height="0.3*"></RowDefinition>
-            <RowDefinition Height="0.7*"></RowDefinition>
-            <RowDefinition Height="0.3*"></RowDefinition>
-            <RowDefinition Height="0.5*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="0.8*"></RowDefinition>
             <RowDefinition Height="1.5*"></RowDefinition>
-            <RowDefinition Height="0.4*"></RowDefinition>
+            <RowDefinition Height="0.3*"></RowDefinition>
             <RowDefinition Height="0.5*"></RowDefinition>
             <RowDefinition Height="0.5*"></RowDefinition>
         </Grid.RowDefinitions>
@@ -44,66 +46,62 @@
 
 
         <!-- Chose Category Combo Box-->
-        <TextBlock Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Left"
-                   Margin="10,10,10,0" Foreground="#3C6255" FontSize="20">
+        <StackPanel Grid.Row="2" VerticalAlignment="Center">
+            <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                   Margin="10,5,10,0" Foreground="#3C6255" FontSize="20">
             Please Select A Category
-        </TextBlock>
-        <Border Grid.Row="3" Margin="10,5,10,35" BorderBrush="#3C6255" BorderThickness="2">
-            <TextBox x:Name="searchBox" TextChanged="searchBox_TextChanged" Background="#EAE7B1"/>
-        </Border>
+            </TextBlock>
+            
+            <Border Margin="10,5,10,0" BorderBrush="#3C6255" BorderThickness="2">
+                <TextBox x:Name="searchBox" TextChanged="searchBox_TextChanged" Background="#EAE7B1"/>
+            </Border>
 
-        <Border Grid.Row="3" Margin="10,35,10,5" BorderBrush="#3C6255" BorderThickness="2">
-            <ComboBox x:Name="categoryComboBox" Loaded="InitializeComboBox" Background="#61876E"
+            <Border Margin="10,0" BorderBrush="#3C6255" BorderThickness="2">
+                <ComboBox x:Name="categoryComboBox" Loaded="InitializeComboBox" Background="#61876E"
                       DropDownOpened="InitializeComboBox">
-
-            </ComboBox>
-        </Border>
-
+                </ComboBox>
+            </Border>
+        </StackPanel>
 
         <!-- Date Picker -->
-        <TextBlock Grid.Row="4" Margin="10,5,10,0" VerticalAlignment="Bottom" Foreground="#3C6255"
+        <StackPanel Grid.Row="3" VerticalAlignment="Center">
+            <TextBlock Grid.Row="3" Margin="10,5,10,0" VerticalAlignment="Bottom" Foreground="#3C6255"
                    FontSize="20">
             Please Select the Date the Expense was Incurred
-        </TextBlock>
-        <Border Grid.Row="5" Margin="10,10,5,10" BorderBrush="#3C6255" BorderThickness="2">
-            <DatePicker x:Name="DateTextBox" Background="White">
-
-            </DatePicker> 
-        </Border>
+            </TextBlock>
+            <Border Grid.Row="3" Margin="5,0" BorderBrush="#3C6255" BorderThickness="2">
+                <DatePicker x:Name="DateTextBox" Background="White"></DatePicker>
+            </Border>
+        </StackPanel>
 
 
         <!-- Description Box -->
-        <TextBlock Grid.Row="6" Margin="10,05,10,100" Foreground="#3C6255" FontSize="20">
+        <TextBlock Grid.Row="4" Margin="10,05,10,100" Foreground="#3C6255" FontSize="20">
             Description
         </TextBlock>
-        <Border Grid.Row="6" Margin="10,35,10,10" BorderBrush="#3C6255" BorderThickness="2">
-            <TextBox  x:Name="DescriptionTextBox" Background="#EAE7B1">
-
-            </TextBox>
+        <Border Grid.Row="4" Margin="10,35,10,10" BorderBrush="#3C6255" BorderThickness="2">
+            <TextBox  x:Name="DescriptionTextBox" Background="#EAE7B1"></TextBox>
         </Border>
 
 
         <!-- Amount box -->
-        <TextBlock Grid.Row="7" Margin="10,10,10,0" VerticalAlignment="Bottom" Foreground="#3C6255"
+        <TextBlock Grid.Row="5" Margin="10,0,10,0" VerticalAlignment="Bottom" Foreground="#3C6255"
                    FontSize="20">
             Amount
         </TextBlock>
-        <Border Grid.Row="8" Margin="10" BorderBrush="#3C6255" BorderThickness="2" >
+        <Border Grid.Row="6" Margin="10" BorderBrush="#3C6255" BorderThickness="2" >
             <TextBox x:Name="AmountTextBox" Background="#EAE7B1">
 
             </TextBox>
         </Border>
 
         <!-- Credit option  + Submit -->
-        <Grid Grid.Row="9">
+        <Grid Grid.Row="7">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.5*"></ColumnDefinition>
                 <ColumnDefinition Width="0.5*"></ColumnDefinition>
                 <ColumnDefinition Width="0.5*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-
-            </Grid.RowDefinitions>
 
             <!-- Delete Expense -->
             <Button Margin="5" Grid.Column="0" x:Name="DeleteExpenseButton" Click="DeleteExpenseButton_Click"

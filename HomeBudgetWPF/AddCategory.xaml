@@ -7,8 +7,11 @@
         mc:Ignorable="d"
         Closing="Window_Closing"
         Title="AddCategory" 
-        Height="700"
+        Height="485"
         Width="500"
+        MinHeight="485"
+        MaxHeight="485"
+        MinWidth="350"
         Background="#a6bb8d">
     <Grid>
         <StackPanel>
