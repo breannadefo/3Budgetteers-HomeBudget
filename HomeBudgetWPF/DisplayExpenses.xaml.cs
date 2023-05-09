@@ -126,11 +126,6 @@ namespace HomeBudgetWPF
             }
         }
 
-        private void mi_Cancel_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void btn_resetCatFilter_Click(object sender, RoutedEventArgs e)
         {
             cmb_categories.SelectedItem = null;
@@ -141,10 +136,6 @@ namespace HomeBudgetWPF
         #endregion
 
         #region Event listeners
-        private void ckb_month_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void cmb_categories_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
