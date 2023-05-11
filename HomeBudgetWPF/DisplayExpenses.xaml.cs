@@ -16,6 +16,7 @@ using System.Threading;
 using System.Windows.Controls.Primitives;
 using System.Diagnostics.Metrics;
 using System.Reflection;
+using System.Data.Entity.Core.Mapping;
 
 namespace HomeBudgetWPF
 {
@@ -79,7 +80,6 @@ namespace HomeBudgetWPF
         {
             DisableRightClick();
             ShowExpenses();
-            SearchExpenses(txb_searchExpense.Text);
         }
 
         private void mi_Modify_Click(object sender, RoutedEventArgs e)
@@ -144,7 +144,7 @@ namespace HomeBudgetWPF
         #region Event listeners
         private void ckb_month_Checked(object sender, RoutedEventArgs e)
         {
-            SearchExpenses(txb_searchExpense.Text);
+
         }
 
         private void cmb_categories_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -408,47 +408,93 @@ namespace HomeBudgetWPF
 
         private void txb_searchExpense_TextChanged(object sender, TextChangedEventArgs e)
         {
-            SearchExpenses(txb_searchExpense.Text);
         }
 
         private void SearchExpenses(string search)
         {
+            bool matchFound = false;
             if (!(((bool)ckb_month.IsChecked || (bool)ckb_category.IsChecked)))
             {
-                ShowExpenses();
-                List<BudgetItem> filteredItems = new List<BudgetItem>();
-                //if it is a number
+                int count = dg_displayExpenses.SelectedIndex;
                 if (int.TryParse(search, out int result))
                 {
-                    foreach (BudgetItem bi in dg_displayExpenses.Items)
+                    if (dg_displayExpenses.SelectedIndex == -1)
                     {
-                        if (bi.Amount.ToString().Contains(search))
+                        for (int i = 0; i < dg_displayExpenses.Items.Count; i++)
                         {
-                            filteredItems.Add(bi);
+                            BudgetItem bi = dg_displayExpenses.Items[i] as BudgetItem;
+                            if (bi.ShortDescription.ToLower().Contains(search.ToLower()))
+                            {
+                                dg_displayExpenses.SelectedIndex = i;
+                                dg_displayExpenses.Focus();
+                                matchFound = true;
+                                break;
+                            }
                         }
+                    }
+                    else
+                    {
+                        do
+                        {
+                            count = (count + 1) % dg_displayExpenses.Items.Count;
+                            BudgetItem bi = dg_displayExpenses.Items[count] as BudgetItem;
+                            if (bi.Amount.ToString().Contains(search))
+                            {
+                                dg_displayExpenses.SelectedIndex = count;
+                                dg_displayExpenses.Focus();
+                                matchFound = true;
+                                break;
+                            }
+                        } while (count != dg_displayExpenses.SelectedIndex);
                     }
                 }
                 else
                 {
-                    foreach (BudgetItem bi in dg_displayExpenses.Items)
+                    if (dg_displayExpenses.SelectedIndex == -1)
                     {
-                        if (bi.ShortDescription.ToLower().Contains(search.ToLower()))
+                        for (int i = 0; i < dg_displayExpenses.Items.Count; i++)
                         {
-                            filteredItems.Add(bi);
-                        }
+                            BudgetItem bi = dg_displayExpenses.Items[i] as BudgetItem;
+                            if (bi.ShortDescription.ToLower().Contains(search.ToLower()))
+                            {
+                                dg_displayExpenses.SelectedIndex = i;
+                                dg_displayExpenses.Focus();
+                                matchFound = true;
+                                break;
+                            }
+                        }        
+                    }
+                    else
+                    {
+                        do
+                        {
+                            count = (count + 1) % dg_displayExpenses.Items.Count;
+                            BudgetItem bi = dg_displayExpenses.Items[count] as BudgetItem;
+                            if (bi.ShortDescription.ToLower().Contains(search.ToLower()))
+                            {
+                                dg_displayExpenses.SelectedIndex = count;
+                                dg_displayExpenses.Focus();
+                                matchFound = true;
+                                break;
+                            }
+                        } while (count != dg_displayExpenses.SelectedIndex);
                     }
                 }
 
-                if(filteredItems.Count == 0)
+                if (!matchFound)
                 {
-                    textBlock_searchNoMatchFound.Text = "No matches";
+                    textBlock_searchNoMatchFound.Text = "No match";
                 }
                 else
                 {
                     textBlock_searchNoMatchFound.Text = "";
                 }
-                dg_displayExpenses.ItemsSource = filteredItems;
             }
+        }
+
+        private void btn_searchExpenses_Click(object sender, RoutedEventArgs e)
+        {
+            SearchExpenses(txb_searchExpense.Text);
         }
     }
 }
