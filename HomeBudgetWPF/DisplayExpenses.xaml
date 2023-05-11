@@ -10,7 +10,7 @@
         Width="800"
         Background="#a6bb8d"
         MinHeight="550"
-        MinWidth="602"
+        MinWidth="657"
         Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -167,10 +167,15 @@
                          TextChanged="txb_searchExpense_TextChanged"
                          BorderBrush="#3c6255" BorderThickness="2"
                          Background="#eae7b1" Foreground="#3c6255">Search expense</TextBox>
-                <Button Name="btn_searchExpense" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Margin="0,5,10,0" MinWidth="100" MinHeight="30" 
+                <Button Name="btn_searchExpense" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Margin="0,5,10,0" MinWidth="70" MinHeight="30" 
                         VerticalAlignment="Center" Click="btn_searchExpense_Click"
                         BorderBrush="#3c6255" BorderThickness="2"
                         Background="#61876E" Foreground="#eae7b1">Search</Button>
+
+                <Button Name="btn_exportValues" Click="btn_exportValues_Click" 
+                        BorderBrush="#3c6255" BorderThickness="2" Margin="5,5,10,0" MinWidth="70" 
+                        Background="#61876E" Foreground="#eae7b1">
+                    Export</Button>
             </StackPanel>
             
 
