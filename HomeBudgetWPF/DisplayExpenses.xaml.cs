@@ -16,6 +16,7 @@ using System.Threading;
 using System.Windows.Controls.Primitives;
 using System.Diagnostics.Metrics;
 using System.Reflection;
+using System.Data.Entity.Core.Mapping;
 
 namespace HomeBudgetWPF
 {
@@ -102,11 +103,11 @@ namespace HomeBudgetWPF
             {
                 int counter = 0;
                 int index = 0;
-                foreach(BudgetItem budgetItem in dg_displayExpenses.Items)
+                foreach (BudgetItem budgetItem in dg_displayExpenses.Items)
                 {
-                    if(budgetItem == dg_displayExpenses.SelectedItem)
+                    if (budgetItem == dg_displayExpenses.SelectedItem)
                     {
-                        if(counter + 1 >= dg_displayExpenses.Items.Count)
+                        if (counter + 1 >= dg_displayExpenses.Items.Count)
                             index = 0;
                         else
                             index = counter;
@@ -118,7 +119,7 @@ namespace HomeBudgetWPF
                 presenterInterface.DeleteExpense(item.ExpenseID);
                 this.selectedIndex = -1;
                 ShowExpenses();
-                if(dg_displayExpenses.Items.Count > 0)
+                if (dg_displayExpenses.Items.Count > 0)
                 {
                     dg_displayExpenses.SelectedItem = dg_displayExpenses.Items[index];
                 }
@@ -193,7 +194,7 @@ namespace HomeBudgetWPF
             ckb_category.IsChecked = false;
             dp_startDate.SelectedDate = null;
             dp_endDate.SelectedDate = null;
-            cmb_categories.SelectedItem= null;
+            cmb_categories.SelectedItem = null;
         }
 
         /// <summary>
@@ -396,12 +397,12 @@ namespace HomeBudgetWPF
 
             presenterInterface.GetBudgetItems(startDate, endDate, filterCat, filterCatId, month, cat);
 
-            if(this.selectedIndex >= 0)
+            if (this.selectedIndex >= 0)
             {
                 dg_displayExpenses.SelectedItem = dg_displayExpenses.Items[this.selectedIndex];
             }
         }
-        
+
         private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (!((bool)ckb_month.IsChecked || (bool)ckb_category.IsChecked))
@@ -412,7 +413,7 @@ namespace HomeBudgetWPF
 
         private void DisableRightClick()
         {
-            if((bool)ckb_month.IsChecked || (bool)ckb_category.IsChecked)
+            if ((bool)ckb_month.IsChecked || (bool)ckb_category.IsChecked)
             {
                 dg_displayExpenses.ContextMenu.Visibility = Visibility.Hidden;
             }
@@ -426,14 +427,95 @@ namespace HomeBudgetWPF
 
         #endregion
 
-        private void btn_searchExpense_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void txb_searchExpense_TextChanged(object sender, TextChangedEventArgs e)
         {
+        }
 
+        private void SearchExpenses(string search)
+        {
+            bool matchFound = false;
+            if (!(((bool)ckb_month.IsChecked || (bool)ckb_category.IsChecked)))
+            {
+                int count = dg_displayExpenses.SelectedIndex;
+                if (int.TryParse(search, out int result))
+                {
+                    if (dg_displayExpenses.SelectedIndex == -1)
+                    {
+                        for (int i = 0; i < dg_displayExpenses.Items.Count; i++)
+                        {
+                            BudgetItem bi = dg_displayExpenses.Items[i] as BudgetItem;
+                            if (bi.ShortDescription.ToLower().Contains(search.ToLower()))
+                            {
+                                dg_displayExpenses.SelectedIndex = i;
+                                dg_displayExpenses.Focus();
+                                matchFound = true;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        do
+                        {
+                            count = (count + 1) % dg_displayExpenses.Items.Count;
+                            BudgetItem bi = dg_displayExpenses.Items[count] as BudgetItem;
+                            if (bi.Amount.ToString().Contains(search))
+                            {
+                                dg_displayExpenses.SelectedIndex = count;
+                                dg_displayExpenses.Focus();
+                                matchFound = true;
+                                break;
+                            }
+                        } while (count != dg_displayExpenses.SelectedIndex);
+                    }
+                }
+                else
+                {
+                    if (dg_displayExpenses.SelectedIndex == -1)
+                    {
+                        for (int i = 0; i < dg_displayExpenses.Items.Count; i++)
+                        {
+                            BudgetItem bi = dg_displayExpenses.Items[i] as BudgetItem;
+                            if (bi.ShortDescription.ToLower().Contains(search.ToLower()))
+                            {
+                                dg_displayExpenses.SelectedIndex = i;
+                                dg_displayExpenses.Focus();
+                                matchFound = true;
+                                break;
+                            }
+                        }        
+                    }
+                    else
+                    {
+                        do
+                        {
+                            count = (count + 1) % dg_displayExpenses.Items.Count;
+                            BudgetItem bi = dg_displayExpenses.Items[count] as BudgetItem;
+                            if (bi.ShortDescription.ToLower().Contains(search.ToLower()))
+                            {
+                                dg_displayExpenses.SelectedIndex = count;
+                                dg_displayExpenses.Focus();
+                                matchFound = true;
+                                break;
+                            }
+                        } while (count != dg_displayExpenses.SelectedIndex);
+                    }
+                }
+
+                if (!matchFound)
+                {
+                    textBlock_searchNoMatchFound.Text = "No match";
+                }
+                else
+                {
+                    textBlock_searchNoMatchFound.Text = "";
+                }
+            }
+        }
+
+        private void btn_searchExpenses_Click(object sender, RoutedEventArgs e)
+        {
+            SearchExpenses(txb_searchExpense.Text);
         }
     }
 }
