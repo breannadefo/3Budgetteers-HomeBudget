@@ -470,8 +470,9 @@ namespace HomeBudgetWPF
 
             foreach (BudgetItem expense in items)
             {
-                string rowValues = expense.Date.ToString() + "," + expense.Category + "," + expense.ShortDescription + "," 
-                    + expense.Amount.ToString("F2") + "," + expense.Balance.ToString("F2") + "," + expense;
+                string rowValues = $"\"{expense.Date.ToString()}\",\"{expense.Category}\",\"{expense.ShortDescription}\",";
+
+                rowValues += expense.Amount.ToString("F2") + "," + expense.Balance.ToString("F2");
 
                 values.Add(rowValues);
             }
@@ -505,7 +506,7 @@ namespace HomeBudgetWPF
 
             foreach (BudgetItemsByCategory categoryTotal in items)
             {
-                string rowValues = categoryTotal.Category + "," + categoryTotal.Total.ToString("F2");
+                string rowValues = $"\"{categoryTotal.Category}\",{categoryTotal.Total.ToString("F2")}";
 
                 values.Add(rowValues);
             }
@@ -524,7 +525,7 @@ namespace HomeBudgetWPF
 
             foreach (Category category in GetCategories())
             {
-                headers.Append("," + category.Description);
+                headers.Append($",\"{category.Description}\"");
                 header.Add(category.Description);
             }
 
@@ -546,7 +547,7 @@ namespace HomeBudgetWPF
                     }
                     rowValue.Append(",");
                 }
-
+                rowValue.Remove(rowValue.Length - 1, 1);
                 values.Add(rowValue.ToString());
             }
         }
