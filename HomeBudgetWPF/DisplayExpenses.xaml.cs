@@ -132,6 +132,29 @@ namespace HomeBudgetWPF
         }
 
 
+        private void btn_exportValues_Click(object sender, RoutedEventArgs e)
+        {
+            if (dg_displayExpenses.ItemsSource is List<BudgetItem>)
+            {
+                presenterInterface.ExportExpensesToCSVFile(dg_displayExpenses.ItemsSource as List<BudgetItem>);
+            }
+            else if (dg_displayExpenses.ItemsSource is List<BudgetItemsByMonth>)
+            {
+                presenterInterface.ExportExpensesToCSVFile(dg_displayExpenses.ItemsSource as List<BudgetItemsByMonth>);
+            }
+            else if (dg_displayExpenses.ItemsSource is List<BudgetItemsByCategory>)
+            {
+                presenterInterface.ExportExpensesToCSVFile(dg_displayExpenses.ItemsSource as List<BudgetItemsByCategory>);
+            }
+            else if (dg_displayExpenses.ItemsSource is List<Dictionary<string, object>>)
+            {
+                presenterInterface.ExportExpensesToCSVFile(dg_displayExpenses.ItemsSource as List<Dictionary<string, object>>);
+            }
+            else
+            {
+                ShowErrorMessage("Something went wrong with the datagrid so the expense cannot be exported at this time.");
+            }
+        }
 
         #endregion
 
@@ -436,9 +459,6 @@ namespace HomeBudgetWPF
 
         }
 
-        private void btn_exportValues_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
+        
     }
 }

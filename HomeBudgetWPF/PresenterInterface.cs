@@ -32,5 +32,10 @@ namespace HomeBudgetWPF
         public bool UsePreviousBudget();
 
         public void GetBudgetItems(DateTime? start, DateTime? end, bool filterFlag, int catId, bool month, bool category);
+
+        public void ExportExpensesToCSVFile(List<BudgetItem> items);
+        public void ExportExpensesToCSVFile(List<BudgetItemsByMonth> items);
+        public void ExportExpensesToCSVFile(List<BudgetItemsByCategory> items);
+        public void ExportExpensesToCSVFile(List<Dictionary<string, object>> items);
     }
 }

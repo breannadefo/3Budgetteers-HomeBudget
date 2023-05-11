@@ -459,5 +459,64 @@ namespace HomeBudgetWPF
             }
         }
 
+        public void ExportExpensesToCSVFile(List<BudgetItem> items)
+        {
+            _view.ShowSuccessMessage("budget items");
+
+            List<String> values = new List<String>();
+            string headers = "Date,Category,Description,Amount,Balance";
+
+            values.Add(headers);
+
+            foreach (BudgetItem expense in items)
+            {
+                string rowValues = expense.Date.ToString() + "," + expense.Category + "," + expense.ShortDescription + "," 
+                    + expense.Amount.ToString("F2") + "," + expense.Balance.ToString("F2") + "," + expense;
+
+                values.Add(rowValues);
+            }
+        }
+
+        public void ExportExpensesToCSVFile(List<BudgetItemsByMonth> items)
+        {
+            _view.ShowSuccessMessage("budget items by month");
+
+            List<String> values = new List<String>();
+            string headers = "Month,Total";
+
+            values.Add(headers);
+
+            foreach (BudgetItemsByMonth monthTotal in items)
+            {
+                string rowValues = monthTotal.Month + "," + monthTotal.Total.ToString("F2");
+
+                values.Add(rowValues);
+            }
+        }
+
+        public void ExportExpensesToCSVFile(List<BudgetItemsByCategory> items)
+        {
+            _view.ShowSuccessMessage("budget items by ctegory");
+
+            List<String> values = new List<String>();
+            string headers = "Category,Total";
+
+            values.Add(headers);
+
+            foreach (BudgetItemsByCategory categoryTotal in items)
+            {
+                string rowValues = categoryTotal.Category + "," + categoryTotal.Total.ToString("F2");
+
+                values.Add(rowValues);
+            }
+        }
+
+        public void ExportExpensesToCSVFile(List<Dictionary<string, object>> items)
+        {
+            _view.ShowSuccessMessage("budget items dicitonry");
+
+            List<String> values = new List<String>();
+            //string headers = "Date,Category,Description,Amount,Balance";
+        }
     }
 }
