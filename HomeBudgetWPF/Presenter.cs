@@ -516,7 +516,39 @@ namespace HomeBudgetWPF
             _view.ShowSuccessMessage("budget items dicitonry");
 
             List<String> values = new List<String>();
-            //string headers = "Date,Category,Description,Amount,Balance";
+            List<String> header = new List<String>();
+
+            StringBuilder headers = new StringBuilder();
+            headers.Append("Month");
+            header.Add("Month");
+
+            foreach (Category category in GetCategories())
+            {
+                headers.Append("," + category.Description);
+                header.Add(category.Description);
+            }
+
+            headers.Append(",Total");
+            header.Add("Total");
+            
+            values.Add(headers.ToString());
+
+            //actually adding the values from the dictionary.
+            foreach (Dictionary<string, object> dictionary in items)
+            {
+                StringBuilder rowValue = new StringBuilder();
+
+                foreach (String column in header)
+                {
+                    if (dictionary.ContainsKey(column))
+                    {
+                        rowValue.Append(dictionary[column]);
+                    }
+                    rowValue.Append(",");
+                }
+
+                values.Add(rowValue.ToString());
+            }
         }
     }
 }
