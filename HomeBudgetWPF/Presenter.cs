@@ -459,6 +459,10 @@ namespace HomeBudgetWPF
             }
         }
 
+        /// <summary>
+        /// Converts the displayed values to a list of comma separated strings. This version is for when there is no grouping involved.
+        /// </summary>
+        /// <param name="items">The list of BudgetItem being dislayed.</param>
         public void ExportExpensesToCSVFile(List<BudgetItem> items)
         {
             _view.ShowSuccessMessage("budget items");
@@ -478,6 +482,10 @@ namespace HomeBudgetWPF
             }
         }
 
+        /// <summary>
+        /// Converts the displayed values to a list of comma separated strings. This version is for when the values are grouped by month.
+        /// </summary>
+        /// <param name="items">The list of BudgetItemsByMonth being displayed.</param>
         public void ExportExpensesToCSVFile(List<BudgetItemsByMonth> items)
         {
             _view.ShowSuccessMessage("budget items by month");
@@ -495,6 +503,10 @@ namespace HomeBudgetWPF
             }
         }
 
+        /// <summary>
+        /// Converts the displayed values to a list of comma separated strings. This version is for when the values are grouped by category.
+        /// </summary>
+        /// <param name="items">The list of BudgetItemsByCategory being displayed.</param>
         public void ExportExpensesToCSVFile(List<BudgetItemsByCategory> items)
         {
             _view.ShowSuccessMessage("budget items by ctegory");
@@ -512,6 +524,11 @@ namespace HomeBudgetWPF
             }
         }
 
+        /// <summary>
+        /// Converts the displayed values to a list of comma separated strings. This version is for when the values are grouped by month
+        /// and by category.
+        /// </summary>
+        /// <param name="items">The list of dictionaries being displayed.</param>
         public void ExportExpensesToCSVFile(List<Dictionary<string, object>> items)
         {
             _view.ShowSuccessMessage("budget items dicitonry");
