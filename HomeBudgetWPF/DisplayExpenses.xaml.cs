@@ -460,10 +460,6 @@ namespace HomeBudgetWPF
 
         #endregion
 
-        private void txb_searchExpense_TextChanged(object sender, TextChangedEventArgs e)
-        {
-        }
-
         private void SearchExpenses(string search)
         {
             bool matchFound = false;

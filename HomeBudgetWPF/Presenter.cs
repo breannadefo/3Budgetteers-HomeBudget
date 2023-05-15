@@ -465,8 +465,6 @@ namespace HomeBudgetWPF
         /// <param name="items">The list of BudgetItem being dislayed.</param>
         public void ExportExpensesToCSVFile(List<BudgetItem> items, string fileName)
         {
-            _view.ShowSuccessMessage($"budget items");
-
             List<String> values = new List<String>();
             string headers = "Date,Category,Description,Amount,Balance";
 
@@ -490,8 +488,6 @@ namespace HomeBudgetWPF
         /// <param name="items">The list of BudgetItemsByMonth being displayed.</param>
         public void ExportExpensesToCSVFile(List<BudgetItemsByMonth> items, string fileName)
         {
-            _view.ShowSuccessMessage("budget items by month");
-
             List<String> values = new List<String>();
             string headers = "Month,Total";
 
@@ -513,8 +509,6 @@ namespace HomeBudgetWPF
         /// <param name="items">The list of BudgetItemsByCategory being displayed.</param>
         public void ExportExpensesToCSVFile(List<BudgetItemsByCategory> items, string fileName)
         {
-            _view.ShowSuccessMessage("budget items by ctegory");
-
             List<String> values = new List<String>();
             string headers = "Category,Total";
 
@@ -537,8 +531,6 @@ namespace HomeBudgetWPF
         /// <param name="items">The list of dictionaries being displayed.</param>
         public void ExportExpensesToCSVFile(List<Dictionary<string, object>> items, string fileName)
         {
-            _view.ShowSuccessMessage("budget items dicitonry");
-
             List<String> values = new List<String>();
             List<String> header = new List<String>();
 
@@ -592,6 +584,7 @@ namespace HomeBudgetWPF
             {
                 writer = new StreamWriter(fileName);
                 writer.Write(fullText.ToString());
+                _view.ShowSuccessMessage($"The filtered expenses were exported to the file {fileName}.");
             }
             catch (Exception ex)
             {
