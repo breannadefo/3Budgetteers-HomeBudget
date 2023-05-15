@@ -459,5 +459,144 @@ namespace HomeBudgetWPF
             }
         }
 
+        /// <summary>
+        /// Converts the displayed values to a list of comma separated strings. This version is for when there is no grouping involved.
+        /// </summary>
+        /// <param name="items">The list of BudgetItem being dislayed.</param>
+        public void ExportExpensesToCSVFile(List<BudgetItem> items, string fileName)
+        {
+            List<String> values = new List<String>();
+            string headers = "Date,Category,Description,Amount,Balance";
+
+            values.Add(headers);
+
+            foreach (BudgetItem expense in items)
+            {
+                string rowValues = $"\"{expense.Date.ToString()}\",\"{expense.Category}\",\"{expense.ShortDescription}\",";
+
+                rowValues += expense.Amount.ToString("F2") + "," + expense.Balance.ToString("F2");
+
+                values.Add(rowValues);
+            }
+
+            WriteToFile(fileName, values);
+        }
+
+        /// <summary>
+        /// Converts the displayed values to a list of comma separated strings. This version is for when the values are grouped by month.
+        /// </summary>
+        /// <param name="items">The list of BudgetItemsByMonth being displayed.</param>
+        public void ExportExpensesToCSVFile(List<BudgetItemsByMonth> items, string fileName)
+        {
+            List<String> values = new List<String>();
+            string headers = "Month,Total";
+
+            values.Add(headers);
+
+            foreach (BudgetItemsByMonth monthTotal in items)
+            {
+                string rowValues = monthTotal.Month + "," + monthTotal.Total.ToString("F2");
+
+                values.Add(rowValues);
+            }
+
+            WriteToFile(fileName, values);
+        }
+
+        /// <summary>
+        /// Converts the displayed values to a list of comma separated strings. This version is for when the values are grouped by category.
+        /// </summary>
+        /// <param name="items">The list of BudgetItemsByCategory being displayed.</param>
+        public void ExportExpensesToCSVFile(List<BudgetItemsByCategory> items, string fileName)
+        {
+            List<String> values = new List<String>();
+            string headers = "Category,Total";
+
+            values.Add(headers);
+
+            foreach (BudgetItemsByCategory categoryTotal in items)
+            {
+                string rowValues = $"\"{categoryTotal.Category}\",{categoryTotal.Total.ToString("F2")}";
+
+                values.Add(rowValues);
+            }
+
+            WriteToFile(fileName, values);
+        }
+
+        /// <summary>
+        /// Converts the displayed values to a list of comma separated strings. This version is for when the values are grouped by month
+        /// and by category.
+        /// </summary>
+        /// <param name="items">The list of dictionaries being displayed.</param>
+        public void ExportExpensesToCSVFile(List<Dictionary<string, object>> items, string fileName)
+        {
+            List<String> values = new List<String>();
+            List<String> header = new List<String>();
+
+            StringBuilder headers = new StringBuilder();
+            headers.Append("Month");
+            header.Add("Month");
+
+            foreach (Category category in GetCategories())
+            {
+                headers.Append($",\"{category.Description}\"");
+                header.Add(category.Description);
+            }
+
+            headers.Append(",Total");
+            header.Add("Total");
+            
+            values.Add(headers.ToString());
+
+            //actually adding the values from the dictionary.
+            foreach (Dictionary<string, object> dictionary in items)
+            {
+                StringBuilder rowValue = new StringBuilder();
+
+                foreach (String column in header)
+                {
+                    if (dictionary.ContainsKey(column))
+                    {
+                        rowValue.Append(dictionary[column]);
+                    }
+                    rowValue.Append(",");
+                }
+                rowValue.Remove(rowValue.Length - 1, 1);
+                values.Add(rowValue.ToString());
+            }
+
+            WriteToFile(fileName, values);
+        }
+
+        private void WriteToFile(string fileName, List<String> values)
+        {
+            StringBuilder fullText = new StringBuilder();
+
+            foreach (string row in values)
+            {
+                fullText.AppendLine(row);
+            }
+
+            StreamWriter writer = null;
+
+            try
+            {
+                writer = new StreamWriter(fileName);
+                writer.Write(fullText.ToString());
+                _view.ShowSuccessMessage($"The filtered expenses were exported to the file {fileName}.");
+            }
+            catch (Exception ex)
+            {
+                _view.ShowErrorMessage("Something went wrong while saving the data to the file. Try again later.");
+            }
+            finally
+            {
+                if (writer != null)
+                {
+                    writer.Close();
+                }
+            }
+        }
     }
 }
