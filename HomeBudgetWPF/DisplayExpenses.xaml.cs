@@ -16,6 +16,7 @@ using System.Threading;
 using System.Windows.Controls.Primitives;
 using System.Diagnostics.Metrics;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace HomeBudgetWPF
 {
@@ -134,25 +135,34 @@ namespace HomeBudgetWPF
 
         private void btn_exportValues_Click(object sender, RoutedEventArgs e)
         {
-            if (dg_displayExpenses.ItemsSource is List<BudgetItem>)
+            //get the file to export these values into
+            SaveFileDialog fileDialogue = new SaveFileDialog();
+            fileDialogue.Filter = "CSV Files (*.csv)|*.csv";
+
+
+            if (fileDialogue.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                presenterInterface.ExportExpensesToCSVFile(dg_displayExpenses.ItemsSource as List<BudgetItem>);
-            }
-            else if (dg_displayExpenses.ItemsSource is List<BudgetItemsByMonth>)
-            {
-                presenterInterface.ExportExpensesToCSVFile(dg_displayExpenses.ItemsSource as List<BudgetItemsByMonth>);
-            }
-            else if (dg_displayExpenses.ItemsSource is List<BudgetItemsByCategory>)
-            {
-                presenterInterface.ExportExpensesToCSVFile(dg_displayExpenses.ItemsSource as List<BudgetItemsByCategory>);
-            }
-            else if (dg_displayExpenses.ItemsSource is List<Dictionary<string, object>>)
-            {
-                presenterInterface.ExportExpensesToCSVFile(dg_displayExpenses.ItemsSource as List<Dictionary<string, object>>);
-            }
-            else
-            {
-                ShowErrorMessage("Something went wrong with the datagrid so the expense cannot be exported at this time.");
+                //actually call the proper method to export the data
+                if (dg_displayExpenses.ItemsSource is List<BudgetItem>)
+                {
+                    presenterInterface.ExportExpensesToCSVFile(dg_displayExpenses.ItemsSource as List<BudgetItem>, fileDialogue.FileName);
+                }
+                else if (dg_displayExpenses.ItemsSource is List<BudgetItemsByMonth>)
+                {
+                    presenterInterface.ExportExpensesToCSVFile(dg_displayExpenses.ItemsSource as List<BudgetItemsByMonth>, fileDialogue.FileName);
+                }
+                else if (dg_displayExpenses.ItemsSource is List<BudgetItemsByCategory>)
+                {
+                    presenterInterface.ExportExpensesToCSVFile(dg_displayExpenses.ItemsSource as List<BudgetItemsByCategory>, fileDialogue.FileName);
+                }
+                else if (dg_displayExpenses.ItemsSource is List<Dictionary<string, object>>)
+                {
+                    presenterInterface.ExportExpensesToCSVFile(dg_displayExpenses.ItemsSource as List<Dictionary<string, object>>, fileDialogue.FileName);
+                }
+                else
+                {
+                    ShowErrorMessage("Something went wrong with the datagrid so the expense cannot be exported at this time.");
+                }
             }
         }
 
@@ -195,7 +205,7 @@ namespace HomeBudgetWPF
         /// <param name="message">The error message to be displayed</param>
         public void ShowErrorMessage(string message)
         {
-            MessageBox.Show(message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show(message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         /// <summary>
@@ -204,7 +214,7 @@ namespace HomeBudgetWPF
         /// <param name="message">The succcess message to be displayed</param>
         public void ShowSuccessMessage(string message)
         {
-            MessageBox.Show(message, "Success!", MessageBoxButton.OK, MessageBoxImage.None);
+            System.Windows.MessageBox.Show(message, "Success!", MessageBoxButton.OK, MessageBoxImage.None);
         }
 
         /// <summary>
@@ -248,25 +258,25 @@ namespace HomeBudgetWPF
             
             DataGridTextColumn date = new DataGridTextColumn();
             date.Header = "Date";
-            date.Binding = new Binding("Date");
+            date.Binding = new System.Windows.Data.Binding("Date");
 
             DataGridTextColumn category = new DataGridTextColumn();
             category.Header = "Category";
-            category.Binding = new Binding("Category");
+            category.Binding = new System.Windows.Data.Binding("Category");
 
             DataGridTextColumn description = new DataGridTextColumn();
             description.Header = "Description";
-            description.Binding = new Binding("ShortDescription");
+            description.Binding = new System.Windows.Data.Binding("ShortDescription");
 
             DataGridTextColumn amount = new DataGridTextColumn();
             amount.Header = "Amount";
-            amount.Binding = new Binding("Amount");
+            amount.Binding = new System.Windows.Data.Binding("Amount");
             amount.Binding.StringFormat = "F2";
             amount.CellStyle = style;
             
             DataGridTextColumn balance = new DataGridTextColumn();
             balance.Header = "Balance";
-            balance.Binding = new Binding("Balance");
+            balance.Binding = new System.Windows.Data.Binding("Balance");
             balance.Binding.StringFormat = "F2";
             balance.CellStyle = style;
 
@@ -293,11 +303,11 @@ namespace HomeBudgetWPF
 
             DataGridTextColumn month = new DataGridTextColumn();
             month.Header = "Month";
-            month.Binding = new Binding("Month");
+            month.Binding = new System.Windows.Data.Binding("Month");
 
             DataGridTextColumn total = new DataGridTextColumn();
             total.Header = "Total";
-            total.Binding = new Binding("Total");
+            total.Binding = new System.Windows.Data.Binding("Total");
             total.Binding.StringFormat = "F2";
             total.CellStyle = style;
 
@@ -320,11 +330,11 @@ namespace HomeBudgetWPF
 
             DataGridTextColumn category = new DataGridTextColumn();
             category.Header = "Category";
-            category.Binding = new Binding("Category");
+            category.Binding = new System.Windows.Data.Binding("Category");
 
             DataGridTextColumn total = new DataGridTextColumn();
             total.Header = "Total";
-            total.Binding = new Binding("Total");
+            total.Binding = new System.Windows.Data.Binding("Total");
             total.Binding.StringFormat = "F2";
             total.CellStyle = style;
 
@@ -368,7 +378,7 @@ namespace HomeBudgetWPF
                 {
                     if (item.Keys.Contains(header))
                     {
-                        column.Binding = new Binding($"[{header}]");
+                        column.Binding = new System.Windows.Data.Binding($"[{header}]");
                         
                         if(header != "Month")
                         {

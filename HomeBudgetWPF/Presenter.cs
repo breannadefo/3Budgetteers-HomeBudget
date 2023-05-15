@@ -463,9 +463,9 @@ namespace HomeBudgetWPF
         /// Converts the displayed values to a list of comma separated strings. This version is for when there is no grouping involved.
         /// </summary>
         /// <param name="items">The list of BudgetItem being dislayed.</param>
-        public void ExportExpensesToCSVFile(List<BudgetItem> items)
+        public void ExportExpensesToCSVFile(List<BudgetItem> items, string fileName)
         {
-            _view.ShowSuccessMessage("budget items");
+            _view.ShowSuccessMessage($"budget items");
 
             List<String> values = new List<String>();
             string headers = "Date,Category,Description,Amount,Balance";
@@ -480,13 +480,15 @@ namespace HomeBudgetWPF
 
                 values.Add(rowValues);
             }
+
+            WriteToFile(fileName, values);
         }
 
         /// <summary>
         /// Converts the displayed values to a list of comma separated strings. This version is for when the values are grouped by month.
         /// </summary>
         /// <param name="items">The list of BudgetItemsByMonth being displayed.</param>
-        public void ExportExpensesToCSVFile(List<BudgetItemsByMonth> items)
+        public void ExportExpensesToCSVFile(List<BudgetItemsByMonth> items, string fileName)
         {
             _view.ShowSuccessMessage("budget items by month");
 
@@ -501,13 +503,15 @@ namespace HomeBudgetWPF
 
                 values.Add(rowValues);
             }
+
+            WriteToFile(fileName, values);
         }
 
         /// <summary>
         /// Converts the displayed values to a list of comma separated strings. This version is for when the values are grouped by category.
         /// </summary>
         /// <param name="items">The list of BudgetItemsByCategory being displayed.</param>
-        public void ExportExpensesToCSVFile(List<BudgetItemsByCategory> items)
+        public void ExportExpensesToCSVFile(List<BudgetItemsByCategory> items, string fileName)
         {
             _view.ShowSuccessMessage("budget items by ctegory");
 
@@ -522,6 +526,8 @@ namespace HomeBudgetWPF
 
                 values.Add(rowValues);
             }
+
+            WriteToFile(fileName, values);
         }
 
         /// <summary>
@@ -529,7 +535,7 @@ namespace HomeBudgetWPF
         /// and by category.
         /// </summary>
         /// <param name="items">The list of dictionaries being displayed.</param>
-        public void ExportExpensesToCSVFile(List<Dictionary<string, object>> items)
+        public void ExportExpensesToCSVFile(List<Dictionary<string, object>> items, string fileName)
         {
             _view.ShowSuccessMessage("budget items dicitonry");
 
@@ -566,6 +572,37 @@ namespace HomeBudgetWPF
                 }
                 rowValue.Remove(rowValue.Length - 1, 1);
                 values.Add(rowValue.ToString());
+            }
+
+            WriteToFile(fileName, values);
+        }
+
+        private void WriteToFile(string fileName, List<String> values)
+        {
+            StringBuilder fullText = new StringBuilder();
+
+            foreach (string row in values)
+            {
+                fullText.AppendLine(row);
+            }
+
+            StreamWriter writer = null;
+
+            try
+            {
+                writer = new StreamWriter(fileName);
+                writer.Write(fullText.ToString());
+            }
+            catch (Exception ex)
+            {
+                _view.ShowErrorMessage("Something went wrong while saving the data to the file. Try again later.");
+            }
+            finally
+            {
+                if (writer != null)
+                {
+                    writer.Close();
+                }
             }
         }
     }
