@@ -473,10 +473,11 @@ namespace HomeBudgetWPF
                         for (int i = 0; i < dg_displayExpenses.Items.Count; i++)
                         {
                             BudgetItem bi = dg_displayExpenses.Items[i] as BudgetItem;
-                            if (bi.ShortDescription.ToLower().Contains(search.ToLower()))
+                            if (bi.ShortDescription.ToLower().Contains(search.ToLower()) || bi.Amount.ToString().Contains(search))
                             {
                                 dg_displayExpenses.SelectedIndex = i;
                                 dg_displayExpenses.Focus();
+                                dg_displayExpenses.ScrollIntoView(dg_displayExpenses.SelectedItem);
                                 matchFound = true;
                                 break;
                             }
@@ -488,10 +489,11 @@ namespace HomeBudgetWPF
                         {
                             count = (count + 1) % dg_displayExpenses.Items.Count;
                             BudgetItem bi = dg_displayExpenses.Items[count] as BudgetItem;
-                            if (bi.Amount.ToString().Contains(search))
+                            if (bi.Amount.ToString().Contains(search) || bi.ShortDescription.ToLower().Contains(search.ToLower()))
                             {
                                 dg_displayExpenses.SelectedIndex = count;
                                 dg_displayExpenses.Focus();
+                                dg_displayExpenses.ScrollIntoView(dg_displayExpenses.SelectedItem);
                                 matchFound = true;
                                 break;
                             }
@@ -509,6 +511,7 @@ namespace HomeBudgetWPF
                             {
                                 dg_displayExpenses.SelectedIndex = i;
                                 dg_displayExpenses.Focus();
+                                dg_displayExpenses.ScrollIntoView(dg_displayExpenses.SelectedItem);
                                 matchFound = true;
                                 break;
                             }
@@ -524,6 +527,7 @@ namespace HomeBudgetWPF
                             {
                                 dg_displayExpenses.SelectedIndex = count;
                                 dg_displayExpenses.Focus();
+                                dg_displayExpenses.ScrollIntoView(dg_displayExpenses.SelectedItem);
                                 matchFound = true;
                                 break;
                             }
